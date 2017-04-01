@@ -151,9 +151,6 @@
                                     <Icon type="camera" size="20"></Icon>
                                 </div>
                             </Upload>
-                            <Modal class-name="img-view" title="查看大图"  :visible.sync="visible">
-                                <img :src="imgName" v-if="visible" style="width: 100%">
-                            </Modal>
                         </Form-item>
                     </i-col>
                 </Row>

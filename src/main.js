@@ -6,6 +6,8 @@ import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 import './global.less'
 import VueLazyload from 'vue-lazyload'
+import { storage } from './libs/server'
+
 
 Vue.use(VueLazyload,{	
 	preLoad:1.3,
@@ -28,10 +30,30 @@ router.map(Routers);
 
 
 router.beforeEach((transition) => {
-	window.scrollTo(0, 0);
+    //loading=Loading.service({ fullscreen: true })
+    window.scrollTo(0, 0);
     iView.LoadingBar.start();
-    transition.next();
-});
+  if(transition.to.meta &&transition.to.meta.requiresAuth) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    let userInfo=storage.session.get('userInfo');
+    //console.log(userInfo)
+    if( !(userInfo && userInfo.name) ){
+        //let lc=window.document.location;
+        //window.document.location.href=lc.origin+lc.pathname+'#!/login?redirect='+transition.to.path;
+        //transition.abort();
+        transition.redirect({
+            path: '/login',
+            query: { redirect: transition.to.fullPath }
+          })
+    } else {
+      transition.next()
+    }
+  } else {
+    transition.next() // 确保一定要调用 next()
+  }
+})
+
 
 router.afterEach((transition) => {
     iView.LoadingBar.finish();

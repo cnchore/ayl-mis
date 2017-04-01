@@ -62,7 +62,7 @@
 </div>
 </template>
 <script>
-import server from '../libs/server'
+import server,{ storage } from '../libs/server'
     export default {
         data () {
             return {
@@ -84,6 +84,10 @@ import server from '../libs/server'
                 }
             }
         },
+        ready(){
+            console.log(this.$router.query);
+            
+        },
         methods: {
             handleSubmit (name) {
                 let self=this;
@@ -93,7 +97,7 @@ import server from '../libs/server'
                         server.login(self.formValidate.name,self.formValidate.pwd).then((res)=>{
                             this.$Loading.finish();
                             if(res.success){
-                                
+                                storage.session.set('userInfo',self.formValidate);
                                 this.$router.go('/index');
                             }else{
                                 this.$Message.error(res.message);
