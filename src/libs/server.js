@@ -14,12 +14,12 @@ const serverPath={
 	login:'/sys/user/login',
 	loginOut:'/sys/user/loginOut',
 	getPublish:'/mem/publish/getPage',
-	getAllPublish:'/sys/publish/getList',
-	getPublishByid:'/sys/publish/getById',
-	addPublish:'/sys/publish/add',
-	updatePublish:'/sys/publish/update',
-	deletePublish:'/sys/publish/deleteById',
-	publish:'/sys/store/publish'
+	getAllPublish:'/mem/publish/getList',
+	getPublishByid:'/mem/publish/getById',
+	addPublish:'/mem/publish/add',
+	updatePublish:'/mem/publish/update',
+	deletePublishByid:'/mem/publish/deleteById',
+	publish:'/mem/store/publish'
 }
 
 /*========本地存储===========*/
@@ -110,7 +110,7 @@ export let storage = {
 export default {
 	jsonParse(obj){
 		if(obj){
-		return JSON.parse(JSON.stringify(obj));
+			return JSON.parse(JSON.stringify(obj));
 		}else{
 			return {};
 		}
@@ -341,6 +341,187 @@ export default {
 		        }, (error)=>{
 		          resolve(ret)
 		          console.log('login',error);
+		        })
+	        }
+	    })
+    	return promise
+	},
+	loginOut(){
+		let ret = {}
+		let promise = new Promise( (resolve) => {
+			util.ajax.request({
+				url: serverPath.loginOut,
+				method: 'post',
+				headers: { 'content-type': 'application/x-www-form-urlencoded' },
+				data: qs.stringify({})
+			}).then((body)=>{
+				if(body.data.success){
+					resolve(body.data)
+				}else{
+					resolve(ret)
+				}
+			}, (error)=>{
+				resolve(ret)
+				console.log('login',error);
+			})
+
+		})
+		return promise
+	},
+	getPublish(page=1,rows=10,titleLike=''){
+		let ret = {}
+	    let promise = new Promise( (resolve) => {
+	      	let type=3;
+	        util.ajax.get(
+	        	serverPath.getPublish,{
+	        		params:{type,page,rows,titleLike}
+	        	}).then((body)=>{
+	        		
+		          if(body.data){
+		            resolve(body.data)
+		          }else{
+		            resolve(ret)
+		          }
+		        }, (error)=>{
+		          resolve(ret)
+		          console.log('getPublish',error);
+		        })
+	    })
+    	return promise
+	},
+	getAllPublish(){
+		let ret = {}
+		let promise = new Promise( (resolve) => {
+
+			util.ajax.get(serverPath.getAllPublish,{
+				params:{type:3}
+			}).then((body)=>{
+				if(body){
+					resolve(body.data)
+				}else{
+					resolve(ret)
+				}
+			}, (error)=>{
+				resolve(ret)
+				console.log('getAllPublish',error);
+			})
+		})
+		return promise
+	},
+	getPublishByid(id){
+		let ret = {}
+		let promise = new Promise( (resolve) => {
+			let type=3;
+			if(!id){
+				resolve(ret);
+			}else{
+				util.ajax.get(
+					serverPath.getPublishByid,{
+						params:{type,id}
+					}).then((body)=>{
+
+						if(body.data){
+							resolve(body.data)
+						}else{
+							resolve(ret)
+						}
+					}, (error)=>{
+						resolve(ret)
+						console.log('getPublishByid',error);
+					})
+				}
+			})
+		return promise
+	},
+	addPublish(formData){
+		let ret = {}
+	    let promise = new Promise( (resolve) => {
+	      	formData.type=3;
+	        util.ajax.request({
+	          url: serverPath.addPublish,
+	          method: 'post',
+	          headers: { 'content-type': 'application/x-www-form-urlencoded' },
+	          data: qs.stringify(formData)
+	        }).then((body)=>{
+		          if(body.data.success){
+		            resolve(body.data)
+		          }else{
+		            resolve(ret)
+		          }
+		        }, (error)=>{
+		          resolve(ret)
+		          console.log('addPublish',error);
+		        })
+	    })
+    	return promise
+	},
+	updatePublish(formData){
+		let ret = {}
+	    let promise = new Promise( (resolve) => {
+	      	format.type=3;
+	        util.ajax.request({
+	          url: serverPath.updatePublish,
+	          method: 'post',
+	          headers: { 'content-type': 'application/x-www-form-urlencoded' },
+	          data: qs.stringify(formData)
+	        }).then((body)=>{
+		          if(body.data.success){
+		            resolve(body.data)
+		          }else{
+		            resolve(ret)
+		          }
+		        }, (error)=>{
+		          resolve(ret)
+		          console.log('updatePublish',error);
+		        })
+	    })
+    	return promise
+	},
+	deletePublishByid(id){
+		let ret = {}
+	    let promise = new Promise( (resolve) => {
+	    	if(!id){
+	    		resolve(ret)
+	    	}else{
+	        util.ajax.request({
+	          url: serverPath.deletePublishByid,
+	          method: 'post',
+	          headers: { 'content-type': 'application/x-www-form-urlencoded' },
+	          data: qs.stringify({id})
+	        }).then((body)=>{
+		          if(body.data.success){
+		            resolve(body.data)
+		          }else{
+		            resolve(ret)
+		          }
+		        }, (error)=>{
+		          resolve(ret)
+		          console.log('deletePublishByid',error);
+		        })
+	        }
+	    })
+    	return promise
+	},
+	publish(id){
+		let ret = {}
+	    let promise = new Promise( (resolve) => {
+	    	if(!id){
+	    		resolve(ret)
+	    	}else{
+	        util.ajax.request({
+	          url: serverPath.publish,
+	          method: 'post',
+	          headers: { 'content-type': 'application/x-www-form-urlencoded' },
+	          data: qs.stringify({id})
+	        }).then((body)=>{
+		          if(body.data.success){
+		            resolve(body.data)
+		          }else{
+		            resolve(ret)
+		          }
+		        }, (error)=>{
+		          resolve(ret)
+		          console.log('publish',error);
 		        })
 	        }
 	    })
