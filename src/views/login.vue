@@ -32,11 +32,12 @@
 <template>
     <div class="l-page">
         <header>
-            <Menu mode="horizontal" theme="primary">
-                <div class="logo"></div>
-                <div class="title">艾臣营销管理平台</div>
-        </Menu>
-    </header>
+            <Row>
+                <i-col span="4">
+                    <div class="logo"></div>
+                </i-col>
+            </Row>
+        </header>
     <div class="login">
         <i-form v-ref:form-validate :model="formValidate" :rules="ruleValidate" :label-width="80">
             
@@ -98,7 +99,7 @@ import server,{ storage } from '../libs/server'
                             this.$Loading.finish();
                             if(res.success){
                                 storage.session.set('userInfo',self.formValidate);
-                                this.$router.go('/index');
+                                this.$router.go('/store');
                             }else{
                                 this.$Message.error(res.message);
                             }

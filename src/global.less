@@ -24,26 +24,24 @@ img[lazy=loading],img {
     color: #3091f2;
 }
 header{
+	background-color: #39f;
+	margin-bottom: 15px;
 	.ivu-menu{
-
+		line-height: 80px;
+		height: 80px; 
+		
+	}
+	.ivu-col{
 		.logo{
-			line-height: 60px;
-			height: 60px; 
-			background-image: url(./imgs/logo.png);
+			line-height: 80px;
+			height: 80px; 
+			width: 100%;
+			background-image: url(./imgs/logo_main.png);
 			background-repeat: no-repeat;
-			background-position: 20px 10px;
-			width: 100px;
-			float: left;
-			display: inline-block;
-			background-size: 70%;
-		}
-		.title{
-			color:#fff;
-			float: left;
-			display: inline-block;
-			font-size: 1.2em;
-			padding-right: 20px;
-			font-weight:bold;
+			background-position:center;
+			background-size: 100%;
+			background-origin: content-box;
+			padding:0 10px; 
 		}
 	}
 }
@@ -54,12 +52,10 @@ header{
 		}
 	}
 }
+/*======页面布局========*/
 .layout{
-	border: 1px solid #d7dde4;
 	background: #f5f7f9;
 	position: relative;
-	border-radius: 4px;
-
 	overflow: hidden;
 	.l-row{
 		height: 100vh;
@@ -75,7 +71,7 @@ header{
 
 }
 .layout-content{
-	min-height: 200px;
+	min-height: 632px;
 	margin: 15px;
 	overflow: hidden;
 	background: #fff;
@@ -91,14 +87,15 @@ header{
 	color: #9ea7b4;
 }
 .layout-menu-left{
-	background: #464c5b;
-
+	background: #fff;
 }
 .layout-header{
-	height: 60px;
-	line-height: 60px;
 	background: #fff;
 	box-shadow: 0 1px 1px rgba(0,0,0,.1);
+	h3{
+		display: inline-block;
+		line-height:47px;
+	}
 }
 .layout-logo-left{
 	width: 90%;
@@ -123,7 +120,7 @@ header{
 .f-center{
 	text-align: center;
 }
-
+/*======文件上传列表========*/
 .l-upload-list{
 	display: inline-block;
 	width: 60px;
@@ -137,6 +134,21 @@ header{
 	position: relative;
 	box-shadow: 0 1px 1px rgba(0,0,0,.2);
 	margin-right: 4px;
+	&.l-desc{
+		width: 188px;
+		height: 100px;
+		.l-img-desc{
+			position: absolute;
+			bottom: -20px;
+			left: 0;
+			right: 0;
+			.ivu-input{
+				border-radius: 0;
+				padding: 2px;
+				height: 22px;
+			}
+		}
+	}
 }
 .l-upload-list img{
 	width: 100%;
@@ -160,6 +172,10 @@ header{
 	cursor: pointer;
 	margin: 0 2px;
 }
+.ivu-upload.show{
+	display: inline-block;
+}
+/*======表格列宽========*/
 .l-min-width{
 	width: 200px;
 }
@@ -173,4 +189,38 @@ header{
 		}
 	}
 }
-
+/*======省略号========*/
+.l-ellipsis{
+	.ivu-table-cell{
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+}
+/*======单行下拉选择========*/
+.l-sel-inline{
+	display: flex;
+	width: 220px;
+	span[slot=prepend]{
+		width: 63px;
+	    padding: 4px 7px;
+	    font-size: inherit;
+	    font-weight: 400;
+	    line-height: 22px;
+	    color: #657180;
+	    text-align: center;
+	    background-color: #eee;
+	    border: 1px solid #d7dde4;
+	    border-radius: 6px;
+	    border-bottom-right-radius: 0!important;
+    	border-top-right-radius: 0!important;
+    	border-right: 0!important;
+	}
+	div{
+		width: 157px;
+		.ivu-select-selection{
+			border-bottom-left-radius: 0!important;
+    		border-top-left-radius: 0!important;	
+		}
+	}
+}

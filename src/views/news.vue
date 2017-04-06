@@ -3,6 +3,7 @@
 	
 </style>
 <template>
+    <l-header active-key="1"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
@@ -10,7 +11,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-header @on-click="toggleClick"></l-header>
+                    <l-title @on-click="toggleClick"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm"  inline>
@@ -27,7 +28,7 @@
                         </Form-item>
                     </i-form>
                 </div>
-                <div class="layout-content" :style="{ height:contentHeight + 'px' }">
+                <div class="layout-content">
                     <i-table :content="self" :columns="tableCol" :data="tableData"></i-table>
                     <div style="margin: 10px;overflow: hidden">
                         <div style="float: right;">
@@ -91,7 +92,7 @@
                     </Modal>
                 </Form-item>
                 <Form-item label="内容" prop="content">
-                    <v-editor :input-content.sync="newsForm.content"></v-editor>
+                    <v-editor :input-content="newsForm.content" :out-content.sync="outContent"></v-editor>
                 </Form-item>
             </i-form>
         </Modal>
@@ -102,11 +103,14 @@ import server from '../libs/server'
 import LeftMenu from '../components/left-menu'
 import LHeader from '../components/header'
 import Editor from '../components/editor'
+import LTitle from '../components/title'
 
 	export default{
-		components:{LHeader,LeftMenu,'v-editor':Editor},
+		components:{LHeader,LTitle,LeftMenu,'v-editor':Editor},
 		data(){
 			return{
+                baseUrl:server.getBaseUrl(),
+                uploadData:{bucket:'dc-test'},
 				addModal:false,
 				rowsTotal:10,
 				pageIndex:1,
@@ -138,23 +142,22 @@ import Editor from '../components/editor'
                         align: 'center',
                         render (row, column, index) {
                             return `
-                            <i-button type="ghost" v-show="${row.status}==1" size="small" icon="edit" @click="update(${row.id})">修改</i-button>
-                            <i-button type="ghost" v-show="${row.status}==1 || ${row.status}==3" size="small" icon="forward" @click="publish(${row.id})">发布</i-button>
-                            <i-button type="ghost" v-show="${row.status}==2" size="small" icon="stop" @click="publish(${row.id})">结束发布</i-button>
+                            <i-button type="primary" v-show="${row.status}==1" size="small" icon="edit" @click="update(${row.id})">修改</i-button>
+                            <i-button type="primary" v-show="${row.status}==1" size="small" icon="forward" @click="publish(${row.id})">发布</i-button>
+                            <i-button type="primary" v-show="${row.status}==2" size="small" icon="stop" @click="publish(${row.id})">结束发布</i-button>
                             <Poptip v-show="${row.status}==1"
                                 confirm
                                 title="您确认删除这条内容吗？"
                                 @on-ok="remove(${row.id})">
-                                <i-button type="ghost" icon="ios-trash" size="small">删除</i-button>
+                                <i-button type="primary" icon="ios-trash" size="small">删除</i-button>
                             </Poptip>
-                            <i-button type="ghost" size="small" icon="eye" @click="look(${row.id})">查看</i-button>
+                            <i-button type="primary" size="small" icon="eye" @click="look(${row.id})">查看</i-button>
                             `;
                         }   
                     },
                     {
                         title: '标题',
-                        className:'l-min-width',
-                        width: 150,
+                        className:'l-m-min-width',
                         key: 'title',
                         render (row, column, index) {
                             return `<strong>${row.title}</strong>`;
@@ -170,7 +173,7 @@ import Editor from '../components/editor'
                     },
                     {
                         title: '摘要',
-                        className:'l-m-min-width',
+                        className:'l-m-min-width l-ellipsis',
                         key: 'summary'
                     },
                     {
@@ -183,14 +186,12 @@ import Editor from '../components/editor'
                 avatarDefaultList:[],
                 imgName: '',
                 visible: false,
-                isLook:false
+                isLook:false,
+                outContent:''
 			}
 		},
 		ready(){
-			let self=this;
-            self.setContentHeight();
-            self.tableWidth=window.document.getElementsByClassName('layout-content')[0].offsetWidth-20;
-            self.getList();
+            this.getList();
 		},
         computed: {
            
@@ -228,7 +229,7 @@ import Editor from '../components/editor'
                     self.rowsTotal=res.data.total;
                 })
             },
-			 modalOk(){
+			modalOk(){
                 //新增
                 let self=this;
                 if(self.isLook){
@@ -236,8 +237,10 @@ import Editor from '../components/editor'
                     self.addModal=false;
                     return;
                 }
-                if(self.seachForm.id){
-                    server.updatePublish(self.seachForm).then((res)=>{
+                self.newsForm.content=self.outContent;
+
+                if(self.newsForm.id){
+                    server.updatePublish(self.newsForm).then((res)=>{
                         if(res.success){
                             self.$Notice.success({
                                 title:'修改成功'
@@ -253,7 +256,7 @@ import Editor from '../components/editor'
                         }
                     })
                 }else{
-                    server.addPublish(self.seachForm).then((res)=>{
+                    server.addPublish(self.newsForm).then((res)=>{
                         if(res.success){
                             self.$Notice.success({
                                 title:'新增成功'
@@ -278,6 +281,7 @@ import Editor from '../components/editor'
                 this.getList(1,10,this.seachForm.titleLike);
 			},
 			add(){
+                this.isLook=false;
                 for (var obj in this.newsForm) {
                     this.newsForm[obj]='';
                 }
@@ -291,11 +295,11 @@ import Editor from '../components/editor'
                     return server.jsonParse(res.data);
                 }).then((list)=>{
                     self.newsForm=list;
+                    self.avatarDefaultList=[];
                     if(!self.newsForm || !self.newsForm.id){
                         return;
                     }
                     if(self.newsForm.thumb){
-                        self.avatarDefaultList=[]
                         self.avatarDefaultList.push({
                             url:self.newsForm.thumb,
                             avatar:server.image.thumb(self.newsForm.thumb,60,60)
@@ -328,6 +332,10 @@ import Editor from '../components/editor'
                 let self=this;
                 server.deletePublishByid(id).then((res)=>{
                     if(res.success){
+                        self.$Notice.success({
+                            title:'删除成功',
+                            desc:res.message
+                        });
                         self.getList(self.pageIndex,10,self.seachForm.titleLike);
                     }else{
                         self.$Notice.error({
@@ -342,6 +350,9 @@ import Editor from '../components/editor'
                 server.publish(id).then((res)=>{
                     if(res.success){
                         self.getList(self.pageIndex,10,self.seachForm.titleLike);
+                        self.$Notice.success({
+                                title:res.message
+                            })
                     }else{
                         self.$Notice.error({
                             title:'失败',
@@ -349,9 +360,6 @@ import Editor from '../components/editor'
                         });
                     }
                 })
-            },
-			setContentHeight(){
-                this.contentHeight=window.document.body.clientHeight-185;
             },
             toggleClick () {
                 this.leftMenu=!this.leftMenu;
