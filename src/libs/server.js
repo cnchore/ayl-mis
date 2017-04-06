@@ -25,7 +25,17 @@ const serverPath={
 	getProductByid:'/sys/product/getById',
 	addProduct:'/sys/product/add',
 	updateProduct:'/sys/product/update',
-	delProduct:'/sys/product/deleteById'
+	delProduct:'/sys/product/deleteById',
+	getFeedback:'/mem/feedBack/getPage',
+	getAllFeedback:'/mem/feedBack/getList',
+	getFeedbackByid:'/mem/feedBack/getById',
+	feedBackReply:'/mem/feedBack/reply',
+	getHelp:'/sys/help/getPage',
+	getAllHelp:'/sys/help/getList',
+	getHelpByid:'/sys/help/getById',
+	addHelp:'/sys/help/add',
+	updateHelp:'/sys/help/update',
+	delHelp:'/sys/help/deleteById'
 
 }
 
@@ -199,6 +209,7 @@ export default {
 		}
     	return this.getPromise(serverPath.getDict,params,'getDict');
 	},
+	//门店展示管理
 	getStoreList(page=1,rows=10,storeNameLike=''){
     	return this.getPromise(serverPath.getStoreList,{page,rows,storeNameLike},'getStoreList');
 	},
@@ -220,15 +231,19 @@ export default {
 	deleteStoreByid(id){
     	return this.postPromise(serverPath.deleteStoreByid,{id},'deleteStoreByid');
 	},
+	//根据中文地址获取经纬度
 	getGpsByAddress(address){
     	return this.postPromise(serverPath.getGpsByAddress,{address},'getGpsByAddress');
 	},
+	//登录
 	login(userName,pwd){
     	return this.postPromise(serverPath.login,{userName,pwd},'login');
 	},
+	//登出
 	loginOut(){
     	return this.postPromise(serverPath.loginOut,{},'loginOut');
 	},
+	//艾臣资讯管理
 	getPublish(page=1,rows=10,titleLike=''){
     	return this.getPromise(serverPath.getPublish,{type:3,page,rows,titleLike},'getPublish');
 	},
@@ -265,6 +280,7 @@ export default {
 	publish(id){
     	return this.postPromise(serverPath.publish,{id},'publish');
 	},
+	//产品介绍管理
 	getProduct(page=1,rows=10,category=-1,productNameLike=''){
     	return this.getPromise(serverPath.getProduct,{page,rows,category,productNameLike},'getProduct');
 	},
@@ -315,6 +331,48 @@ export default {
 	},
 	delProduct(id){
     	return this.postPromise(serverPath.delProduct,{id},'delProduct');
-		
+	},
+	//会员反馈管理
+	getFeedback(page=1,rows=10,feedbackTimeStr='',feedbackTimeBegin='',feedbackTimeEnd=''){
+		let feedbackerType=4;
+		if(util.env=='development'){
+			feedbackerType=''
+		}
+		return this.getPromise(serverPath.getFeedback,{page,rows,feedbackerType,feedbackTimeStr,feedbackTimeBegin,feedbackTimeEnd},'getFeedback');
+	},
+	getAllFeedback(feedbackTimeStr='',feedbackTimeBegin='',feedbackTimeEnd=''){
+		return this.getPromise(serverPath.getAllFeedback,{feedbackerType:4,feedbackTimeStr,feedbackTimeBegin,feedbackTimeEnd},'getAllFeedback');
+	},
+	getFeedbackByid(id){
+    	return this.getPromise(serverPath.getFeedbackByid,{id},'getFeedbackByid');
+	},
+	feedBackReply(feedBackId=null,replyCont=''){
+    	return this.postPromise(serverPath.feedBackReply,{feedBackId,replyCont},'feedBackReply');
+	},
+	//常见问题管理
+	getHelp(page=1,rows=10,type=null){
+		return this.getPromise(serverPath.getHelp,{page,rows,type},'getHelp');
+	},
+	getAllHelp(type=null){
+		return this.getPromise(serverPath.getAllHelp,{type},'getAllHelp');
+
+	},
+	getHelpByid(id){
+		return this.getPromise(serverPath.getHelpByid,{id},'getHelpByid');
+	},
+	addHelp(formData){
+		let _list={
+		 seq:formData.seq,
+		 question:formData.question,
+		 answer:formData.answer,
+		 type:formData.type
+		}
+    	return this.postPromise(serverPath.addHelp,formData,'addHelp');
+	},
+	updateHelp(formData){
+    	return this.postPromise(serverPath.updateHelp,formData,'updateHelp');
+	},
+	delHelp(id){
+    	return this.postPromise(serverPath.delHelp,{id},'delHelp');
 	}
 }
