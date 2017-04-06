@@ -8,25 +8,39 @@ const routers = {
     '/login': {
         component(resolve) {
             require(['./views/login.vue'], resolve);
-        }
+        },
+        meta: { title:'登录' }
     },
     '/store': {
         component(resolve) {
             require(['./views/store.vue'], resolve);
         },
-        meta: { requiresAuth: true,title:'首页' }
+        meta: { requiresAuth: true,title:'门店展示管理' }
     },
     '/news': {
         component(resolve) {
             require(['./views/news.vue'], resolve);
         },
-        meta: { requiresAuth: true,title:'首页' }
+        meta: { requiresAuth: true,title:'艾臣资讯管理' }
     },
     '/product': {
         component(resolve) {
             require(['./views/product.vue'], resolve);
         },
-        meta: { requiresAuth: true,title:'首页' }
+        meta: { requiresAuth: true,title:'产品介绍管理' }
+    },
+    '/feed/back': {
+        component(resolve) {
+            require(['./views/feed-back.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'会员反馈管理' }
+    }
+    ,
+    '/help': {
+        component(resolve) {
+            require(['./views/help.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'常见问题管理' }
     }
 };
 export default routers;

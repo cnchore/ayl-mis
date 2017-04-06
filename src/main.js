@@ -57,6 +57,9 @@ router.beforeEach((transition) => {
 
 router.afterEach((transition) => {
     iView.LoadingBar.finish();
+    if(transition.to.meta &&transition.to.meta.title){
+        window.document.title=transition.to.meta.title;
+    }
 });
 router.redirect({
     '*': "/index"

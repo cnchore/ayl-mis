@@ -3,9 +3,8 @@
 	
 </style>
 <template>
-	<Menu :active-key="activeKey" theme="dark" width="auto" @on-select="handleSelect">
-        <div class="layout-logo-left"></div>
-        <Menu-group title="安居艾臣">
+	<Menu :active-key="activeKey"  width="auto" @on-select="handleSelect">
+        
             <Menu-item key="1-1">
                 <Icon type="document-text"></Icon>
                 门店展示管理
@@ -20,19 +19,26 @@
             </Menu-item>
             <Menu-item key="1-4">
                 <Icon type="document"></Icon>
+                会员反馈管理
+            </Menu-item>
+       
+            <Menu-item key="1-5">
+                <Icon type="heart"></Icon>
+                常见问题管理
+            </Menu-item>
+            <Menu-item key="1-6">
+                <Icon type="heart-broken"></Icon>
                 优惠券活动配置
             </Menu-item>
-        </Menu-group>
-        <Menu-group title="统计分析">
-            <Menu-item key="2-1">
-                <Icon type="heart"></Icon>
-                用户留存
-            </Menu-item>
-            <Menu-item key="2-2">
+            <Menu-item key="1-7">
                 <Icon type="heart-broken"></Icon>
-                流失用户
+                优惠券明细配置
             </Menu-item>
-        </Menu-group>
+            <Menu-item key="1-8">
+                <Icon type="heart-broken"></Icon>
+                领取礼品管理
+            </Menu-item>
+       
     </Menu>
 </template>
 <script>
@@ -51,13 +57,19 @@
                 //this.$Message.info(key);
                 switch(key){
                 	case '1-1':
-                        this.$router.go('/index');
+                        this.$router.go('/store');
                         break;
                     case '1-2':
                         this.$router.go('/news');
                         break;
                     case '1-3':
                         this.$router.go('/product');
+                        break;
+                    case '1-4':
+                        this.$router.go('/feed/back');
+                        break;
+                    case '1-5':
+                        this.$router.go('/help');
                         break;
                 }
             }

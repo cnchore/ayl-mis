@@ -12,7 +12,7 @@ if(_HOST.indexOf('http://ktz.aylsonclub.com') === -1){
 	//ajaxUrl='http://192.168.0.119:8080/admin'
 }
 
-util.sererPath=ajaxUrl;
+util.serverPath=ajaxUrl;
 util.ajax = axios.create({
     baseURL: ajaxUrl,
     timeout: 7000,

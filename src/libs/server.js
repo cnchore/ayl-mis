@@ -2,7 +2,7 @@ import util from './util'
 import qs from 'qs'
 
 const serverPath={
-
+	getDict:'/sys/dictionary/getList',
 	getStoreAllList:'/sys/store/getList',
 	getStoreList:'/sys/store/getPage',
 	addStore:'/sys/store/add',
@@ -19,7 +19,14 @@ const serverPath={
 	addPublish:'/mem/publish/add',
 	updatePublish:'/mem/publish/update',
 	deletePublishByid:'/mem/publish/deleteById',
-	publish:'/mem/store/publish'
+	publish:'/mem/publish/publish',
+	getProduct:'/sys/product/getPage',
+	getAllProduct:'/sys/product/getList',
+	getProductByid:'/sys/product/getById',
+	addProduct:'/sys/product/add',
+	updateProduct:'/sys/product/update',
+	delProduct:'/sys/product/deleteById'
+
 }
 
 /*========本地存储===========*/
@@ -116,6 +123,49 @@ export default {
 		}
 
 	},
+	getPromise(url='',params={},requestName=''){
+		let ret = {}
+	    let promise = new Promise( (resolve) => {
+	      
+	        util.ajax.get(
+	        	url,{
+	        		params:params
+	        	}).then((body)=>{
+	        		
+		          if(body.data){
+		            resolve(body.data)
+		          }else{
+		            resolve(ret)
+		          }
+		        }, (error)=>{
+		          resolve(ret)
+		          console.log(requestName,error);
+		        })
+	    })
+    	return promise
+	},
+	postPromise(url='',formData={},requestName=''){
+		let ret = {}
+	    let promise = new Promise( (resolve) => {
+	      
+	        util.ajax.request({
+	          url: url,
+	          method: 'post',
+	          headers: { 'content-type': 'application/x-www-form-urlencoded' },
+	          data: qs.stringify(formData)
+	        }).then((body)=>{
+		          if(body.data.success){
+		            resolve(body.data)
+		          }else{
+		            resolve(ret)
+		          }
+		        }, (error)=>{
+		          resolve(ret)
+		          console.log(requestName,error);
+		        })
+	    })
+    	return promise
+	},
 	image: {
 	    thumb(src, width, height) {
 	      width = width || 320
@@ -138,393 +188,133 @@ export default {
 	    }
 	},
 	getBaseUrl(){
-		return util.sererPath;
+		return util.serverPath;
+	},
+	getDict(dicType='',parentId=null){
+		let params={
+			dicType
+		}
+		if(parentId){
+			params.parentId=parentId;
+		}
+    	return this.getPromise(serverPath.getDict,params,'getDict');
 	},
 	getStoreList(page=1,rows=10,storeNameLike=''){
-		let ret = {}
-	    let promise = new Promise( (resolve) => {
-	      
-	        util.ajax.get(
-	        	serverPath.getStoreList,{
-	        		params:{page,rows,storeNameLike}
-	        	}).then((body)=>{
-	        		
-		          if(body.data){
-		            resolve(body.data)
-		          }else{
-		            resolve(ret)
-		          }
-		        }, (error)=>{
-		          resolve(ret)
-		          console.log('getStoreList',error);
-		        })
-	    })
-    	return promise
-		
+    	return this.getPromise(serverPath.getStoreList,{page,rows,storeNameLike},'getStoreList');
 	},
 	getAgentUserList(){
-		let ret = {}
-	    let promise = new Promise( (resolve) => {
-	      
-	        util.ajax.get(serverPath.getAgentUserList
-	        	).then((body)=>{
-		          if(body){
-		            resolve(body.data)
-		          }else{
-		            resolve(ret)
-		          }
-		        }, (error)=>{
-		          resolve(ret)
-		          console.log('getAgentUserList',error);
-		        })
-	    })
-    	return promise
-		
+    	return this.getPromise(serverPath.getAgentUserList,{},'getAgentUserList');
 	},
 	getStoreAllList(){
-		let ret = {}
-	    let promise = new Promise( (resolve) => {
-	      
-	        util.ajax.get(serverPath.getStoreAllList
-	        	).then((body)=>{
-		          if(body){
-		            resolve(body.data)
-		          }else{
-		            resolve(ret)
-		          }
-		        }, (error)=>{
-		          resolve(ret)
-		          console.log('getStoreList',error);
-		        })
-	    })
-    	return promise
-		
+    	return this.getPromise(serverPath.getStoreAllList,{},'getStoreList');
 	},
 	getStoreListByid(id){
-		let ret = {}
-
-	    let promise = new Promise( (resolve) => {
-	      	if(!id){
-	      		resolve(ret)
-	      	}else{
-	        util.ajax.get(
-	        	serverPath.getStoreListByid,{
-	        	params:{
-	        		id
-	        	}
-	        }).then((body)=>{
-		          if(body){
-		            resolve(body.data)
-		          }else{
-		            resolve(ret)
-		          }
-		        }, (error)=>{
-		          resolve(ret)
-		          console.log('getStoreListByid',error);
-		        })
-	        }
-	    })
-    	return promise
-		
+    	return this.getPromise(serverPath.getStoreListByid,{id},'getStoreListByid');
 	},
 	addStore(formData){
-		let ret = {}
-	    let promise = new Promise( (resolve) => {
-	      
-	        util.ajax.request({
-	          url: serverPath.addStore,
-	          method: 'post',
-	          headers: { 'content-type': 'application/x-www-form-urlencoded' },
-	          data: qs.stringify(formData)
-	        }).then((body)=>{
-		          if(body.data.success){
-		            resolve(body.data)
-		          }else{
-		            resolve(ret)
-		          }
-		        }, (error)=>{
-		          resolve(ret)
-		          console.log('addStore',error);
-		        })
-	    })
-    	return promise
+    	return this.postPromise(serverPath.addStore,formData,'addStore');
 	},
 	updateStore(formData){
-		let ret = {}
-	    let promise = new Promise( (resolve) => {
-	      
-	        util.ajax.request({
-	          url: serverPath.updateStore,
-	          method: 'post',
-	          headers: { 'content-type': 'application/x-www-form-urlencoded' },
-	          data: qs.stringify(formData)
-	        }).then((body)=>{
-		          if(body.data.success){
-		            resolve(body.data)
-		          }else{
-		            resolve(ret)
-		          }
-		        }, (error)=>{
-		          resolve(ret)
-		          console.log('addStore',error);
-		        })
-	    })
-    	return promise
+    	return this.postPromise(serverPath.updateStore,formData,'updateStore');
 	},
 	deleteStoreByid(id){
-		let ret = {}
-	    let promise = new Promise( (resolve) => {
-	    	if(!id){
-	    		resolve(ret)
-	    	}else{
-	        util.ajax.request({
-	          url: serverPath.deleteStoreByid,
-	          method: 'post',
-	          headers: { 'content-type': 'application/x-www-form-urlencoded' },
-	          data: qs.stringify({id})
-	        }).then((body)=>{
-		          if(body.data.success){
-		            resolve(body.data)
-		          }else{
-		            resolve(ret)
-		          }
-		        }, (error)=>{
-		          resolve(ret)
-		          console.log('deleteStoreByid',error);
-		        })
-	        }
-	    })
-    	return promise
+    	return this.postPromise(serverPath.deleteStoreByid,{id},'deleteStoreByid');
 	},
 	getGpsByAddress(address){
-		let ret = {}
-	    let promise = new Promise( (resolve) => {
-	    	if(!address){
-	    		resolve(ret)
-	    	}else{
-	        util.ajax.request({
-	          url: serverPath.getGpsByAddress,
-	          method: 'post',
-	          headers: { 'content-type': 'application/x-www-form-urlencoded' },
-	          data: qs.stringify({address})
-	        }).then((body)=>{
-		          if(body.data.success){
-		            resolve(body.data)
-		          }else{
-		            resolve(ret)
-		          }
-		        }, (error)=>{
-		          resolve(ret)
-		          console.log('getGpsByAddress',error);
-		        })
-	        }
-	    })
-    	return promise
+    	return this.postPromise(serverPath.getGpsByAddress,{address},'getGpsByAddress');
 	},
 	login(userName,pwd){
-		let ret = {}
-	    let promise = new Promise( (resolve) => {
-	    	if(!userName||!pwd){
-	    		resolve(ret)
-	    	}else{
-	        util.ajax.request({
-	          url: serverPath.login,
-	          method: 'post',
-	          headers: { 'content-type': 'application/x-www-form-urlencoded' },
-	          data: qs.stringify({userName,pwd})
-	        }).then((body)=>{
-		          if(body.data.success){
-		            resolve(body.data)
-		          }else{
-		            resolve(ret)
-		          }
-		        }, (error)=>{
-		          resolve(ret)
-		          console.log('login',error);
-		        })
-	        }
-	    })
-    	return promise
+    	return this.postPromise(serverPath.login,{userName,pwd},'login');
 	},
 	loginOut(){
-		let ret = {}
-		let promise = new Promise( (resolve) => {
-			util.ajax.request({
-				url: serverPath.loginOut,
-				method: 'post',
-				headers: { 'content-type': 'application/x-www-form-urlencoded' },
-				data: qs.stringify({})
-			}).then((body)=>{
-				if(body.data.success){
-					resolve(body.data)
-				}else{
-					resolve(ret)
-				}
-			}, (error)=>{
-				resolve(ret)
-				console.log('login',error);
-			})
-
-		})
-		return promise
+    	return this.postPromise(serverPath.loginOut,{},'loginOut');
 	},
 	getPublish(page=1,rows=10,titleLike=''){
-		let ret = {}
-	    let promise = new Promise( (resolve) => {
-	      	let type=3;
-	        util.ajax.get(
-	        	serverPath.getPublish,{
-	        		params:{type,page,rows,titleLike}
-	        	}).then((body)=>{
-	        		
-		          if(body.data){
-		            resolve(body.data)
-		          }else{
-		            resolve(ret)
-		          }
-		        }, (error)=>{
-		          resolve(ret)
-		          console.log('getPublish',error);
-		        })
-	    })
-    	return promise
+    	return this.getPromise(serverPath.getPublish,{type:3,page,rows,titleLike},'getPublish');
 	},
 	getAllPublish(){
-		let ret = {}
-		let promise = new Promise( (resolve) => {
-
-			util.ajax.get(serverPath.getAllPublish,{
-				params:{type:3}
-			}).then((body)=>{
-				if(body){
-					resolve(body.data)
-				}else{
-					resolve(ret)
-				}
-			}, (error)=>{
-				resolve(ret)
-				console.log('getAllPublish',error);
-			})
-		})
-		return promise
+    	return this.getPromise(serverPath.getAllPublish,{type:3},'getAllPublish');
 	},
 	getPublishByid(id){
-		let ret = {}
-		let promise = new Promise( (resolve) => {
-			let type=3;
-			if(!id){
-				resolve(ret);
-			}else{
-				util.ajax.get(
-					serverPath.getPublishByid,{
-						params:{type,id}
-					}).then((body)=>{
-
-						if(body.data){
-							resolve(body.data)
-						}else{
-							resolve(ret)
-						}
-					}, (error)=>{
-						resolve(ret)
-						console.log('getPublishByid',error);
-					})
-				}
-			})
-		return promise
+    	return this.getPromise(serverPath.getPublishByid,{type:3,id},'getPublishByid');
 	},
 	addPublish(formData){
-		let ret = {}
-	    let promise = new Promise( (resolve) => {
-	      	formData.type=3;
-	        util.ajax.request({
-	          url: serverPath.addPublish,
-	          method: 'post',
-	          headers: { 'content-type': 'application/x-www-form-urlencoded' },
-	          data: qs.stringify(formData)
-	        }).then((body)=>{
-		          if(body.data.success){
-		            resolve(body.data)
-		          }else{
-		            resolve(ret)
-		          }
-		        }, (error)=>{
-		          resolve(ret)
-		          console.log('addPublish',error);
-		        })
-	    })
-    	return promise
+		let _list={
+    		thumb:formData.thumb,   //缩略图
+		  	summary:formData.summary, //摘要
+		  	title:formData.title,     //标题
+		  	content:formData.content,     //内容
+		  	type:3    //类别:1通知公告 2：新闻动态 3、艾臣资讯
+    	}
+    	return this.postPromise(serverPath.addPublish,_list,'addPublish');
 	},
 	updatePublish(formData){
-		let ret = {}
-	    let promise = new Promise( (resolve) => {
-	      	format.type=3;
-	        util.ajax.request({
-	          url: serverPath.updatePublish,
-	          method: 'post',
-	          headers: { 'content-type': 'application/x-www-form-urlencoded' },
-	          data: qs.stringify(formData)
-	        }).then((body)=>{
-		          if(body.data.success){
-		            resolve(body.data)
-		          }else{
-		            resolve(ret)
-		          }
-		        }, (error)=>{
-		          resolve(ret)
-		          console.log('updatePublish',error);
-		        })
-	    })
-    	return promise
+		let _list={
+    		id:formData.id,
+    		thumb:formData.thumb,   //缩略图
+		  	summary:formData.summary, //摘要
+		  	title:formData.title,     //标题
+		  	content:formData.content,     //内容
+		  	type:3    //类别:1通知公告 2：新闻动态 3、艾臣资讯
+    	}
+    	return this.postPromise(serverPath.updatePublish,_list,'updatePublish');
 	},
 	deletePublishByid(id){
-		let ret = {}
-	    let promise = new Promise( (resolve) => {
-	    	if(!id){
-	    		resolve(ret)
-	    	}else{
-	        util.ajax.request({
-	          url: serverPath.deletePublishByid,
-	          method: 'post',
-	          headers: { 'content-type': 'application/x-www-form-urlencoded' },
-	          data: qs.stringify({id})
-	        }).then((body)=>{
-		          if(body.data.success){
-		            resolve(body.data)
-		          }else{
-		            resolve(ret)
-		          }
-		        }, (error)=>{
-		          resolve(ret)
-		          console.log('deletePublishByid',error);
-		        })
-	        }
-	    })
-    	return promise
+    	return this.postPromise(serverPath.deletePublishByid,{id},'deletePublishByid');
 	},
 	publish(id){
-		let ret = {}
-	    let promise = new Promise( (resolve) => {
-	    	if(!id){
-	    		resolve(ret)
-	    	}else{
-	        util.ajax.request({
-	          url: serverPath.publish,
-	          method: 'post',
-	          headers: { 'content-type': 'application/x-www-form-urlencoded' },
-	          data: qs.stringify({id})
-	        }).then((body)=>{
-		          if(body.data.success){
-		            resolve(body.data)
-		          }else{
-		            resolve(ret)
-		          }
-		        }, (error)=>{
-		          resolve(ret)
-		          console.log('publish',error);
-		        })
-	        }
-	    })
-    	return promise
+    	return this.postPromise(serverPath.publish,{id},'publish');
+	},
+	getProduct(page=1,rows=10,category=-1,productNameLike=''){
+    	return this.getPromise(serverPath.getProduct,{page,rows,category,productNameLike},'getProduct');
+	},
+	getAllProduct(category=-1,productNameLike=''){
+    	return this.getPromise(serverPath.getAllProduct,{category,productNameLike},'getAllProduct');
+	},
+	getProductByid(id){
+    	return this.getPromise(serverPath.getProductByid,{id},'getProductByid');
+	},
+	addProduct(formData){
+		let _list={
+    		seq:formData.seq,
+    		category:formData.category,
+		  	categoryName:formData.categoryName,
+		  	thumbnail:formData.thumbnail,
+		  	productName:formData.productName,
+		  	productProp:formData.productProp,
+		  	application:formData.application,
+		  	params:formData.params,
+		  	videoTitle:formData.videoTitle,
+		  	videoThum:formData.videoThum,
+		  	videoDesc:formData.videoDesc,
+		  	videoUrl:formData.videoUrl,
+		  	pictureShowsItem:formData.pictureShows,
+		  	pictureDescItem:formData.pictureDesc
+    	}
+    	return this.postPromise(serverPath.addProduct,_list,'addProduct');
+	},
+	updateProduct(formData){
+		let _list={
+			id:formData.id,
+    		seq:formData.seq,
+    		category:formData.category,
+		  	categoryName:formData.categoryName,
+		  	thumbnail:formData.thumbnail,
+		  	productName:formData.productName,
+		  	productProp:formData.productProp,
+		  	application:formData.application,
+		  	params:formData.params,
+		  	videoTitle:formData.videoTitle,
+		  	videoThum:formData.videoThum,
+		  	videoDesc:formData.videoDesc,
+		  	videoUrl:formData.videoUrl,
+		  	pictureShowsItem:formData.pictureShows,
+		  	pictureDescItem:formData.pictureDesc
+    	}
+    	return this.postPromise(serverPath.updateProduct,_list,'updateProduct');
+	},
+	delProduct(id){
+    	return this.postPromise(serverPath.delProduct,{id},'delProduct');
+		
 	}
 }
