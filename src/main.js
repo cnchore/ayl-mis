@@ -16,7 +16,10 @@ Vue.use(VueLazyload,{
 })
 Vue.use(VueRouter);
 Vue.use(iView);
-
+iView.LoadingBar.config({
+    color: '#ff6600',
+    height:5
+});
 // 开启debug模式
 Vue.config.debug = true;
 

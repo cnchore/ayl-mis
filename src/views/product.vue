@@ -17,10 +17,10 @@
                     <i-form v-ref:form-inline :model="seachForm" inline>
                         <Form-item prop="category">
                             <div class="l-sel-inline">
-                            <span slot="prepend">产品类别</span>
-                            <i-select :model.sync="seachForm.category" placeholder="请选择">
-                                <i-option v-for="item in categoryList" :value="item.value">{{ item.label }}</i-option>
-                            </i-select>
+                                <span slot="prepend">产品类别</span>
+                                <i-select :model.sync="seachForm.category" placeholder="请选择">
+                                    <i-option v-for="item in categoryList" :value="item.value">{{ item.label }}</i-option>
+                                </i-select>
                             </div>
                         </Form-item>
                         <Form-item prop="productNameLike">

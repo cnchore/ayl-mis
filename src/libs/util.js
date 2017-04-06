@@ -11,7 +11,7 @@ if(_HOST.indexOf('http://ktz.aylsonclub.com') === -1){
 	ajaxUrl='http://test.aylsonclub.com/admin'
 	//ajaxUrl='http://192.168.0.119:8080/admin'
 }
-
+util.env=env;
 util.serverPath=ajaxUrl;
 util.ajax = axios.create({
     baseURL: ajaxUrl,

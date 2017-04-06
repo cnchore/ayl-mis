@@ -1,6 +1,41 @@
 <style scoped lang="less">
-	
-	
+	.l-reply{
+        //border-top:1px solid #d7dde4;
+        height: 350px;
+        overflow-y: auto;
+        padding: 10px 20px 10px 10px;
+        &:first-child{
+            text-align: center;
+        }
+        .l-date{
+            text-align: center;
+            width:auto;
+            background-color: #d7dde4;
+            color:#fff;
+            font-size: 9px;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+        .l-left{
+            width: 100%;
+            float: left;
+            padding: 5px 0;
+            .l-p{
+                display: inline-block;
+                float:left;
+            }
+        }
+        .l-right{
+            padding: 5px 0;
+            width: 100%;
+            float:right;
+            .l-p{
+                display: inline-block;
+                float:right;
+            }
+        }
+
+    }
 </style>
 <template>
     <l-header active-key="1"></l-header>
@@ -16,16 +51,27 @@
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm"  inline>
                         <Form-item prop="storeName">
-                            <i-input type="text" :value.sync="seachForm.storeName" placeholder="模糊查询">
-                                <span slot="prepend">标题</span>
-                            </i-input>
+                            <div class="l-sel-inline">
+                                <span slot="prepend">提交日期</span>
+                                <Date-picker type="date" :value="seachForm.feedbackTimeStr" format="yyyy-MM-dd" @on-change="strDateChange"  placeholder="选择日期"></Date-picker>
+                            </div>
+                        </Form-item>
+                        <Form-item prop="storeName">
+                            <div class="l-sel-inline">
+                                <span slot="prepend">开始日期</span>
+                                <Date-picker type="date" :value="seachForm.feedbackTimeBegin" format="yyyy-MM-dd" @on-change="startDateChange"  placeholder="选择日期"></Date-picker>
+                            </div>
+                        </Form-item>
+                        <Form-item prop="storeName">
+                            <div class="l-sel-inline">
+                                <span slot="prepend">结束日期</span>
+                                <Date-picker type="date" :value="seachForm.feedbackTimeEnd" format="yyyy-MM-dd" @on-change="endDateChange" placeholder="选择日期"></Date-picker>
+                            </div>
                         </Form-item>
                         <Form-item>
                             <i-button type="ghost" icon="search" @click="search('formInline')">搜索</i-button>
                         </Form-item>
-                        <Form-item>
-                            <i-button type="primary" icon="ios-plus-empty" @click="add">新增</i-button>
-                        </Form-item>
+                        
                     </i-form>
                 </div>
                 <div class="layout-content" :style="{ height:contentHeight + 'px' }">
@@ -44,12 +90,55 @@
         <Modal
             :visible.sync="addModal"
             title="新增/编辑"
-            @on-ok="modalOk"
-            width="700"
-            loading
+            width="580"
             :mask-closable="false" 
             scrollable=>
-            
+            <i-form :model="modalForm" label-position="right" :label-width="100">
+                <Form-item label="反馈标题：">
+                    {{modalForm.title}}
+                </Form-item>
+                <Form-item label="反馈内容：">
+                    {{modalForm.content}}
+                </Form-item>
+                <Form-item label="回复历史：">
+                    <div class="l-reply">
+                        <div v-for="item in modalForm.feedBackReplyList">
+                            <span class="l-date">{{item.replyTime}}</span>
+                            <div class="l-left" v-if="item.replyType==1">
+                                <div class="l-p">提问人：</div>
+                                <div class="fade-transition ivu-tooltip-popper l-chat left" x-placement="right">
+                                    <div class="ivu-tooltip-content">
+                                        <div class="ivu-tooltip-arrow"></div>
+                                        <div class="ivu-tooltip-inner">
+                                            <p>{{item.replyCont}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="l-right" v-else>
+                                <div class="l-p">：客服人员</div>
+                                <div class="fade-transition ivu-tooltip-popper l-chat right" x-placement="left" >
+                                    <div class="ivu-tooltip-content">
+                                        <div class="ivu-tooltip-arrow"></div>
+                                        <div class="ivu-tooltip-inner">
+                                            <p>{{item.replyCont}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                </Form-item>
+                <Form-item v-show="!isLook" label="回复：">
+                    <i-input type="textarea" :value.sync="modalForm.replyCont" :rows="3" placeholder="请输入..." ></i-input>
+                 </Form-item>
+            </i-form>
+            <div slot="footer">
+                <i-button type="ghost" size="large" @click="addModal=fasle">取消</i-button>
+                <i-button type="primary" size="large" :loading="modelLoading" @click="modalOk">确定</i-button>
+            </div>
         </Modal>
     </div>
 </template>
@@ -68,7 +157,9 @@ import LTitle from '../components/title'
 				self:this,
 				tableData:[],
 				seachForm:{
-					storeName:''
+					feedbackTimeStr:'',
+                    feedbackTimeBegin:'',
+                    feedbackTimeEnd:''
 				},
 				leftMenu:true,
 				spanLeft: 4,
@@ -81,70 +172,138 @@ import LTitle from '../components/title'
                         align: 'center',
                         render (row, column, index) {
                             return `
-                            <i-button type="ghost" size="small" icon="edit" @click="update(${row.id})">修改</i-button>
-                            <Poptip
-                                confirm
-                                title="您确认删除这条内容吗？"
-                                @on-ok="remove(${row.id})">
-                                <i-button type="ghost" icon="ios-trash" size="small">删除</i-button>
-                            </Poptip>`;
+                            <i-button type="primary" size="small" icon="reply" @click="reply(${row.id})">回复</i-button>
+                            <i-button type="primary" size="small" icon="eye" @click="look(${row.id})">查看</i-button>
+                            `;
                         }   
                     },
                     {
-                        title: '门店名称',
+                        title: '反馈标题',
                         className:'l-min-width',
                         width: 150,
-                        key: 'storeName',
+                        key: 'title',
                         render (row, column, index) {
-                            return `<strong>${row.storeName}</strong>`;
+                            return `<strong>${row.title}</strong>`;
                         }
                     },
                     {
-                        title: '营业时间',
+                        title: '反馈内容',
                         className:'l-min-width',
-                        key: 'openTime'
+                        key: 'content'
                     },
                     {
-                        title: '工作电话',
+                        title: '反馈状态',
                         className:'l-min-width',
-                        key: 'workPhone'
+                        key: 'state',
+                        render(row,column,index){
+                            return `{{getStatusName(${row.state})}}`;
+                        }
                     },
                     {
-                        title: '门店地址',
+                        title: '反馈时间',
                         className:'l-m-min-width',
-                        key: 'address'
+                        key: 'feedbackTime'
                     }
                     
-                ]
+                ],
+                modalForm:{
+                    title:'',
+                    content:'',
+                    feedBackReplyList:[],
+                    replyCont:''
+                },
+                isLook:false,
+                modelLoading:false
 			}
 		},
 		ready(){
-			let self=this;
-            self.setContentHeight();
-            self.tableWidth=window.document.getElementsByClassName('layout-content')[0].offsetWidth-20;
+			this.getList();
 		},
 		methods:{
+            getStatusName(v){
+                switch(v){
+                    case 1:
+                    return "待回复";
+                    case 2:
+                    return "已回答";
+                    case 3:
+                    return "已查看";
+                    case 4:
+                    return "反馈人已查看";
+                }
+            },
+            getList(page=1,rows=10,feedbackTimeStr=null,feedbackTimeBegin=null,feedbackTimeEnd=null){
+                let self=this;
+                self.$Loading.start();
+                
+                server.getFeedback(page,rows,feedbackTimeStr,feedbackTimeBegin,feedbackTimeEnd).then((res)=>{
+                    self.$Loading.finish();
+                    self.tableData=res.data.rowsObject;
+                    self.rowsTotal=res.data.total;
+                })
+            },
 			modalOk(){
-
+                let self=this;
+                if(this.isLook){
+                    this.addModal=false;
+                    return
+                }
+                if(!this.modalForm.replyCont){
+                    self.$Notice.warning({
+                                title:'警告',
+                                desc:'请输入回复内容'
+                            })
+                    return;
+                }
+                self.modelLoading=true;
+                server.feedBackReply(self.modalForm.id,this.modalForm.replyCont).then((res)=>{
+                    if(res.success){
+                        self.$Notice.success({
+                            title:'回复成功'
+                        })
+                        server.getFeedbackByid(self.modalForm.id).then((res)=>{
+                            self.modalForm=res.data;
+                            self.backBottom();
+                            self.modelLoading=false;
+                            
+                        })
+                    }else{
+                        self.$Notice.error({
+                            title:'回复失败',
+                            desc:res.message
+                        })
+                        self.modelLoading=false;
+                    }
+                })
 			},
 			changePage(index){
-
+                this.pageIndex=index+0;
+                this.getList(index+0,10,this.seachForm.feedbackTimeStr,this.seachForm.feedbackTimeBegin,this.seachForm.feedbackTimeEnd);
 			},
 			search(name){
-
+                this.pageIndex=1;
+                this.getList(1,10,this.seachForm.feedbackTimeStr,this.seachForm.feedbackTimeBegin,this.seachForm.feedbackTimeEnd
+                    );
 			},
-			add(){
-
+			reply(id){
+                this.modalForm.feedBackReplyList=[];
+                this.isLook=false;
+                server.getFeedbackByid(id).then((res)=>{
+                    this.modalForm=res.data;
+                    this.backBottom();
+                })
+                this.addModal=true;
+                
 			},
-			update(id){
-
+			look(id){
+                this.isLook=true;
+                this.modalForm.feedBackReplyList=[];
+                server.getFeedbackByid(id).then((res)=>{
+                    this.modalForm=res.data;
+                    this.backBottom();
+                })
+                this.addModal=true;
 			},
-			remove(id){
-
-			},
-			setContentHeight(){
-                this.contentHeight=window.document.body.clientHeight-185;
-            },
             toggleClick () {
                 this.leftMenu=!this.leftMenu;
                 if (this.leftMenu) {
@@ -153,6 +312,21 @@ import LTitle from '../components/title'
                 } else {
                     this.spanRight = 24;
                 }
+            },
+            strDateChange(e){
+                this.seachForm.feedbackTimeStr=e;
+            },
+            startDateChange(e){
+                this.seachForm.feedbackTimeBegin=e;
+            },
+            endDateChange(e){
+                this.seachForm.feedbackTimeEnd=e;
+            },
+            backBottom(){
+                let obj=document.getElementsByClassName('l-reply')[0];
+                this.$nextTick(function () {
+                    obj.scrollTop=obj.clientHeight;
+                })
             }	
 		}
 	}

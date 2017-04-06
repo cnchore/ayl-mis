@@ -200,7 +200,7 @@ header{
 /*======单行下拉选择========*/
 .l-sel-inline{
 	display: flex;
-	width: 220px;
+	width: 278px;
 	span[slot=prepend]{
 		width: 63px;
 	    padding: 4px 7px;
@@ -217,10 +217,36 @@ header{
     	border-right: 0!important;
 	}
 	div{
-		width: 157px;
-		.ivu-select-selection{
+		width: 215px;
+		.ivu-select-selection,
+		.ivu-input{
 			border-bottom-left-radius: 0!important;
     		border-top-left-radius: 0!important;	
 		}
 	}
+}
+/*======会话========*/
+.l-chat{
+	position: relative;
+	display: block;
+	&.right{
+		float: right;
+		.ivu-tooltip-inner{
+			background-color: #3399ff;
+		}
+		.ivu-tooltip-arrow{
+			border-left-color: #3399ff;
+		}
+	}
+	&.left{
+		float: left;
+		.ivu-tooltip-inner{
+			background-color: #fff;
+			color: #657180;
+		}
+		.ivu-tooltip-arrow{
+			border-right-color: #fff;
+		}
+	}
+
 }

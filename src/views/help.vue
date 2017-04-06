@@ -1,67 +1,283 @@
+<style scoped lang="less">
+    
+    
+</style>
 <template>
-    <i-form v-ref:form-dynamic :model="formDynamic" :label-width="80">
-        <Form-item
-            v-for="item in formDynamic.items"
-            :label="'项目' + ($index + 1)"
-            :prop="'items.' + $index + '.value'"
-            :rules="{required: true, message: '项目' + ($index + 1) +'不能为空', trigger: 'blur'}">
-            <Row>
-                <i-col span="18">
-                    <i-input type="text" :value.sync="item.value" placeholder="请输入..."></i-input>
-                </i-col>
-                <i-col span="4" offset="1">
-                    <i-button type="ghost" @click="handleRemove(item)">删除</i-button>
-                </i-col>
-            </Row>
-        </Form-item>
-        <Form-item>
-            <Row>
-                <i-col span="12">
-                    <i-button type="dashed" long @click="handleAdd" icon="plus-round">新增</i-button>
-                </i-col>
-            </Row>
-        </Form-item>
-        <Form-item>
-            <i-button type="primary" @click="handleSubmit('formDynamic')">提交</i-button>
-            <i-button type="ghost" @click="handleReset('formDynamic')" style="margin-left: 8px">重置</i-button>
-        </Form-item>
-    </i-form>
+    <l-header active-key="1"></l-header>
+    <div class="layout">
+        <Row type="flex" class="l-row">
+            <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
+                <left-menu active-key="1-5"></left-menu>
+            </i-col>
+            <i-col :span="spanRight">
+                <div class="layout-header">
+                    <l-title @on-click="toggleClick"></l-title>
+                </div>
+                <div class="layout-breadcrumb">
+                    <i-form v-ref:form-inline :model="seachForm" inline>
+                        <Form-item prop="category">
+                            <div class="l-sel-inline">
+                                <span slot="prepend">问题类别</span>
+                                <i-select :model.sync="seachForm.type" clearable placeholder="请选择">
+                                    <i-option v-for="item in typeList" :value="item.value">{{ item.label }}</i-option>
+                                </i-select>
+                            </div>
+                        </Form-item>
+                        
+                        <Form-item>
+                            <i-button type="ghost" icon="search" @click="search('formInline')">搜索</i-button>
+                        </Form-item>
+                        <Form-item>
+                            <i-button type="primary" icon="ios-plus-empty" @click="add">新增</i-button>
+                        </Form-item>
+                    </i-form>
+                </div>
+                <div class="layout-content">
+                    <i-table :content="self" :columns="tableCol" :data="tableData"></i-table>
+                    <div style="margin: 10px;overflow: hidden">
+                        <div style="float: right;">
+                            <Page :total="rowsTotal" :current.sync="pageIndex" @on-change="changePage"></Page>
+                        </div>
+                    </div>
+                </div>
+                <div class="layout-copy">
+                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                </div>
+            </i-col>
+        </Row>
+        <Modal
+            :visible.sync="addModal"
+            title="新增/编辑"
+            @on-ok="modalOk"
+            width="580"
+            loading
+            :mask-closable="false" 
+            scrollable=>
+             <i-form v-ref:form-validate :model="modelForm" :rules="ruleValidate" :label-width="100">
+                <Form-item label="序号" prop="seq">
+                    <i-input :value.sync="modelForm.seq" placeholder="请输入序号"></i-input>
+                </Form-item>
+                <Form-item label="问题类型" prop="type">
+                    <i-select :model.sync="modelForm.type" placeholder="请选择">
+                        <i-option v-for="item in typeList" :value="item.value">{{ item.label }}</i-option>
+                    </i-select>
+                </Form-item>
+                <Form-item label="问题描述" prop="question">
+                    <i-input :value.sync="modelForm.question" placeholder="请输入问题描述"></i-input>
+                </Form-item>
+                <Form-item label="问题答案" prop="answer">
+                    <v-editor :input-content="modelForm.answer" :out-content.sync="outProp"></v-editor>
+                </Form-item>
+                
+        
+            </i-form>
+        </Modal>
+    </div>
 </template>
 <script>
-    export default {
-        data () {
-            return {
-                formDynamic: {
-                    items: [
-                        {
-                            value: ''
+import server from '../libs/server'
+import LeftMenu from '../components/left-menu'
+import LHeader from '../components/header'
+import Editor from '../components/editor'
+import LTitle from '../components/title'
+    export default{
+        components:{LHeader,'v-editor':Editor,LeftMenu,LTitle},
+        data(){
+            return{
+                
+                addModal:false,
+                rowsTotal:10,
+                pageIndex:1,
+                self:this,
+                tableData:[],
+                seachForm:{
+                    type:''
+                },
+                typeList:[{value:1,label:'设计师'},{value:2,label:'开拓者'},{value:3,label:'业主'}],
+                leftMenu:true,
+                spanLeft: 4,
+                spanRight: 20,
+                tableCol: [
+                    {
+                        title: '操作',
+                        key: 'action',
+                        className:'l-m-min-width',
+                        align: 'center',
+                        render (row, column, index) {
+                            return `
+                            <i-button type="primary" size="small" icon="edit" @click="update(${row.id})">修改</i-button>
+                            <Poptip 
+                                confirm
+                                title="您确认删除这条内容吗？"
+                                @on-ok="remove(${row.id})">
+                                <i-button type="primary" icon="ios-trash" size="small">删除</i-button>
+                            </Poptip>
+                            `;
+                        }   
+                    },
+                    {
+                        title: '问题类型',
+                        className:'l-min-width',
+                        key: 'type',
+                        render(row,column,index){
+                            return `{{getTypeName(${row.type})}}`;
                         }
+                    },
+                    {
+                        title: '问题标题',
+                        className:'l-min-width',
+                        key: 'question'
+                    }
+                    
+                ],
+                modelForm:{
+                    seq:'',
+                    question:'',
+                    answer:'',
+                    type:''
+                },
+
+                ruleValidate:{
+                    question:[
+                        { required: true, message: '问题不能为空', trigger: 'blur' }
+                    ],
+                    type:[
+                        { required: true, message: '类型不能为空', trigger: 'blur' }
                     ]
-                }
+                },
+                outProp:'',
+                outParams:'',
+                
+                isLook:false
             }
         },
-        methods: {
-            handleSubmit (name) {
-                this.$refs[name].validate((valid) => {
-                    if (valid) {
-                        console.log(this.formDynamic.items)
-                        this.$Message.success('提交成功!');
-                    } else {
-                        this.$Message.error('表单验证失败!');
+        ready(){
+            this.getList();
+        },
+        computed:{
+            
+        },
+        methods:{
+            getTypeName(value){
+                let _index=this.typeList.findIndex((v)=>v.value==value);
+                return this.typeList[_index].label;
+            },
+            getList(page=1,rows=10,type=null){
+                let self=this;
+                self.$Loading.start();
+                server.getHelp(page,rows,type).then((res)=>{
+                    self.$Loading.finish();
+                    self.tableData=res.data.rowsObject;
+                    self.rowsTotal=res.data.total;
+                })
+            },
+            modalOk(){
+                //新增
+                let self=this;
+                if(self.isLook){
+                    self.isLook=false;
+                    self.addModal=false;
+                    return;
+                }
+                self.modelForm.answer=self.outProp;
+                
+                
+                if(self.modelForm.id){
+                    server.updateHelp(self.modelForm).then((res)=>{
+                        if(res.success){
+                            self.$Notice.success({
+                                title:'修改成功'
+                            })
+                            self.addModal=false;
+                           self.getList(self.pageIndex,10,self.seachForm.type);
+                        }else{
+                            self.$Notice.error({
+                                title:'修改失败',
+                                desc:res.message
+                            })
+                        }
+                    })
+                }else{
+                    server.addHelp(self.modelForm).then((res)=>{
+                        if(res.success){
+                            self.$Notice.success({
+                                title:'新增成功'
+                            })
+                            self.addModal=false;
+                           self.getList(self.pageIndex,10,self.seachForm.type);
+                        }else{
+                            self.$Notice.error({
+                                title:'新增失败',
+                                desc:res.message
+                            })
+                        }
+                    });
+                }
+            },
+            changePage(index){
+                this.pageIndex=index+0;
+                this.getList(index+0,10,this.seachForm.type);
+            },
+            search(name){
+                this.pageIndex=1;
+                this.getList(1,10,this.seachForm.type);
+            },
+            add(){
+                this.isLook=false;
+                for (var obj in this.modelForm) {
+                    this.modelForm[obj]='';
+                }
+                
+                this.outProp='';
+                
+                this.addModal=true;
+            },
+            update(id){
+                let self=this;
+                self.isLook=false;
+                self.$Loading.start();
+                server.getHelpByid(id).then((res)=>{   
+                    self.$Loading.finish();
+
+                    return server.jsonParse(res.data);
+
+                }).then((list)=>{
+                    self.modelForm=list;
+                    if(!self.modelForm || !self.modelForm.id){
+                        return;
+                    }
+                    
+                    self.outProp=self.modelForm.answer;
+                    
+                    self.addModal=true;
+                })
+            },
+            remove(id){
+                let self=this;
+                server.delHelp(id).then((res)=>{
+                    if(res.success){
+                        self.$Notice.success({
+                            title:'删除成功',
+                            desc:res.message
+                        });
+                        self.getList(self.pageIndex,10,self.seachForm.type);
+                    }else{
+                        self.$Notice.error({
+                            title:'删除失败',
+                            desc:res.message
+                        });
                     }
                 })
             },
-            handleReset (name) {
-                this.$refs[name].resetFields();
-            },
-            handleAdd () {
-                this.formDynamic.items.push({
-                    value: ''
-                });
-            },
-            handleRemove (item) {
-                this.formDynamic.items.$remove(item);
-            }
+            toggleClick () {
+                this.leftMenu=!this.leftMenu;
+                if (this.leftMenu) {
+                    this.spanRight = 20;
+
+                } else {
+                    this.spanRight = 24;
+                }
+            }     
         }
     }
 </script>

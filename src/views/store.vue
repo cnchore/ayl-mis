@@ -227,12 +227,12 @@ import LTitle from '../components/title'
                         align: 'center',
                         render (row, column, index) {
                             return `
-                            <i-button type="ghost" size="small" icon="edit" @click="update(${row.id})">修改</i-button>
+                            <i-button type="primary" size="small" icon="edit" @click="update(${row.id})">修改</i-button>
                             <Poptip
                                 confirm
                                 title="您确认删除这条内容吗？"
                                 @on-ok="remove(${row.id})">
-                                <i-button type="ghost" icon="ios-trash" size="small">删除</i-button>
+                                <i-button type="primary" icon="ios-trash" size="small">删除</i-button>
                             </Poptip>`;
                         }   
                     },
@@ -336,7 +336,7 @@ import LTitle from '../components/title'
                     //<;>
                     self.defaultList=[];
                     self.avatarDefaultList=[]
-                    
+
                     if(self.formValidate.storeImgs){
                         let _list=self.formValidate.storeImgs.split('<;>');
                         _list.forEach(function(item){
