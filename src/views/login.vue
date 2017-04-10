@@ -98,7 +98,7 @@ import server,{ storage } from '../libs/server'
                         server.login(self.formValidate.name,self.formValidate.pwd).then((res)=>{
                             this.$Loading.finish();
                             if(res.success){
-                                storage.session.set('userInfo',self.formValidate);
+                                storage.session.set('userInfo',res.data.user);
                                 this.$router.go('/store');
                             }else{
                                 this.$Message.error(res.message);

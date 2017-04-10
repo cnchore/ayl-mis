@@ -1,5 +1,6 @@
 import util from './util'
 import qs from 'qs'
+import Vue from 'vue'
 
 const serverPath={
 	getDict:'/sys/dictionary/getList',
@@ -35,7 +36,21 @@ const serverPath={
 	getHelpByid:'/sys/help/getById',
 	addHelp:'/sys/help/add',
 	updateHelp:'/sys/help/update',
-	delHelp:'/sys/help/deleteById'
+	delHelp:'/sys/help/deleteById',
+	getCoupon:'/sys/coupon/getPage',
+	getAllCoupon:'/sys/coupon/getList',
+	getCouponByid:'/sys/coupon/getById',
+	addCoupon:'/sys/coupon/add',
+	updateCoupon:'/sys/coupon/update',
+	applyCoupon:'/sys/coupon/apply',
+	verifyCoupon:'/sys/coupon/verify',
+	changeCoupon:'/sys/coupon/changeState',
+	getCouponDetail:'/sys/couponDetail/getPage',
+	getAllCouponDetail:'/sys/couponDetail/getList',
+	getCouponDetailByid:'/sys/couponDetail/getById',
+	addCouponDetail:'/sys/couponDetail/add',
+	updateCouponDetail:'/sys/couponDetail/update',
+	changeCouponDetail:'/sys/couponDetail/changeState'
 
 }
 
@@ -154,6 +169,30 @@ export default {
 	    })
     	return promise
 	},
+	getJsonpPromise(url='',params={},requestName=''){
+		let ret = {}
+	    let promise = new Promise( (resolve) => {
+	      
+	        Vue.http.jsonp(util.serverPath+url,{
+		        	method:'GET',
+		        	headers: { 'content-type': 'application/x-www-form-urlencoded' },
+		        	params:params,
+		        	credientials:false,
+		        	emulateJSON:true
+	        	}).then((body)=>{
+	        		
+		          if(body.data){
+		            resolve(body.data)
+		          }else{
+		            resolve(ret)
+		          }
+		        }, (error)=>{
+		          resolve(ret)
+		          console.log(requestName,error);
+		        })
+	    })
+    	return promise
+	},
 	postPromise(url='',formData={},requestName=''){
 		let ret = {}
 	    let promise = new Promise( (resolve) => {
@@ -167,7 +206,26 @@ export default {
 		          if(body.data.success){
 		            resolve(body.data)
 		          }else{
-		            resolve(ret)
+		            resolve(body.data)
+		          }
+		        }, (error)=>{
+		          resolve(ret)
+		          console.log(requestName,error);
+		        })
+	    })
+    	return promise
+	},
+	postPromise1(url='',formData={},requestName=''){
+		let ret = {}
+	    let promise = new Promise( (resolve) => {
+	    	//let pData=JSON.stringify(formData);
+	        Vue.http.post(util.serverPath+url,qs.stringify(formData),{
+	        	headers: { 'content-type': 'application/x-www-form-urlencoded' }
+	        }).then((body)=>{
+		          if(body.data.success){
+		            resolve(body.data)
+		          }else{
+		            resolve(body.data)
 		          }
 		        }, (error)=>{
 		          resolve(ret)
@@ -374,5 +432,137 @@ export default {
 	},
 	delHelp(id){
     	return this.postPromise(serverPath.delHelp,{id},'delHelp');
+	},
+	//优惠券活动配置
+	getCoupon(page=1,rows=10,activityType=null,state=null){
+
+		return this.getPromise(serverPath.getCoupon,{page,rows,activityType,state},'getCoupon');
+	},
+	getAllCoupon(activityType=null,state=null){
+
+		return this.getPromise(serverPath.getAllCoupon,{activityType,state},'getAllCoupon');
+	},
+	getCouponByid(id){
+
+		return this.getPromise(serverPath.getCouponByid,{id},'getCouponByid');
+	},
+	addCoupon(formData){
+		let _list={
+			activityType:formData.activityType,             //类型：1线上活动    2线下活动    3电商活动
+			title:formData.title,                     //活动标题 	
+			summary:formData.summary,                  //活动摘要
+			location:formData.location,                  //活动地点
+			limitNum:formData.limitNum,                //活动人数限制
+			url:formData.url,                       //活动图
+			content:formData.content,                  //活动内容
+			couponFkid:formData.couponFkid,              //优惠券配置id
+			area:formData.area,                     //区域
+			province:formData.province,                 //省会
+			provinceId:formData.provinceId,              //省会id
+			city:formData.city,                     //城市
+			cityId:formData.cityId,                  //城市id
+			cityCode:formData.cityCode,                 //城市编码
+			areaId:formData.areaId,                  //区域id
+			startTimeStr:formData.startTimeStr,              //活动开始时间           		
+			endTimeStr:formData.endTimeStr             //活动结束时间
+		}
+    	return this.postPromise(serverPath.addCoupon,_list,'addCoupon');
+	},
+	updateCoupon(formData){
+		let _list={
+			id:formData.id,
+			activityType:formData.activityType,             //类型：1线上活动    2线下活动    3电商活动
+			title:formData.title,                     //活动标题 	
+			summary:formData.summary,                  //活动摘要
+			location:formData.location,                  //活动地点
+			limitNum:formData.limitNum,                //活动人数限制
+			url:formData.url,                       //活动图
+			content:formData.content,                  //活动内容
+			couponFkid:formData.couponFkid,              //优惠券配置id
+			area:formData.area,                     //区域
+			province:formData.province,                 //省会
+			provinceId:formData.provinceId,              //省会id
+			city:formData.city,                     //城市
+			cityId:formData.cityId,                  //城市id
+			cityCode:formData.cityCode,                 //城市编码
+			areaId:formData.areaId,                  //区域id
+			startTimeStr:formData.startTimeStr,              //活动开始时间           		
+			endTimeStr:formData.endTimeStr             //活动结束时间
+		}
+    	return this.postPromise(serverPath.updateCoupon,_list,'updateCoupon');
+	},
+	applyCoupon(id){
+    	return this.postPromise(serverPath.applyCoupon,{id},'applyCoupon');
+	},
+	verifyCoupon(id,isPass,curAuditOpinion=null){
+    	return this.postPromise(serverPath.verifyCoupon,{id,isPass,curAuditOpinion},'verifyCoupon');
+	},
+	changeCoupon(id){
+    	return this.postPromise(serverPath.changeCoupon,{id},'changeCoupon');
+	},
+	//优惠券明细配置
+	getAllCouponDetail(couponType=1,isEnabled=1){
+		return this.getPromise(serverPath.getAllCouponDetail,{couponType,isEnabled},'getAllCouponDetail');
+	},
+	getCouponDetail(page=1,rows=10,couponType=null,isEnabled=null){
+		return this.getPromise(serverPath.getCouponDetail,{page,rows,couponType,isEnabled},'getCouponDetail');
+	},
+	getCouponDetailByid(id){
+		return this.getPromise(serverPath.getCouponDetailByid,{id},'getCouponDetailByid');
+	},
+	addCouponDetail(formData){
+		let _list={
+			couponName:formData.couponName,
+			couponType:formData.couponType,
+			couponValue:formData.couponValue,
+			ruleDesc:formData.ruleDesc,
+			notice:formData.notice,
+			serviceTel:formData.serviceTel,
+			comments:formData.comments,
+			startTimeStr:formData.startTimeStr,
+			endTimeStr:formData.endTimeStr
+		}
+		if(formData.couponRuleList){
+			formData.couponRuleList.forEach((item,index)=>{
+				if(item.deratePrice){
+					_list["couponRuleList["+index+"].deratePrice"]=item.deratePrice;
+					_list["couponRuleList["+index+"].startPrice"]=item.startPrice;
+					_list["couponRuleList["+index+"].endPrice"]=item.endPrice;
+				}
+			})
+			
+		}
+    	return this.postPromise(serverPath.addCouponDetail,_list,'addCouponDetail');
+
+	},
+	updateCouponDetail(formData){
+		let _list={
+			id:formData.id,
+			couponName:formData.couponName,
+			couponType:formData.couponType,
+			couponValue:formData.couponValue,
+			ruleDesc:formData.ruleDesc,
+			notice:formData.notice,
+			serviceTel:formData.serviceTel,
+			comments:formData.comments,
+			startTimeStr:formData.startTimeStr,
+			endTimeStr:formData.endTimeStr
+		}
+		if(formData.couponRuleList){
+			formData.couponRuleList.forEach((item,index)=>{
+				if(item.deratePrice){
+					_list["couponRuleList["+index+"].id"]=item.id;
+					_list["couponRuleList["+index+"].deratePrice"]=item.deratePrice;
+					_list["couponRuleList["+index+"].startPrice"]=item.startPrice;
+					_list["couponRuleList["+index+"].endPrice"]=item.endPrice;
+				}
+			})
+			
+		}
+    	return this.postPromise(serverPath.updateCouponDetail,_list,'updateCouponDetail');
+	},
+	changeCouponDetail(id,isEnabled=1){
+    	return this.postPromise(serverPath.changeCouponDetail,{id,isEnabled},'changeCouponDetail');
+
 	}
 }

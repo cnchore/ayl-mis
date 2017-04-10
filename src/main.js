@@ -7,6 +7,7 @@ import 'iview/dist/styles/iview.css';
 import './global.less'
 import VueLazyload from 'vue-lazyload'
 import { storage } from './libs/server'
+import VueResource from 'vue-resource'
 
 
 Vue.use(VueLazyload,{	
@@ -16,6 +17,7 @@ Vue.use(VueLazyload,{
 })
 Vue.use(VueRouter);
 Vue.use(iView);
+Vue.use(VueResource);
 iView.LoadingBar.config({
     color: '#ff6600',
     height:5
@@ -41,7 +43,7 @@ router.beforeEach((transition) => {
     // if not, redirect to login page.
     let userInfo=storage.session.get('userInfo');
     //console.log(userInfo)
-    if( !(userInfo && userInfo.name) ){
+    if( !(userInfo && userInfo.userName) ){
         //let lc=window.document.location;
         //window.document.location.href=lc.origin+lc.pathname+'#!/login?redirect='+transition.to.path;
         //transition.abort();
