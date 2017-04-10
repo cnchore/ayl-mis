@@ -34,13 +34,25 @@ const routers = {
             require(['./views/feed-back.vue'], resolve);
         },
         meta: { requiresAuth: true,title:'会员反馈管理' }
-    }
-    ,
+    },
     '/help': {
         component(resolve) {
             require(['./views/help.vue'], resolve);
         },
         meta: { requiresAuth: true,title:'常见问题管理' }
+    },
+    '/coupon': {
+        component(resolve) {
+            require(['./views/coupon.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'优惠券活动配置' }
+    },
+    '/coupon/details': {
+        component(resolve) {
+            require(['./views/coupon-details.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'优惠券明细配置' }
     }
+
 };
 export default routers;

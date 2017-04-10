@@ -71,6 +71,12 @@
                     case '1-5':
                         this.$router.go('/help');
                         break;
+                    case '1-6':
+                        this.$router.go('/coupon');
+                        break;
+                    case '1-7':
+                        this.$router.go('/coupon/details');
+                        break;
                 }
             }
 		}
