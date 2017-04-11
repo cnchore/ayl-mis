@@ -7,8 +7,7 @@ import 'iview/dist/styles/iview.css';
 import './global.less'
 import VueLazyload from 'vue-lazyload'
 import { storage } from './libs/server'
-import VueResource from 'vue-resource'
-
+//import VueResource from 'vue-resource'
 
 Vue.use(VueLazyload,{	
 	preLoad:1.3,
@@ -17,7 +16,7 @@ Vue.use(VueLazyload,{
 })
 Vue.use(VueRouter);
 Vue.use(iView);
-Vue.use(VueResource);
+//Vue.use(VueResource);
 iView.LoadingBar.config({
     color: '#ff6600',
     height:5
@@ -52,7 +51,7 @@ router.beforeEach((transition) => {
             query: { redirect: transition.to.fullPath }
           })
     } else {
-      transition.next()
+      transition.next();
     }
   } else {
     transition.next() // 确保一定要调用 next()
@@ -67,6 +66,6 @@ router.afterEach((transition) => {
     }
 });
 router.redirect({
-    '*': "/index"
+    '*': "/login"
 });
 router.start(App, '#app');

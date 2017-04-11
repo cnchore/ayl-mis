@@ -11,7 +11,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title @on-click="toggleClick"></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm" inline>
@@ -31,9 +31,7 @@
                         <Form-item>
                             <i-button type="ghost" icon="search" @click="search('formInline')">搜索</i-button>
                         </Form-item>
-                        <Form-item>
-                            <i-button type="primary" icon="ios-plus-empty" @click="add">新增</i-button>
-                        </Form-item>
+                        
                     </i-form>
                 </div>
                 <div class="layout-content">
@@ -210,11 +208,11 @@
     </div>
 </template>
 <script>
-import server from '../libs/server'
-import LeftMenu from '../components/left-menu'
-import LHeader from '../components/header'
-import Editor from '../components/editor'
-import LTitle from '../components/title'
+import server from '../../libs/server'
+import LeftMenu from '../../components/left-menu'
+import LHeader from '../../components/header'
+import Editor from '../../components/editor'
+import LTitle from '../../components/title'
 	export default{
 		components:{LHeader,'v-editor':Editor,LeftMenu,LTitle},
 		data(){
@@ -235,24 +233,7 @@ import LTitle from '../components/title'
 				spanLeft: 4,
                 spanRight: 20,
 				tableCol: [
-                    {
-                        title: '操作',
-                        key: 'action',
-                        className:'l-m-min-width',
-                        align: 'center',
-                        render (row, column, index) {
-                            return `
-                            <i-button type="primary" size="small" icon="edit" @click="update(${row.id})">修改</i-button>
-                            <Poptip 
-                                confirm
-                                title="您确认删除这条内容吗？"
-                                @on-ok="remove(${row.id})">
-                                <i-button type="primary" icon="ios-trash" size="small">删除</i-button>
-                            </Poptip>
-                            <i-button type="primary" size="small" icon="eye" @click="look(${row.id})">查看</i-button>
-                            `;
-                        }   
-                    },
+                    
                     {
                         title: '产品类别',
                         className:'l-min-width',
@@ -267,6 +248,25 @@ import LTitle from '../components/title'
                         title: '适用范围',
                         className:'l-min-width',
                         key: 'application'
+                    },
+                    {
+                        title: '操作',
+                        key: 'action',
+                        className:'l-m-min-width',
+                        fixed:'right',
+                        align: 'center',
+                        render (row, column, index) {
+                            return `
+                            <i-button type="primary" size="small" icon="edit" @click="update(${row.id})">修改</i-button>
+                            <Poptip 
+                                confirm
+                                title="您确认删除这条内容吗？"
+                                @on-ok="remove(${row.id})">
+                                <i-button type="primary" icon="ios-trash" size="small">删除</i-button>
+                            </Poptip>
+                            <i-button type="primary" size="small" icon="eye" @click="look(${row.id})">查看</i-button>
+                            `;
+                        }   
                     }
                     
                 ],
@@ -531,15 +531,7 @@ import LTitle from '../components/title'
                     self.addModal=true;
                 })
             },
-            toggleClick () {
-                this.leftMenu=!this.leftMenu;
-                if (this.leftMenu) {
-                    this.spanRight = 20;
-
-                } else {
-                    this.spanRight = 24;
-                }
-            },
+            
             //===========缩略图方法=start====================
             handleView (name) {
                 this.imgName = name;

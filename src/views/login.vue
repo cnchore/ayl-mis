@@ -86,26 +86,26 @@ import server,{ storage } from '../libs/server'
             }
         },
         ready(){
-            console.log(this.$router.query);
-            
+            //console.log(this.$router.query);
+           
         },
         methods: {
             handleSubmit (name) {
                 let self=this;
-                this.$refs[name].validate((valid) => {
+                self.$refs[name].validate((valid) => {
                     if (valid) {
-                        this.$Loading.start();
+                        self.$Loading.start();
                         server.login(self.formValidate.name,self.formValidate.pwd).then((res)=>{
-                            this.$Loading.finish();
+                            self.$Loading.finish();
                             if(res.success){
                                 storage.session.set('userInfo',res.data.user);
-                                this.$router.go('/store');
+                                self.$router.go('/store');
                             }else{
-                                this.$Message.error(res.message);
+                                self.$Message.error(res.message);
                             }
                         })
                     } else {
-                        this.$Message.error('表单验证失败!');
+                        self.$Message.error('表单验证失败!');
                     }
                 })
             },

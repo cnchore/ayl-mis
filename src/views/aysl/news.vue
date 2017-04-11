@@ -11,7 +11,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title @on-click="toggleClick"></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm"  inline>
@@ -23,9 +23,7 @@
                         <Form-item>
                             <i-button type="ghost" icon="search" @click="search('formInline')">搜索</i-button>
                         </Form-item>
-                        <Form-item>
-                            <i-button type="primary" icon="ios-plus-empty" @click="add">新增</i-button>
-                        </Form-item>
+                       
                     </i-form>
                 </div>
                 <div class="layout-content">
@@ -99,11 +97,11 @@
     </div>
 </template>
 <script>
-import server from '../libs/server'
-import LeftMenu from '../components/left-menu'
-import LHeader from '../components/header'
-import Editor from '../components/editor'
-import LTitle from '../components/title'
+import server from '../../libs/server'
+import LeftMenu from '../../components/left-menu'
+import LHeader from '../../components/header'
+import Editor from '../../components/editor'
+import LTitle from '../../components/title'
 
 	export default{
 		components:{LHeader,LTitle,LeftMenu,'v-editor':Editor},
@@ -135,26 +133,7 @@ import LTitle from '../components/title'
                     ]
                 },
 				tableCol: [
-                    {
-                        title: '操作',
-                        key: 'action',
-                        className:'l-m-min-width',
-                        align: 'center',
-                        render (row, column, index) {
-                            return `
-                            <i-button type="primary" v-show="${row.status}==1" size="small" icon="edit" @click="update(${row.id})">修改</i-button>
-                            <i-button type="primary" v-show="${row.status}==1" size="small" icon="forward" @click="publish(${row.id})">发布</i-button>
-                            <i-button type="primary" v-show="${row.status}==2" size="small" icon="stop" @click="publish(${row.id})">结束发布</i-button>
-                            <Poptip v-show="${row.status}==1"
-                                confirm
-                                title="您确认删除这条内容吗？"
-                                @on-ok="remove(${row.id})">
-                                <i-button type="primary" icon="ios-trash" size="small">删除</i-button>
-                            </Poptip>
-                            <i-button type="primary" size="small" icon="eye" @click="look(${row.id})">查看</i-button>
-                            `;
-                        }   
-                    },
+                    
                     {
                         title: '标题',
                         className:'l-m-min-width',
@@ -180,6 +159,27 @@ import LTitle from '../components/title'
                         title: '发布时间',
                         className:'l-min-width',
                         key: 'publishTime'
+                    },
+                    {
+                        title: '操作',
+                        key: 'action',
+                        className:'l-m-min-width',
+                        fixed:'right',
+                        align: 'center',
+                        render (row, column, index) {
+                            return `
+                            <i-button type="primary" v-show="${row.status}==1" size="small" icon="edit" @click="update(${row.id})">修改</i-button>
+                            <i-button type="primary" v-show="${row.status}==1" size="small" icon="forward" @click="publish(${row.id})">发布</i-button>
+                            <i-button type="primary" v-show="${row.status}==2" size="small" icon="stop" @click="publish(${row.id})">结束发布</i-button>
+                            <Poptip v-show="${row.status}==1"
+                                confirm
+                                title="您确认删除这条内容吗？"
+                                @on-ok="remove(${row.id})">
+                                <i-button type="primary" icon="ios-trash" size="small">删除</i-button>
+                            </Poptip>
+                            <i-button type="primary" size="small" icon="eye" @click="look(${row.id})">查看</i-button>
+                            `;
+                        }   
                     }
                     
                 ],
@@ -361,15 +361,7 @@ import LTitle from '../components/title'
                     }
                 })
             },
-            toggleClick () {
-                this.leftMenu=!this.leftMenu;
-                if (this.leftMenu) {
-                    this.spanRight = 20;
-
-                } else {
-                    this.spanRight = 24;
-                }
-            },
+            
             //===========缩略图方法=start====================
             handleView (name) {
                 this.imgName = name;

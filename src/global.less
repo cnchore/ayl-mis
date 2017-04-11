@@ -1,4 +1,5 @@
 body,#app{
+	
 	overflow: hidden;
 	.wangEditor-container{
 	    border-radius: 4px;
@@ -25,7 +26,7 @@ img[lazy=loading],img {
 }
 header{
 	background-color: #39f;
-	margin-bottom: 15px;
+	//margin-bottom: 15px;
 	.ivu-menu{
 		line-height: 80px;
 		height: 80px; 
@@ -65,14 +66,14 @@ header{
 	padding: 10px 15px 0;
 	.ivu-form{
 		.ivu-form-item{
-			margin-bottom: 0;
+			margin-bottom: 15px;
 		} 
 	}
 
 }
 .layout-content{
-	min-height: 632px;
-	margin: 15px;
+	//min-height: calc(100vh-30rem);
+	margin: 0px 15px 15px 15px;
 	overflow: hidden;
 	background: #fff;
 	border-radius: 4px;
@@ -200,9 +201,9 @@ header{
 /*======单行下拉选择========*/
 .l-sel-inline{
 	display: flex;
-	width: 278px;
+	width: 287px;
 	span[slot=prepend]{
-		width: 63px;
+		width: 72px;
 	    padding: 4px 7px;
 	    font-size: inherit;
 	    font-weight: 400;
@@ -250,3 +251,23 @@ header{
 	}
 
 }
+/*======页面字体大小=start=======*/
+/*
+.ivu-menu,.ivu-menu-item,
+.ivu-menu-horizontal .ivu-menu-submenu .ivu-select-dropdown .ivu-menu-item{
+	font-size: 16px!important;;
+}
+body,#app,
+.ivu-table,.ivu-btn,.ivu-input,.ivu-input-group,
+.ivu-form .ivu-form-item-label,
+.ivu-modal-header p, .ivu-modal-header-inner,
+.ivu-form-item-content,
+.ivu-select-single .ivu-select-selection .ivu-select-placeholder, .ivu-select-single .ivu-select-selection .ivu-select-selected-value{
+	font-size: 14px!important;;
+}
+.ivu-input,
+.ivu-select-single .ivu-select-selection{
+	height: 35px!important;;
+}
+*/
+/*======页面字体大小=end=======*/

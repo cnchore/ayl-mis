@@ -11,7 +11,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title @on-click="toggleClick"></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm" inline>
@@ -34,9 +34,7 @@
                         <Form-item>
                             <i-button type="ghost" icon="search" @click="search('formInline')">搜索</i-button>
                         </Form-item>
-                        <Form-item>
-                            <i-button type="primary" icon="ios-plus-empty" @click="add">新增</i-button>
-                        </Form-item>
+                        
                     </i-form>
                 </div>
                 <div class="layout-content">
@@ -128,10 +126,10 @@
     </div>
 </template>
 <script>
-import server,{storage} from '../libs/server'
-import LeftMenu from '../components/left-menu'
-import LHeader from '../components/header'
-import LTitle from '../components/title'
+import server,{storage} from '../../libs/server'
+import LeftMenu from '../../components/left-menu'
+import LHeader from '../../components/header'
+import LTitle from '../../components/title'
 	export default{
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
@@ -144,40 +142,16 @@ import LTitle from '../components/title'
 				self:this,
 				tableData:[],
 				seachForm:{
-					couponTypeList:'',
-                    isEnabledList:''
+					couponType:'',
+                    isEnabled:''
 				},
                 couponTypeList:[{value:1,label:'现金券'}],
-                isEnabled:[{value:0,label:'禁用'},{value:1,label:'启用'}],
+                isEnabledList:[{value:0,label:'禁用'},{value:1,label:'启用'}],
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
 				tableCol: [
-                    {
-                        title: '操作',
-                        key: 'action',
-                        className:'l-m-min-width',
-                        align: 'center',
-                        render (row, column, index) {
-                            return `
-                                <i-button type="primary" size="small" icon="edit" @click="modalShow(${row.id})">修改</i-button>
-                                <Poptip 
-                                    confirm
-                                    title="您确认启用吗？"
-                                    v-show="${row.isEnabled}==0"
-                                    @on-ok="changeState(${row.id},true)">
-                                    <i-button type="primary" size="small" >启用</i-button>
-                                </Poptip>
-                                <Poptip 
-                                    confirm
-                                    title="您确认禁用吗？"
-                                    v-show="${row.isEnabled}==1"
-                                    @on-ok="changeState(${row.id},false)">
-                                    <i-button type="primary"  size="small" >禁用</i-button>
-                                </Poptip>
-                            `;
-                        }   
-                    },
+                    
                     {
                         title: '是否启用',
                         className:'l-min-width',
@@ -218,8 +192,33 @@ import LTitle from '../components/title'
                         title: '客服电话',
                         className:'l-min-width',
                         key: 'serviceTel'
+                    },
+                    {
+                        title: '操作',
+                        key: 'action',
+                        className:'l-m-min-width',
+                        fixed:'right',
+                        align: 'center',
+                        render (row, column, index) {
+                            return `
+                                <i-button type="primary" size="small" icon="edit" @click="modalShow(${row.id})">修改</i-button>
+                                <Poptip 
+                                    confirm
+                                    title="您确认启用吗？"
+                                    v-show="${row.isEnabled}==0"
+                                    @on-ok="changeState(${row.id},true)">
+                                    <i-button type="primary" size="small" >启用</i-button>
+                                </Poptip>
+                                <Poptip 
+                                    confirm
+                                    title="您确认禁用吗？"
+                                    v-show="${row.isEnabled}==1"
+                                    @on-ok="changeState(${row.id},false)">
+                                    <i-button type="primary"  size="small" >禁用</i-button>
+                                </Poptip>
+                            `;
+                        }   
                     }
-                    
                 ],
                 modelForm:{
                     id:'',
@@ -409,17 +408,7 @@ import LTitle from '../components/title'
                         });
                     }
                 })
-            },
-            
-            toggleClick () {
-                this.leftMenu=!this.leftMenu;
-                if (this.leftMenu) {
-                    this.spanRight = 20;
-
-                } else {
-                    this.spanRight = 24;
-                }
-            }	
+            }
 		}
 	}
 </script>

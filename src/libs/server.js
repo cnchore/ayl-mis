@@ -10,10 +10,12 @@ const serverPath={
 	getStoreListByid:'/sys/store/getById',
 	updateStore:'/sys/store/update',
 	deleteStoreByid:'/sys/store/deleteById',
+
 	getAgentUserList:'/sys/agentUser/getList',
 	getGpsByAddress:'/common/getGpsByAddress',
 	login:'/sys/user/login',
 	loginOut:'/sys/user/loginOut',
+
 	getPublish:'/mem/publish/getPage',
 	getAllPublish:'/mem/publish/getList',
 	getPublishByid:'/mem/publish/getById',
@@ -21,22 +23,26 @@ const serverPath={
 	updatePublish:'/mem/publish/update',
 	deletePublishByid:'/mem/publish/deleteById',
 	publish:'/mem/publish/publish',
+
 	getProduct:'/sys/product/getPage',
 	getAllProduct:'/sys/product/getList',
 	getProductByid:'/sys/product/getById',
 	addProduct:'/sys/product/add',
 	updateProduct:'/sys/product/update',
 	delProduct:'/sys/product/deleteById',
+
 	getFeedback:'/mem/feedBack/getPage',
 	getAllFeedback:'/mem/feedBack/getList',
 	getFeedbackByid:'/mem/feedBack/getById',
 	feedBackReply:'/mem/feedBack/reply',
+
 	getHelp:'/sys/help/getPage',
 	getAllHelp:'/sys/help/getList',
 	getHelpByid:'/sys/help/getById',
 	addHelp:'/sys/help/add',
 	updateHelp:'/sys/help/update',
 	delHelp:'/sys/help/deleteById',
+
 	getCoupon:'/sys/coupon/getPage',
 	getAllCoupon:'/sys/coupon/getList',
 	getCouponByid:'/sys/coupon/getById',
@@ -45,12 +51,22 @@ const serverPath={
 	applyCoupon:'/sys/coupon/apply',
 	verifyCoupon:'/sys/coupon/verify',
 	changeCoupon:'/sys/coupon/changeState',
+
 	getCouponDetail:'/sys/couponDetail/getPage',
 	getAllCouponDetail:'/sys/couponDetail/getList',
 	getCouponDetailByid:'/sys/couponDetail/getById',
 	addCouponDetail:'/sys/couponDetail/add',
 	updateCouponDetail:'/sys/couponDetail/update',
-	changeCouponDetail:'/sys/couponDetail/changeState'
+	changeCouponDetail:'/sys/couponDetail/changeState',
+
+	getGiftSend:'/mem/giftSend/getPage',
+	getAllGiftSend:'/mem/giftSend/getList',
+	getActInfo:'/mem/giftSend/getActInfo',
+	upateGiftSendState:'/mem/giftSend/updateState',
+
+	getParnerAccount:'/partner/partnerAccount/getPage',
+	getAllParnerAccount:'/partner/partnerAccount/getList',
+	verifyParnerAccount:'/partner/partnerAccount/verify'
 
 }
 
@@ -110,6 +126,10 @@ export let storage = {
     get(key) {
       if(!key) return null
       return JSON.parse(window.sessionStorage.getItem(STORE_PREFIX + key))
+    },
+    remove(key){
+    	if(!key) return null;
+    	window.sessionStorage.removeItem(STORE_PREFIX+key);
     } 
   },
   local: {
@@ -563,6 +583,35 @@ export default {
 	},
 	changeCouponDetail(id,isEnabled=1){
     	return this.postPromise(serverPath.changeCouponDetail,{id,isEnabled},'changeCouponDetail');
+
+	},
+	//获取礼品管理
+	getGiftSend(page=1,rows=10,createTime=null,updateTime=null,consigneePhoneLike=null,consigneeLike=null){
+		return this.getPromise(serverPath.getGiftSend,{page,rows,createTime,updateTime,consigneePhoneLike,consigneeLike},'getGiftSend');
+
+	},
+	getAllGiftSend(createTime=null,updateTime=null,consigneePhoneLike=null,consigneeLike=null){
+		return this.getPromise(serverPath.getAllGiftSend,{createTime,updateTime,consigneePhoneLike,consigneeLike},'getAllGiftSend');
+
+	},
+	getActInfo(id){
+		return this.getPromise(serverPath.getActInfo,{id},'getActInfo');
+
+	},
+	upateGiftSendState(id){
+    	return this.postPromise(serverPath.upateGiftSendState,{id},'upateGiftSendState');
+
+	},
+	//合伙人账号管理
+	getParnerAccount(formData){
+		return this.getPromise(serverPath.getParnerAccount,formData,'getParnerAccount');
+	},
+	getAllParnerAccount(formData){
+		return this.getPromise(serverPath.getAllParnerAccount,formData,'getAllParnerAccount');
+
+	},
+	verifyParnerAccount(id,isPass=false){
+    	return this.postPromise(serverPath.verifyParnerAccount,{id,isPass},'verifyParnerAccount');
 
 	}
 }
