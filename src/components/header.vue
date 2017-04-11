@@ -1,11 +1,11 @@
  <template>                  
     <header>
             <Row>
-                <i-col span="4">
+                <i-col :span="spanLeft">
                     <div class="logo"></div>
                 </i-col>
-                <i-col span="20">
-                 <Menu mode="horizontal" theme="primary" active-key="1">
+                <i-col :span="spanRight">
+                 <Menu mode="horizontal" theme="primary" :active-key="activeKey" @on-select="handleSelect">
                     <Menu-item key="1">
                         <Icon type="ios-paper"></Icon>
                         安居艾臣
@@ -59,15 +59,65 @@
     </header>
 </template> 
 <script>
+import server,{ storage } from '../libs/server'
     export default{
         props: {
-          activeKey:{
-            type:String,
-            default:'1'
-          }
+            activeKey:{
+                type:String,
+                default:'1'
+            },
+            spanLeft:{
+                type:Number,
+                default:4
+            },
+            spanRight:{
+                type:Number,
+                default:20
+            }
+        },
+        ready(){
+            let w=window.document.body.clientWidth;
+            if(w&&w>=1440){
+                this.spanLeft=3;
+                this.spanRight = 21;
+            }else if(w&&w>=2160){
+                this.spanLeft=2;
+                this.spanRight = 22;
+            }else{
+                this.spanLeft=4;
+                this.spanRight = 20;
+            }
         },
         methods:{
-            
+            handleSelect(key){
+                //this.$Message.info(key);
+                switch(key){
+                    case '1':
+                        this.$router.go('/store');
+                        break;
+                    case '2':
+                        this.$router.go('/partner/account');
+                        
+                        break;
+                    case '5-3':
+                        this.loginOut();
+                        break;
+                }
+            },
+            loginOut(){
+                let self=this;
+                self.$Loading.start();
+                server.loginOut().then((res)=>{
+                    self.$Loading.finish();
+                    if(res.success){
+                        storage.session.remove('userInfo');
+                        self.$router.go('login')
+                        
+                    }else{
+                        self.$Message.error(res.message);
+                    }
+                })
+            }
         }
     }
 </script>

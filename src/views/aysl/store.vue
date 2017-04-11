@@ -10,7 +10,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title @on-click="toggleClick"></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="formInline"  inline>
@@ -22,9 +22,7 @@
                         <Form-item>
                             <i-button type="ghost" icon="search" @click="search('formInline')">搜索</i-button>
                         </Form-item>
-                        <Form-item>
-                            <i-button type="primary" icon="ios-plus-empty" @click="add">新增</i-button>
-                        </Form-item>
+                        
                     </i-form>
                 </div>
                 <div class="layout-content">
@@ -179,10 +177,10 @@
     </div>
 </template>
 <script>
-import server from '../libs/server'
-import LHeader from '../components/header'
-import LeftMenu from '../components/left-menu'
-import LTitle from '../components/title'
+import server from '../../libs/server'
+import LHeader from '../../components/header'
+import LeftMenu from '../../components/left-menu'
+import LTitle from '../../components/title'
     export default {
         components:{LeftMenu,LTitle,LHeader},
         data () {
@@ -220,22 +218,7 @@ import LTitle from '../components/title'
                 agentList:[],
                 self: this,
                 storeCols: [
-                    {
-                        title: '操作',
-                        key: 'action',
-                        className:'l-min-width',
-                        align: 'center',
-                        render (row, column, index) {
-                            return `
-                            <i-button type="primary" size="small" icon="edit" @click="update(${row.id})">修改</i-button>
-                            <Poptip
-                                confirm
-                                title="您确认删除这条内容吗？"
-                                @on-ok="remove(${row.id})">
-                                <i-button type="primary" icon="ios-trash" size="small">删除</i-button>
-                            </Poptip>`;
-                        }   
-                    },
+                    
                     {
                         title: '门店名称',
                         className:'l-min-width',
@@ -258,6 +241,23 @@ import LTitle from '../components/title'
                         title: '门店地址',
                         className:'l-m-min-width',
                         key: 'address'
+                    },
+                    {
+                        title: '操作',
+                        key: 'action',
+                        className:'l-min-width',
+                        fixed:'right',
+                        align: 'center',
+                        render (row, column, index) {
+                            return `
+                            <i-button type="primary" size="small" icon="edit" @click="update(${row.id})">修改</i-button>
+                            <Poptip
+                                confirm
+                                title="您确认删除这条内容吗？"
+                                @on-ok="remove(${row.id})">
+                                <i-button type="primary" icon="ios-trash" size="small">删除</i-button>
+                            </Poptip>`;
+                        }   
                     }
                     
                 ],
@@ -311,15 +311,7 @@ import LTitle from '../components/title'
                    // self.agentList=res;
                 })
             },
-            toggleClick () {
-                this.leftMenu=!this.leftMenu;
-                if (this.leftMenu) {
-                    this.spanRight = 20;
-
-                } else {
-                    this.spanRight = 24;
-                }
-            },
+            
             update(id){
                 let self=this;
                 

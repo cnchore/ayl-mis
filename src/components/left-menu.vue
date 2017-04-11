@@ -3,7 +3,7 @@
 	
 </style>
 <template>
-	<Menu :active-key="activeKey"  width="auto" @on-select="handleSelect">
+	<Menu :active-key="activeKey" v-show="activeMenu==='1'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="1-1">
                 <Icon type="document-text"></Icon>
@@ -40,6 +40,40 @@
             </Menu-item>
        
     </Menu>
+    <Menu :active-key="activeKey" v-show="activeMenu==='2'" width="auto" @on-select="handleSelect">
+        
+            <Menu-item key="2-1">
+                <Icon type="document-text"></Icon>
+                合伙人账号管理
+            </Menu-item>
+            <Menu-item key="2-2">
+                <Icon type="document"></Icon>
+                现金券配置管理
+            </Menu-item>
+            <Menu-item key="2-3">
+                <Icon type="document"></Icon>
+                现金券申请管理
+            </Menu-item>
+            <Menu-item key="2-4">
+                <Icon type="document"></Icon>
+                现金券使用情况管理
+            </Menu-item>
+       
+            <Menu-item key="2-5">
+                <Icon type="heart"></Icon>
+                公共发布管理
+            </Menu-item>
+            <Menu-item key="2-6">
+                <Icon type="heart-broken"></Icon>
+                申诉管理
+            </Menu-item>
+            <Menu-item key="2-7">
+                <Icon type="heart-broken"></Icon>
+                分红管理
+            </Menu-item>
+            
+       
+    </Menu>
 </template>
 <script>
 	export default{
@@ -47,7 +81,11 @@
 	      activeKey:{
 	        type:String,
 	        default:'1-1'
-	      }
+	      },
+          activeMenu:{
+            type:String,
+            default:'1'
+          }
 	  	},
 		ready(){
 
@@ -76,6 +114,13 @@
                         break;
                     case '1-7':
                         this.$router.go('/coupon/details');
+                        break;
+                    case '1-8':
+                        this.$router.go('/gift/send');
+                        break;
+
+                    case '2-1':
+                        this.$router.go('/partner/account');
                         break;
                 }
             }

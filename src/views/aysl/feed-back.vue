@@ -46,7 +46,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title @on-click="toggleClick"></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" :is-Show="false"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm"  inline>
@@ -143,10 +143,10 @@
     </div>
 </template>
 <script>
-import server from '../libs/server'
-import LeftMenu from '../components/left-menu'
-import LHeader from '../components/header'
-import LTitle from '../components/title'
+import server from '../../libs/server'
+import LeftMenu from '../../components/left-menu'
+import LHeader from '../../components/header'
+import LTitle from '../../components/title'
 	export default{
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
@@ -165,18 +165,7 @@ import LTitle from '../components/title'
 				spanLeft: 4,
                 spanRight: 20,
 				tableCol: [
-                    {
-                        title: '操作',
-                        key: 'action',
-                        className:'l-min-width',
-                        align: 'center',
-                        render (row, column, index) {
-                            return `
-                            <i-button type="primary" size="small" icon="reply" @click="reply(${row.id})">回复</i-button>
-                            <i-button type="primary" size="small" icon="eye" @click="look(${row.id})">查看</i-button>
-                            `;
-                        }   
-                    },
+                    
                     {
                         title: '反馈标题',
                         className:'l-min-width',
@@ -203,6 +192,19 @@ import LTitle from '../components/title'
                         title: '反馈时间',
                         className:'l-m-min-width',
                         key: 'feedbackTime'
+                    },
+                    {
+                        title: '操作',
+                        key: 'action',
+                        fixed:'right',
+                        className:'l-min-width',
+                        align: 'center',
+                        render (row, column, index) {
+                            return `
+                            <i-button type="primary" size="small" icon="reply" @click="reply(${row.id})">回复</i-button>
+                            <i-button type="primary" size="small" icon="eye" @click="look(${row.id})">查看</i-button>
+                            `;
+                        }   
                     }
                     
                 ],
@@ -304,15 +306,7 @@ import LTitle from '../components/title'
                 })
                 this.addModal=true;
 			},
-            toggleClick () {
-                this.leftMenu=!this.leftMenu;
-                if (this.leftMenu) {
-                    this.spanRight = 20;
-
-                } else {
-                    this.spanRight = 24;
-                }
-            },
+            
             strDateChange(e){
                 this.seachForm.feedbackTimeStr=e;
             },
