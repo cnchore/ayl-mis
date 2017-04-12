@@ -41,7 +41,7 @@
                     <i-table :content="self" :columns="tableCol" :data="tableData"></i-table>
                     <div style="margin: 10px;overflow: hidden">
                         <div style="float: right;">
-                            <Page :total="rowsTotal" :current.sync="pageIndex" @on-change="changePage"></Page>
+                            <Page :total="rowsTotal" show-total show-elevator :current.sync="pageIndex" @on-change="changePage"></Page>
                         </div>
                     </div>
                 </div>
@@ -202,20 +202,17 @@ import LTitle from '../../components/title'
                         render (row, column, index) {
                             return `
                                 <i-button type="primary" size="small" icon="edit" @click="modalShow(${row.id})">修改</i-button>
-                                <Poptip 
-                                    confirm
-                                    title="您确认启用吗？"
+                                
+                                <i-button type="primary"
                                     v-show="${row.isEnabled}==0"
-                                    @on-ok="changeState(${row.id},true)">
-                                    <i-button type="primary" size="small" >启用</i-button>
-                                </Poptip>
-                                <Poptip 
-                                    confirm
-                                    title="您确认禁用吗？"
+                                    @click="changeState(${row.id},true,'您确认启用吗？')"
+                                     size="small" >启用</i-button>
+
+                                <i-button type="primary" 
                                     v-show="${row.isEnabled}==1"
-                                    @on-ok="changeState(${row.id},false)">
-                                    <i-button type="primary"  size="small" >禁用</i-button>
-                                </Poptip>
+                                    @click="changeState(${row.id},false,'您确认禁用吗？')"
+                                     size="small" >禁用</i-button>
+
                             `;
                         }   
                     }
@@ -392,22 +389,28 @@ import LTitle from '../../components/title'
                     self.addModal=true;
                 })
 			},
-            changeState(id,isEnabled){
+            changeState(id,isEnabled,title){
                 let self=this;
-                server.changeCouponDetail(id,isEnabled).then((res)=>{
-                    if(res.success){
-                        self.$Notice.success({
-                            title:'成功',
-                            desc:res.message
-                        });
-                        self.getList(self.pageIndex,10,self.seachForm.couponType,self.seachForm.isEnabled);
-                    }else{
-                        self.$Notice.error({
-                            title:'失败',
-                            desc:res.message
-                        });
-                    }
+                self.$Modal.confirm({
+                    onOk:function(){
+                        server.changeCouponDetail(id,isEnabled).then((res)=>{
+                            if(res.success){
+                                self.$Notice.success({
+                                    title:'成功',
+                                    desc:res.message
+                                });
+                                self.getList(self.pageIndex,10,self.seachForm.couponType,self.seachForm.isEnabled);
+                            }else{
+                                self.$Notice.error({
+                                    title:'失败',
+                                    desc:res.message
+                                });
+                            }
+                        })
+                    },
+                    content:title
                 })
+                
             }
 		}
 	}

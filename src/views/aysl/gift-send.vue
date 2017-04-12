@@ -55,7 +55,7 @@
                     <i-table :content="self" :columns="tableCol" :data="tableData"></i-table>
                     <div style="margin: 10px;overflow: hidden">
                         <div style="float: right;">
-                            <Page :total="rowsTotal" :current.sync="pageIndex" @on-change="changePage"></Page>
+                            <Page :total="rowsTotal" show-total show-elevator :current.sync="pageIndex" @on-change="changePage"></Page>
                         </div>
                     </div>
                 </div>
@@ -154,21 +154,16 @@ import LTitle from '../../components/title'
                     render (row, column, index) {
                         return `
                         
-                        
-                        <Poptip 
-                            confirm
-                            title="您确认处理为［已回访］吗？"
+                        <i-button type="primary" 
                             v-show="${row.state}==1"
-                            @on-ok="updateState(${row.id})">
-                            <i-button type="primary"  size="small">已回访</i-button>
-                        </Poptip>
-                        <Poptip 
-                            confirm
-                            title="您确认处理为［已发货］吗？"
+                            @click="updateState(${row.id},'您确认处理为［已回访］吗？')"
+                             size="small">已回访</i-button>
+
+                        <i-button type="primary"
                             v-show="${row.state}<3" 
-                            @on-ok="updateState(${row.id})">
-                            <i-button type="primary" size="small">已发货</i-button>
-                        </Poptip>
+                            @click="updateState(${row.id},'您确认处理为［已发货］吗？')"
+                             size="small">已发货</i-button>
+
                         <i-button type="primary" size="small" icon="eye" @click="look(${row.id})">活动参与情况</i-button>
                         `;
                     }   
@@ -226,22 +221,28 @@ import LTitle from '../../components/title'
                 this.getList(1,10,this.seachForm.createTime,this.seachForm.updateTime,this.seachForm.consigneePhoneLike,this.seachForm.consigneeLike
                     );
 			},
-			updateState(id){
+			updateState(id,title){
                 let self=this;
-                server.upateGiftSendState(id).then((res)=>{
-                    if(res.success){
-                        self.$Notice.success({
-                            title:'成功',
-                            desc:res.message
-                        });
-                        self.getList(self.pageIndex,10,self.seachForm.createTime,self.seachForm.updateTime,self.seachForm.consigneePhoneLike,self.seachForm.consigneeLike);
-                    }else{
-                        self.$Notice.error({
-                            title:'失败',
-                            desc:res.message
-                        });
-                    }
+                self.$Modal.confirm({
+                    onOk:function(){
+                      server.upateGiftSendState(id).then((res)=>{
+                            if(res.success){
+                                self.$Notice.success({
+                                    title:'成功',
+                                    desc:res.message
+                                });
+                                self.getList(self.pageIndex,10,self.seachForm.createTime,self.seachForm.updateTime,self.seachForm.consigneePhoneLike,self.seachForm.consigneeLike);
+                            }else{
+                                self.$Notice.error({
+                                    title:'失败',
+                                    desc:res.message
+                                });
+                            }
+                        })  
+                    },
+                    content:title
                 })
+                
             },
 			look(id){
                 this.isLook=true;

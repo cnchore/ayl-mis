@@ -38,11 +38,11 @@
     }
 </style>
 <template>
-    <l-header active-key="1"></l-header>
+    <l-header :active-key="activeT"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-key="1-4"></left-menu>
+                <left-menu :active-key="activeL" :active-Menu="activeMenu"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
@@ -78,7 +78,7 @@
                     <i-table :content="self" :columns="tableCol" :data="tableData"></i-table>
                     <div style="margin: 10px;overflow: hidden">
                         <div style="float: right;">
-                            <Page :total="rowsTotal" :current.sync="pageIndex" @on-change="changePage"></Page>
+                            <Page :total="rowsTotal" show-total show-elevator :current.sync="pageIndex" @on-change="changePage"></Page>
                         </div>
                     </div>
                 </div>
@@ -152,11 +152,15 @@ import LTitle from '../../components/title'
 		data(){
 			return{
 				addModal:false,
+                activeMenu:'1',
+                activeT:'1',
+                activeL:'1-4',
 				rowsTotal:10,
 				pageIndex:1,
 				self:this,
 				tableData:[],
 				seachForm:{
+                    feedbackerType:'',
 					feedbackTimeStr:'',
                     feedbackTimeBegin:'',
                     feedbackTimeEnd:''
@@ -218,7 +222,22 @@ import LTitle from '../../components/title'
                 modelLoading:false
 			}
 		},
+        route:{
+            data:function(transition){
+                if(transition.to.query &&transition.to.query.t){
+                    let t=transition.to.query.t;
+                    this.seachForm.feedbackerType=t;
+                    if(t==5){
+                        window.document.title="艾臣营销管理平台－申诉管理";
+                        this.activeMenu='2';
+                        this.activeL='2-6';
+                        this.activeT='2';
+                    }
+                }
+            }
+        },
 		ready(){
+            
 			this.getList();
 		},
 		methods:{
@@ -234,11 +253,13 @@ import LTitle from '../../components/title'
                     return "反馈人已查看";
                 }
             },
-            getList(page=1,rows=10,feedbackTimeStr=null,feedbackTimeBegin=null,feedbackTimeEnd=null){
+            getList(page=1,rows=10){
                 let self=this;
                 self.$Loading.start();
-                
-                server.getFeedback(page,rows,feedbackTimeStr,feedbackTimeBegin,feedbackTimeEnd).then((res)=>{
+                let _list=self.seachForm;
+                _list.page=page;
+                _list.rows=rows;
+                server.getFeedback(_list).then((res)=>{
                     self.$Loading.finish();
                     self.tableData=res.data.rowsObject;
                     self.rowsTotal=res.data.total;

@@ -29,7 +29,11 @@
         },
         ready(){
             let w=window.document.body.clientWidth;
-            if(w&&w>=1440){
+            if(w&&w<=1024){
+                this.spanLeft=5;
+                this.spanRight = 19;
+            }
+            else if(w&&w>=1440){
                 this.spanLeft=3;
                 this.spanRight = 21;
             }else if(w&&w>=2160){
@@ -45,7 +49,10 @@
                 let w=window.document.body.clientWidth;
                 this.leftMenu=!this.leftMenu;
                 if (this.leftMenu) {
-                    if(w&&w>=1440){
+                    if(w&&w<=1024){
+                        this.spanLeft=0;
+                        this.spanRight = 24;
+                    }else if(w&&w>=1440){
                         this.spanLeft=3;
                         this.spanRight = 21;
                     }else if(w&&w>=2160){

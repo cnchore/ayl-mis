@@ -74,7 +74,7 @@
                     <i-table :content="self" :columns="tableCol" :data="tableData"></i-table>
                     <div style="margin: 10px;overflow: hidden">
                         <div style="float: right;">
-                            <Page :total="rowsTotal" :current.sync="pageIndex" @on-change="changePage"></Page>
+                            <Page :total="rowsTotal" show-total show-elevator :page-size="9" :current.sync="pageIndex" @on-change="changePage"></Page>
                         </div>
                     </div>
                 </div>
@@ -156,20 +156,16 @@ import LTitle from '../../components/title'
 					align: 'center',
 					render (row, column, index) {
 					return `
-						<Poptip 
-							confirm
-							title="您确认该账号通过吗？"
-							v-show="${row.state}==0"
-							@on-ok="updateState(${row.id},true)">
-							<i-button type="primary"  size="small">通过</i-button>
-						</Poptip>
-						<Poptip 
-							confirm
-							title="您确认该账号不通过吗？"
+						
+						<i-button type="primary"
 							v-show="${row.state}==0" 
-							@on-ok="updateState(${row.id},false)">
-							<i-button type="primary" size="small">不通过</i-button>
-						</Poptip>
+							@click="updateState(${row.id},true,'您确认该账号通过吗？')"
+							 size="small">通过</i-button>
+						<i-button type="primary"
+							v-show="${row.state}==0" 
+							@click="updateState(${row.id},false,'您确认该账号不通过吗？')"
+							 size="small">不通过</i-button>
+
 					`;
 					}   
 				}]
@@ -206,7 +202,7 @@ import LTitle from '../../components/title'
 	                }
 	            }
             },
-            getList(page=1,rows=10){
+            getList(page=1,rows=9){
                 let self=this;
                 self.$Loading.start();
                 let _list=self.seachForm;
@@ -221,28 +217,34 @@ import LTitle from '../../components/title'
 			
 			changePage(index){
                 this.pageIndex=index+0;
-                this.getList(index+0,10);
+                this.getList(index+0,9);
 			},
 			search(name){
                 this.pageIndex=1;
-                this.getList(1,10);
+                this.getList(1,9);
 			},
-			updateState(id,t){
+			updateState(id,t,title){
                 let self=this;
-                server.verifyParnerAccount(id,t).then((res)=>{
-                    if(res.success){
-                        self.$Notice.success({
-                            title:'成功',
-                            desc:res.message
-                        });
-                        self.getList(self.pageIndex,10);
-                    }else{
-                        self.$Notice.error({
-                            title:'失败',
-                            desc:res.message
-                        });
-                    }
+                self.$Modal.confirm({
+                    onOk:function(){
+                        server.verifyParnerAccount(id,t).then((res)=>{
+		                    if(res.success){
+		                        self.$Notice.success({
+		                            title:'成功',
+		                            desc:res.message
+		                        });
+		                        self.getList(self.pageIndex,9);
+		                    }else{
+		                        self.$Notice.error({
+		                            title:'失败',
+		                            desc:res.message
+		                        });
+		                    }
+		                })
+                    },
+                    content:title
                 })
+                
             },
             createDateChange(e){
                 this.seachForm.registerTime=e;
