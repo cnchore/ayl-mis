@@ -225,7 +225,7 @@ import LTitle from '../../components/title'
                         }) 
                     },
                     content:title
-                });
+                })
             },
 			changePage(index){
                 this.pageIndex=index+0;
