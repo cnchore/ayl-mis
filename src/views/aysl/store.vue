@@ -29,7 +29,7 @@
                     <i-table :content="self" :columns="storeCols" :data="storeData"></i-table>
                     <div style="margin: 10px;overflow: hidden">
                         <div style="float: right;">
-                            <Page :total="rowsTotal" :current.sync="pageIndex" @on-change="changePage"></Page>
+                            <Page :total="rowsTotal" show-total show-elevator :current.sync="pageIndex" @on-change="changePage"></Page>
                         </div>
                     </div>
                 </div>
@@ -245,18 +245,16 @@ import LTitle from '../../components/title'
                     {
                         title: '操作',
                         key: 'action',
-                        className:'l-min-width',
+                        className:'l-m-min-width',
                         fixed:'right',
                         align: 'center',
                         render (row, column, index) {
                             return `
                             <i-button type="primary" size="small" icon="edit" @click="update(${row.id})">修改</i-button>
-                            <Poptip
-                                confirm
-                                title="您确认删除这条内容吗？"
-                                @on-ok="remove(${row.id})">
-                                <i-button type="primary" icon="ios-trash" size="small">删除</i-button>
-                            </Poptip>`;
+                            
+                            <i-button type="primary" icon="ios-trash" @click="remove(${row.id})" size="small">删除</i-button>
+
+                            `;
                         }   
                     }
                     
@@ -272,7 +270,7 @@ import LTitle from '../../components/title'
         },
         ready(){
             let self=this;
-           
+            
             self.getList(self.pageIndex,10);
             self.getAgentList();
             
@@ -351,16 +349,21 @@ import LTitle from '../../components/title'
             },
             remove(id){
                 let self=this;
-                server.deleteStoreByid(id).then((res)=>{
-                    if(res.success){
-                        self.getList(self.pageIndex,10,self.formInline.storeName);
-                    }else{
-                        self.$Notice.error({
-                            title:'删除失败',
-                            desc:res.message
-                        });
-                    }
-                })
+                self.$Modal.confirm({
+                    onOk:function(){
+                        server.deleteStoreByid(id).then((res)=>{
+                            if(res.success){
+                                self.getList(self.pageIndex,10,self.formInline.storeName);
+                            }else{
+                                self.$Notice.error({
+                                    title:'删除失败',
+                                    desc:res.message
+                                });
+                            }
+                        })
+                    },
+                    content:'您确认删除这条内容吗？'
+                });
             },
             search(formData){
                 this.pageIndex=1;

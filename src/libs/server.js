@@ -66,7 +66,27 @@ const serverPath={
 
 	getParnerAccount:'/partner/partnerAccount/getPage',
 	getAllParnerAccount:'/partner/partnerAccount/getList',
-	verifyParnerAccount:'/partner/partnerAccount/verify'
+	verifyParnerAccount:'/partner/partnerAccount/verify',
+
+	getCouponConfig:'/partner/couponConfig/getPage',
+	getAllCouponConfig:'/partner/couponConfig/getList',
+	getCouponConfigByid:'/partner/couponConfig/getById',
+	addCouponConfig:'/partner/couponConfig/add',
+	updateCouponConfig:'/partner/couponConfig/update',
+	delCouponConfig:'/partner/couponConfig/deleteById',
+	upDownCouponConfig:'/partner/couponConfig/upDown',
+
+	getParnerCoupon:'/partner/coupon/getPage',
+
+	getNotice:'/sys/notice/getPage',
+	getNoticeByid:'/sys/notice/getById',
+	addNotice:'/sys/notice/add',
+	updateNotice:'/sys/notice/update',
+	delNotice:'/sys/notice/deleteById',
+	publishNotice:'/sys/notice/publish',
+
+	getCouponApply:'/partner/couponApply/getPage',
+	verifyCouponApply:'/partner/couponApply/verify'
 
 }
 
@@ -411,12 +431,12 @@ export default {
     	return this.postPromise(serverPath.delProduct,{id},'delProduct');
 	},
 	//会员反馈管理
-	getFeedback(page=1,rows=10,feedbackTimeStr='',feedbackTimeBegin='',feedbackTimeEnd=''){
+	getFeedback(searchData){
 		let feedbackerType=4;
 		if(util.env=='development'){
 			feedbackerType=''
 		}
-		return this.getPromise(serverPath.getFeedback,{page,rows,feedbackerType,feedbackTimeStr,feedbackTimeBegin,feedbackTimeEnd},'getFeedback');
+		return this.getPromise(serverPath.getFeedback,searchData,'getFeedback');
 	},
 	getAllFeedback(feedbackTimeStr='',feedbackTimeBegin='',feedbackTimeEnd=''){
 		return this.getPromise(serverPath.getAllFeedback,{feedbackerType:4,feedbackTimeStr,feedbackTimeBegin,feedbackTimeEnd},'getAllFeedback');
@@ -612,6 +632,101 @@ export default {
 	},
 	verifyParnerAccount(id,isPass=false){
     	return this.postPromise(serverPath.verifyParnerAccount,{id,isPass},'verifyParnerAccount');
+
+	},
+	//现金券配置管理
+	getCouponConfig(searchData){
+		return this.getPromise(serverPath.getCouponConfig,searchData,'getCouponConfig');
+
+	},
+	getAllCouponConfig(searchData){
+		return this.getPromise(serverPath.getAllCouponConfig,searchData,'getAllCouponConfig');
+
+	},
+	getCouponConfigByid(id){
+		return this.getPromise(serverPath.getCouponConfigByid,{id},'getCouponConfigByid');
+
+	},
+	addCouponConfig(formData){
+		let _list={
+			couponName:formData.couponName,//券名
+			couponValue:formData.couponValue,//券面值
+			achieveMoney:formData.achieveMoney,//满足多少钱可以使用
+			remark:formData.remark,//备注
+			effectDays:formData.effectDays//有效天数
+		}
+    	return this.postPromise(serverPath.addCouponConfig,_list,'addCouponConfig');
+
+	},
+	updateCouponConfig(formData){
+		let _list={
+			id:formData.id,
+			couponName:formData.couponName,//券名
+			couponValue:formData.couponValue,//券面值
+			achieveMoney:formData.achieveMoney,//满足多少钱可以使用
+			remark:formData.remark,//备注
+			effectDays:formData.effectDays//有效天数
+		}
+    	return this.postPromise(serverPath.updateCouponConfig,_list,'updateCouponConfig');
+
+	},
+	delCouponConfig(id){
+    	return this.postPromise(serverPath.delCouponConfig,{id},'delCouponConfig');
+
+	},
+	upDownCouponConfig(id){
+    	return this.postPromise(serverPath.upDownCouponConfig,{id},'upDownCouponConfig');
+
+	}
+	//现金券使用情况管理
+	,
+	getParnerCoupon(searchData){
+		return this.getPromise(serverPath.getParnerCoupon,searchData,'getParnerCoupon');
+
+	}
+	//公告发布管理
+	,
+	getNotice(searchData){
+		return this.getPromise(serverPath.getNotice,searchData,'getNotice');
+
+	},
+	getNoticeByid(id){
+		return this.getPromise(serverPath.getNoticeByid,{id},'getNoticeByid');
+
+	},
+	addNotice(formData){
+		let _list={
+			title:formData.title,
+			content:formData.content
+		}
+    	return this.postPromise(serverPath.addNotice,_list,'addNotice');
+
+	},
+	updateNotice(formData){
+		let _list={
+			id:formData.id,
+			title:formData.title,
+			content:formData.content
+		}
+    	return this.postPromise(serverPath.updateNotice,_list,'updateNotice');
+
+	},
+	delNotice(id){
+    	return this.postPromise(serverPath.delNotice,{id},'delNotice');
+
+	},
+	publishNotice(id){
+    	return this.postPromise(serverPath.publishNotice,{id},'publishNotice');
+
+	}
+	//现金券申请管理
+	,
+	getCouponApply(searchData){
+		return this.getPromise(serverPath.getCouponApply,searchData,'getCouponApply');
+
+	},
+	verifyCouponApply(id,isPass=false){
+    	return this.postPromise(serverPath.verifyCouponApply,{id,isPass},'verifyCouponApply');
 
 	}
 }

@@ -41,7 +41,7 @@
                     <i-table :content="self" :columns="tableCol" :data="tableData"></i-table>
                     <div style="margin: 10px;overflow: hidden">
                         <div style="float: right;">
-                            <Page :total="rowsTotal" :current.sync="pageIndex" @on-change="changePage"></Page>
+                            <Page :total="rowsTotal" show-total show-elevator :current.sync="pageIndex" @on-change="changePage"></Page>
                         </div>
                     </div>
                 </div>
@@ -240,20 +240,16 @@ import chinaAddress from '../../components/china-address-0408'
                             return `
                                 <i-button type="primary" v-show="btnShow(${row.userType},${row.state},${row.auditState},'e')" size="small" icon="edit" @click="modalShow(${row.id},'u')">修改</i-button>
                                 <i-button type="primary" v-show="btnShow(${row.userType},${row.state},${row.auditState},'a')" size="small"  @click="apply(${row.id})">申请</i-button>
-                                <Poptip 
-                                    confirm
-                                    title="您确认上线吗？"
+                                
+                                <i-button type="primary" 
                                     v-show="btnShow(${row.userType},${row.state},${row.auditState},'ul')"
-                                    @on-ok="changeState(${row.id})">
-                                    <i-button type="primary" size="small" icon="arrow-graph-up-right">上线</i-button>
-                                </Poptip>
-                                <Poptip 
-                                    confirm
-                                    title="您确认下线吗？"
+                                    @click="changeState(${row.id},'您确认上线吗？')"
+                                    size="small" icon="arrow-graph-up-right">上线</i-button>
+
+                                <i-button type="primary"  
                                     v-show="btnShow(${row.userType},${row.state},${row.auditState},'dl')"
-                                    @on-ok="changeState(${row.id})">
-                                    <i-button type="primary"  size="small" icon="arrow-graph-down-right" >下线</i-button>
-                                </Poptip>
+                                    @click="changeState(${row.id},'您确认下线吗？')"
+                                    size="small" icon="arrow-graph-down-right" >下线</i-button>
                                 
                                 <i-button type="primary" v-show="btnShow(${row.userType},${row.state},${row.auditState},'vf')" size="small" icon="hammer" @click="modalShow(${row.id},'v')">审核</i-button>
                                 <i-button type="primary" size="small" icon="eye" @click="modalShow(${row.id},'l')">查看</i-button>
@@ -559,22 +555,28 @@ import chinaAddress from '../../components/china-address-0408'
                     self.addModal=true;
                 })
 			},
-            changeState(id){
+            changeState(id,title){
                 let self=this;
-                server.changeCoupon(id).then((res)=>{
-                    if(res.success){
-                        self.$Notice.success({
-                            title:'成功',
-                            desc:res.message
-                        });
-                        self.getList(self.pageIndex,10,self.seachForm.activityType,self.seachForm.state);
-                    }else{
-                        self.$Notice.error({
-                            title:'失败',
-                            desc:res.message
-                        });
-                    }
+                self.$Modal.confirm({
+                    onOk:function(){
+                        server.changeCoupon(id).then((res)=>{
+                            if(res.success){
+                                self.$Notice.success({
+                                    title:'成功',
+                                    desc:res.message
+                                });
+                                self.getList(self.pageIndex,10,self.seachForm.activityType,self.seachForm.state);
+                            }else{
+                                self.$Notice.error({
+                                    title:'失败',
+                                    desc:res.message
+                                });
+                            }
+                        })
+                    },
+                    content:title
                 })
+                
             },
 			verify(t){
                 let self=this;

@@ -15,11 +15,11 @@
             </Menu-item>
             <Menu-item key="1-3">
                 <Icon type="document"></Icon>
-                产品介绍管理
+                产品介绍
             </Menu-item>
             <Menu-item key="1-4">
                 <Icon type="document"></Icon>
-                会员反馈管理
+                意见反馈管理
             </Menu-item>
        
             <Menu-item key="1-5">
@@ -28,7 +28,7 @@
             </Menu-item>
             <Menu-item key="1-6">
                 <Icon type="heart-broken"></Icon>
-                优惠券活动配置
+                优惠活动发布
             </Menu-item>
             <Menu-item key="1-7">
                 <Icon type="heart-broken"></Icon>
@@ -104,7 +104,7 @@
                         this.$router.go('/product');
                         break;
                     case '1-4':
-                        this.$router.go('/feed/back');
+                        this.$router.go('/feed/back?t=4');
                         break;
                     case '1-5':
                         this.$router.go('/help');
@@ -121,6 +121,21 @@
 
                     case '2-1':
                         this.$router.go('/partner/account');
+                        break;
+                    case '2-2':
+                        this.$router.go('/coupon/config');
+                        break;
+                    case '2-3':
+                        this.$router.go('/coupon/apply');
+                        break;
+                    case '2-4':
+                        this.$router.go('/partner/coupon');
+                        break;
+                    case '2-5':
+                        this.$router.go('/notice');
+                        break;
+                    case '2-6':
+                        this.$router.go('/feed/back?t=5');
                         break;
                 }
             }

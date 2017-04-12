@@ -30,7 +30,7 @@
                     <i-table :content="self" :columns="tableCol" :data="tableData"></i-table>
                     <div style="margin: 10px;overflow: hidden">
                         <div style="float: right;">
-                            <Page :total="rowsTotal" :current.sync="pageIndex" @on-change="changePage"></Page>
+                            <Page :total="rowsTotal" show-total show-elevator :current.sync="pageIndex" @on-change="changePage"></Page>
                         </div>
                     </div>
                 </div>
@@ -171,12 +171,12 @@ import LTitle from '../../components/title'
                             <i-button type="primary" v-show="${row.status}==1" size="small" icon="edit" @click="update(${row.id})">修改</i-button>
                             <i-button type="primary" v-show="${row.status}==1" size="small" icon="forward" @click="publish(${row.id})">发布</i-button>
                             <i-button type="primary" v-show="${row.status}==2" size="small" icon="stop" @click="publish(${row.id})">结束发布</i-button>
-                            <Poptip v-show="${row.status}==1"
-                                confirm
-                                title="您确认删除这条内容吗？"
-                                @on-ok="remove(${row.id})">
-                                <i-button type="primary" icon="ios-trash" size="small">删除</i-button>
-                            </Poptip>
+                            
+                            <i-button type="primary" 
+                                v-show="${row.status}==1"
+                                @click="remove(${row.id})"
+                                icon="ios-trash" size="small">删除</i-button>
+
                             <i-button type="primary" size="small" icon="eye" @click="look(${row.id})">查看</i-button>
                             `;
                         }   
@@ -330,20 +330,26 @@ import LTitle from '../../components/title'
             },
 			remove(id){
                 let self=this;
-                server.deletePublishByid(id).then((res)=>{
-                    if(res.success){
-                        self.$Notice.success({
-                            title:'删除成功',
-                            desc:res.message
-                        });
-                        self.getList(self.pageIndex,10,self.seachForm.titleLike);
-                    }else{
-                        self.$Notice.error({
-                            title:'删除失败',
-                            desc:res.message
-                        });
-                    }
+                self.$Modal.confirm({
+                    onOk:function(){
+                       server.deletePublishByid(id).then((res)=>{
+                            if(res.success){
+                                self.$Notice.success({
+                                    title:'删除成功',
+                                    desc:res.message
+                                });
+                                self.getList(self.pageIndex,10,self.seachForm.titleLike);
+                            }else{
+                                self.$Notice.error({
+                                    title:'删除失败',
+                                    desc:res.message
+                                });
+                            }
+                        }) 
+                    },
+                    content:'您确认删除这条内容吗？'
                 })
+                
 			},
             publish(id){
                 let self=this;
