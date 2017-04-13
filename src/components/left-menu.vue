@@ -137,6 +137,9 @@
                     case '2-6':
                         this.$router.go('/feed/back?t=5');
                         break;
+                    case '2-7':
+                        this.$router.go('/partner/bonus');
+                        break;
                 }
             }
 		}
