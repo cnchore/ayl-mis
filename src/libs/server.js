@@ -66,7 +66,11 @@ const serverPath={
 
 	getParnerAccount:'/partner/partnerAccount/getPage',
 	getAllParnerAccount:'/partner/partnerAccount/getList',
+	getParnerAccountByid:'/partner/partnerAccount/getById',
 	verifyParnerAccount:'/partner/partnerAccount/verify',
+
+	getParnerBonus:'/partner/partnerAccount/getBonusPage',
+	addParnerBonus:'/partner/partnerAccount/addBonus',
 
 	getCouponConfig:'/partner/couponConfig/getPage',
 	getAllCouponConfig:'/partner/couponConfig/getList',
@@ -630,6 +634,9 @@ export default {
 		return this.getPromise(serverPath.getAllParnerAccount,formData,'getAllParnerAccount');
 
 	},
+	getParnerAccountByid(id){
+		return this.getPromise(serverPath.getParnerAccountByid,{id},'getParnerAccountByid');
+	},
 	verifyParnerAccount(id,isPass=false){
     	return this.postPromise(serverPath.verifyParnerAccount,{id,isPass},'verifyParnerAccount');
 
@@ -727,6 +734,21 @@ export default {
 	},
 	verifyCouponApply(id,isPass=false){
     	return this.postPromise(serverPath.verifyCouponApply,{id,isPass},'verifyCouponApply');
+
+	}
+	//分红管理
+	,
+	getParnerBonus(searchData){
+		return this.getPromise(serverPath.getParnerBonus,searchData,'getParnerBonus');
+
+	},
+	addParnerBonus(formData){
+		let _list={
+			accountId:formData.id,
+			wallet:formData.walletNew,
+			attachUrl:formData.attachUrl
+		}
+    	return this.postPromise(serverPath.addParnerBonus,_list,'addParnerBonus');
 
 	}
 }

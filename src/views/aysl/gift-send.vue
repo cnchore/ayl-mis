@@ -177,9 +177,11 @@ import LTitle from '../../components/title'
                     {title:'序号',type:'index',width:80,align:'center'},
                     {title:'昵称',key:'wxNickName'},
                     {title:'助力时间',key:'createTime'},
-                    {title:'助力值',key:'assistValue',render(row){
-                        return `${row.assistValue/10}%`
-                    }}
+                    {title:'助力值',key:'assistValue',
+                        render(row){
+                            return `${row.assistValue/10}%`
+                        }
+                    }
                 ],
                 isLook:false,
                 modelLoading:false
@@ -260,6 +262,7 @@ import LTitle from '../../components/title'
                 })
                 
 			},
+            
             createDateChange(e){
                 this.seachForm.createTime=e;
             },

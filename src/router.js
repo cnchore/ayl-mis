@@ -90,6 +90,12 @@ const routers = {
             require(['./views/hhr/notice.vue'], resolve);
         },
         meta: { requiresAuth: true,title:'艾臣营销管理平台－公告发布管理' }
+    },
+    '/partner/bonus': {
+        component(resolve) {
+            require(['./views/hhr/partner-bonus.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－分红管理' }
     }
 
 };
