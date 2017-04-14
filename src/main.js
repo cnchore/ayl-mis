@@ -4,7 +4,9 @@ import App from 'components/app.vue';
 import Routers from './router';
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
+import './my-theme/index.less';
 import './global.less'
+
 import VueLazyload from 'vue-lazyload'
 import { storage } from './libs/server'
 //import VueResource from 'vue-resource'

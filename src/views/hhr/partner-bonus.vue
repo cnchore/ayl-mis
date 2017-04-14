@@ -32,7 +32,7 @@
                         
                     </i-form>
                 </div>
-                <div class="layout-content" :style="{ height:contentHeight + 'px' }">
+                <div class="layout-content">
                     <i-table :content="self" :columns="tableCol" :data="tableData"></i-table>
                     <div style="margin: 10px;overflow: hidden">
                         <div style="float: right;">
@@ -179,7 +179,7 @@ import LTitle from '../../components/title'
 					key:'partnerName',title:'合伙人姓名',width:120
 				},
 				{
-					key:'mobilePhone',title:'合伙人手机号',width:120
+					key:'mobilePhone',title:'合伙人手机号',width:150
 				},
 				{
 					key:'cardID',title:'身份证号',width:200

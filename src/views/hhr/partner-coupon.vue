@@ -114,7 +114,7 @@ import LTitle from '../../components/title'
 					key:'ownerName',title:'业主名称',width:120
 				},
 				{
-					key:'ownerPhone',title:'业主电话',width:120
+					key:'ownerPhone',title:'业主电话',width:150
 				},
 				{
 					key:'province',title:'客户地址',className:'l-m-min-width l-ellipsis',
@@ -137,19 +137,19 @@ import LTitle from '../../components/title'
 					}
 				},
 				{
-					key:'effectTime',title:'有效时间',width:150
+					key:'effectTime',title:'有效时间',width:200
 				},
 				{
 					key:'applier',title:'申请人名称',width:120
 				},
 				{
-					key:'applierPhone',title:'申请人电话',width:120
+					key:'applierPhone',title:'申请人电话',width:150
 				},
 				{
-					key:'createTime',title:'创建时间',width:150
+					key:'createTime',title:'创建时间',width:200
 				},
 				{
-					key:'updateTime',title:'更新时间',width:150
+					key:'updateTime',title:'更新时间',width:200
 				}]
 			}
 		},

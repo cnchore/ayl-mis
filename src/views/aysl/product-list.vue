@@ -187,20 +187,7 @@
 		        
 			</Menu>
 		</header>
-		<div class="container">
-			<div class="ivu-col-span-xs-12 ivu-col-span-sm-8 ivu-col-span-md-6 ivu-col-span-lg-4 list" v-for="item in images">
-				<Card>
-				<img v-lazy="item" class="image">
-					<div style="padding: 14px;">
-						<h3>好吃的汉堡</h3>
-						<div class="bottom clearfix">
-							<time class="time">{{ currentDate }}</time>
-							<a href="#" size="large" class="button">操作链接</a>
-						</div>
-					</div>
-				</Card>
-			</div>
-		</div>
+		
 		<Row>
 		<i-col span="8">color</i-col>
 		<i-col span="16">

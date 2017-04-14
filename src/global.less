@@ -18,14 +18,15 @@ img[lazy=loading],img {
 .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item-active, .ivu-menu-dark.ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item-active:hover {
 	border-right: none;
 	color: #fff;
-	background: #39f!important;
+	background: #336699!important;
+	//39f
 }
 .ivu-menu-primary.ivu-menu-horizontal .ivu-menu-item-active, .ivu-menu-primary.ivu-menu-horizontal .ivu-menu-item:hover, .ivu-menu-primary.ivu-menu-horizontal .ivu-menu-submenu-active, .ivu-menu-primary.ivu-menu-horizontal .ivu-menu-submenu:hover {
     background: #fff;
-    color: #3091f2;
+    color: #336699;
 }
 header{
-	background-color: #39f;
+	background-color: #336699;
 	//margin-bottom: 15px;
 	.ivu-menu{
 		line-height: 80px;
@@ -33,16 +34,61 @@ header{
 		
 	}
 	.ivu-col{
+
 		.logo{
 			line-height: 80px;
 			height: 80px; 
 			width: 100%;
-			background-image: url(./imgs/logo_main.png);
+			background-image: url(./imgs/logo.png);
 			background-repeat: no-repeat;
 			background-position:center;
-			background-size: 100%;
-			background-origin: content-box;
-			padding:0 10px; 
+			background-size: 80%;
+		}
+		&.ivu-col-span-lg-15{
+			.q-menu{
+				&>.ivu-menu-item{
+					padding: 15px 18px 0px 18px;
+				}
+			}
+			
+		}
+	}
+}
+.q-menu{
+	display: table;
+	margin: 0 auto;
+	text-align: center;
+	&>.ivu-menu-item{
+		height: 80px;
+		text-align: center;
+		padding: 15px 15px 0px 15px;
+		i{
+			display: block;
+			font-size: 26px;
+			line-height: 1.0;
+			margin-right:0px; 
+		}
+		span{
+			display: block;
+			line-height: 1.5;
+		}
+
+	}
+	.q-right{
+			float: right;
+		}
+	.q-inline{
+		display: inline-block;
+		padding-top: 25px;
+	}
+}
+.q-lg-icon{
+	display: block;
+	margin: 0px;
+	&>.ivu-menu-item{
+		
+		i{
+			font-size: 32px;
 		}
 	}
 }
@@ -53,14 +99,24 @@ header{
 		}
 	}
 }
+
 /*======页面布局========*/
+
+
 .layout{
 	background: #f5f7f9;
 	position: relative;
-	overflow: hidden;
+	overflow:hidden;
 	.l-row{
-		height: 100vh;
+		height:100%;
+		.ivu-col{
+			overflow-y: auto;
+			height: 100vh;
+			padding-bottom: 100px;
+			//height: calc(100vh-10rem);
+		}
 	}
+	
 }
 .layout-breadcrumb{
 	padding: 10px 15px 0;
@@ -72,9 +128,10 @@ header{
 
 }
 .layout-content{
-	//min-height: calc(100vh-30rem);
+	position: relative;
+	
 	margin: 0px 15px 15px 15px;
-	overflow: hidden;
+	
 	background: #fff;
 	border-radius: 4px;
 	padding: 10px;
@@ -201,9 +258,9 @@ header{
 /*======单行下拉选择========*/
 .l-sel-inline{
 	display: flex;
-	width: 287px;
+	width: 300px;
 	span[slot=prepend]{
-		width: 72px;
+		width: 85px;
 	    padding: 4px 7px;
 	    font-size: inherit;
 	    font-weight: 400;
@@ -265,6 +322,15 @@ header{
 	color:#ff6600;
 }
 /*======状态=end=======*/
+.ivu-table th{
+	height: 48px;
+}
+.iconfont.btn{
+	color:#336699;
+	font-size: 20px;
+	cursor: pointer;
+	padding: 0px 5px;
+}
 /*======页面字体大小=start=======*/
 /*
 .ivu-menu,.ivu-menu-item,

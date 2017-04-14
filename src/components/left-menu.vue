@@ -3,11 +3,12 @@
 	
 </style>
 <template>
-	<Menu :active-key="activeKey" v-show="activeMenu==='1'" width="auto" @on-select="handleSelect">
+	<Menu :active-key="activeKey" class="q-menu q-lg-icon"
+    v-show="activeMenu==='1'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="1-1">
                 <Icon type="document-text"></Icon>
-                门店展示管理
+                <span>门店展示管理</span>
             </Menu-item>
             <Menu-item key="1-2">
                 <Icon type="document"></Icon>
@@ -40,7 +41,8 @@
             </Menu-item>
        
     </Menu>
-    <Menu :active-key="activeKey" v-show="activeMenu==='2'" width="auto" @on-select="handleSelect">
+    <Menu :active-key="activeKey" class="q-menu q-lg-icon" 
+    v-show="activeMenu==='2'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="2-1">
                 <Icon type="document-text"></Icon>
@@ -61,7 +63,7 @@
        
             <Menu-item key="2-5">
                 <Icon type="heart"></Icon>
-                公共发布管理
+                公告发布管理
             </Menu-item>
             <Menu-item key="2-6">
                 <Icon type="heart-broken"></Icon>

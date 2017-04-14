@@ -143,7 +143,7 @@ import LTitle from '../../components/title'
 					}
 				},
 				{
-					key:'achieveMoney',title:'使用条件',width:200,
+					key:'achieveMoney',title:'使用条件',width:250,
 					render(row){
 						return `订单满足 ${row.achieveMoney} 元可以使用`;
 					}
