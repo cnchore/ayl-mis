@@ -111,7 +111,7 @@ import LTitle from '../../components/title'
                     key:'applier',title:'申请人名称',width:120
                 },
                 {
-                    key:'applierPhone',title:'申请人电话',width:120
+                    key:'applierPhone',title:'申请人电话',width:150
                 },
                 {
                     key:'couponValue',title:'券值',width:120
@@ -121,7 +121,7 @@ import LTitle from '../../components/title'
                     key:'applyNum',title:'申请数量',width:120
                 },
                 {
-                    key:'applyTime',title:'申请时间',width:150
+                    key:'applyTime',title:'申请时间',width:200
                 },
                 {
                     key:'province',title:'客户地址',className:'l-m-min-width l-ellipsis',
@@ -133,7 +133,7 @@ import LTitle from '../../components/title'
                     key:'ownerName',title:'客户名称',width:120
                 },
                 {
-                    key:'ownerPhone',title:'客户电话',width:120
+                    key:'ownerPhone',title:'客户电话',width:150
                 },
                 {
                     key:'houseStyle',title:'房子风格',width:120

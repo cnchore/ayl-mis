@@ -135,7 +135,7 @@ import LTitle from '../../components/title'
                         return `{{getStatusName(${row.state})}}`;
                     }
                 },
-                {className:'l-min-width',key:'billCode',title:'单号'},
+                {width:300,key:'billCode',title:'单号'},
                 {className:'l-min-width',key:'giftName',title:'礼品名称'},
                 {className:'l-min-width',key:'consignee',title:'收货人'},
                 {className:'l-min-width',key:'consigneePhone',title:'收货人手机号码'},

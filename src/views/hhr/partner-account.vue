@@ -127,9 +127,9 @@ import LTitle from '../../components/title'
 					render(row,column,index){
 						return `{{getStatusName(${row.state},'s')}}`;
 					}
-				},{key:'mobilePhone',width:120,title:'手机号'},
+				},{key:'mobilePhone',width:150,title:'手机号'},
 				{
-					width:120,title:'所在城市',
+					width:150,title:'所在城市',
 					render(row){
 						return `${row.province}${row.city}`;
 					}
@@ -143,9 +143,9 @@ import LTitle from '../../components/title'
 				},
 				{key:'storeBrand',className:'l-min-width',title:'卖场/品牌'},
 				{key:'referralName',width:120,title:'推荐人姓名'},
-				{key:'referralPhone',width:120,title:'推荐人电话'},
-				{key:'agentName',width:120,title:'代理商名称'},
-				{key:'agentPhone',width:120,title:'代理商电话'},
+				{key:'referralPhone',width:150,title:'推荐人电话'},
+				{key:'agentName',width:150,title:'代理商名称'},
+				{key:'agentPhone',width:150,title:'代理商电话'},
 				{key:'registerTime',className:'l-min-width',title:'注册时间'},
 
 				{

@@ -33,7 +33,7 @@
     <div class="l-page">
         <header>
             <Row>
-                <i-col span="4">
+                <i-col span="5">
                     <div class="logo"></div>
                 </i-col>
             </Row>
