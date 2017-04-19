@@ -7,7 +7,9 @@ body,#app{
 	    border:1px solid #d7dde4;
 	}
 }
-
+a{
+	color:#336699;
+}
 img[lazy=loading],img {
 	background-color: #ccc;
 	background-image: url(./imgs/loading-spin.svg);
@@ -114,6 +116,12 @@ header{
 			height: 100vh;
 			padding-bottom: 100px;
 			//height: calc(100vh-10rem);
+		}
+		.ivu-form{
+			.ivu-col{
+				height: auto;
+				padding:15px;
+			}
 		}
 	}
 	
@@ -330,6 +338,19 @@ header{
 	font-size: 20px;
 	cursor: pointer;
 	padding: 0px 5px;
+}
+.q-text-center{
+	input{
+		text-align: center;
+		border: none;
+	}
+}
+.q-form-btn{
+	text-align: center;
+	margin-left: -150px;
+	button:first-child{
+		margin-right: 15px;
+	}
 }
 /*======页面字体大小=start=======*/
 /*

@@ -3,6 +3,23 @@
 	
 </style>
 <template>
+    <Menu :active-key="activeKey" class="q-menu q-lg-icon"
+    v-show="activeMenu==='0'" width="auto" @on-select="handleSelect">
+        
+            <Menu-item key="0-1">
+                <Icon type="document-text"></Icon>
+                <span>基本信息</span>
+            </Menu-item>
+            <Menu-item key="0-2">
+                <Icon type="document"></Icon>
+                修改密码
+            </Menu-item>
+            <Menu-item key="0-3">
+                <Icon type="document"></Icon>
+                备忘录
+            </Menu-item>
+       
+    </Menu>
 	<Menu :active-key="activeKey" class="q-menu q-lg-icon"
     v-show="activeMenu==='1'" width="auto" @on-select="handleSelect">
         
@@ -76,6 +93,23 @@
             
        
     </Menu>
+    <Menu :active-key="activeKey" class="q-menu q-lg-icon"
+    v-show="activeMenu==='3'" width="auto" @on-select="handleSelect">
+        
+            <Menu-item key="3-1">
+                <Icon type="document-text"></Icon>
+                <span>待办事项</span>
+            </Menu-item>
+            <Menu-item key="3-2">
+                <Icon type="document"></Icon>
+                已办事项
+            </Menu-item>
+            <Menu-item key="3-3">
+                <Icon type="document"></Icon>
+                预约废弃箱
+            </Menu-item>
+       
+    </Menu>
 </template>
 <script>
 	export default{
@@ -96,6 +130,15 @@
 			handleSelect(key){
                 //this.$Message.info(key);
                 switch(key){
+                    case '0-1':
+                        this.$router.go('/info');
+                        break;
+                    case '0-2':
+                        this.$router.go('/pwd/update');
+                        break;
+                    case '0-3':
+                        this.$router.go('/memo');
+                        break;
                 	case '1-1':
                         this.$router.go('/store');
                         break;
@@ -141,6 +184,16 @@
                         break;
                     case '2-7':
                         this.$router.go('/partner/bonus');
+                        break;
+
+                    case '3-1':
+                        this.$router.go('/waiting');
+                        break;
+                    case '3-2':
+                        this.$router.go('/complete');
+                        break;
+                    case '3-3':
+                        this.$router.go('/trash');
                         break;
                 }
             }

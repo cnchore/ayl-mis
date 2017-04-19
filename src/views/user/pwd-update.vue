@@ -1,0 +1,86 @@
+<style scoped lang="less">
+	
+	
+</style>
+<template>
+    <l-header active-key="0"></l-header>
+	<div class="layout">
+        <Row type="flex" class="l-row">
+            <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
+                <left-menu active-Menu="0" active-key="0-2"></left-menu>
+            </i-col>
+            <i-col :span="spanRight">
+
+                <div class="layout-header">
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" :is-Show="false" :breads="breads" ></l-title>
+                </div>
+               	<br/>
+                <div class="layout-content">
+                	<i-form v-ref:form-validate :model="modelForm" :rules="modeRule" :label-width="150">
+                		<Form-item>
+		            				
+						        </Form-item>
+	                	<Row>
+	                		<i-col span="5">
+		                    	
+	                		</i-col>
+	                		<i-col span="14" >
+	 							
+						        <Form-item label="旧密码">
+		            <i-input :value.sync="modelForm.title" placeholder="请输入旧密码"></i-input>
+							            
+						        </Form-item>
+						        <Form-item label="新密码">
+		            <i-input :value.sync="modelForm.title" placeholder="请输入新密码"></i-input>
+						        </Form-item>
+						        <Form-item label="确定秘密">
+		            <i-input :value.sync="modelForm.title" placeholder="请再次输入新密码"></i-input>
+						            
+						        </Form-item>
+						     </i-col>
+	                		<i-col span="5">
+		                    	
+	                		</i-col>
+	                	</Row>
+	                	<Form-item>
+						        	<div class="q-form-btn">
+						            <i-button type="primary" size="large">保存</i-button>
+						            <i-button type="ghost" size="large">取消</i-button>
+						            </div>
+				        </Form-item>
+                     </i-form>
+                </div>
+                <div class="layout-copy">
+                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                </div>
+            </i-col>
+        </Row>
+        
+    </div>
+</template>
+<script>
+import server from '../../libs/server'
+import LeftMenu from '../../components/left-menu'
+import LHeader from '../../components/header'
+import LTitle from '../../components/title'
+	
+	
+	export default{
+		components:{LHeader,LeftMenu,LTitle},
+		data(){
+			return{
+				breads:[{text:'首页',href:'/index#!/index'},{text:'修改密码',href:''}],
+				leftMenu:true,
+				spanLeft: 4,
+                spanRight: 20,
+                modelForm:{}
+			}
+		},
+		ready(){
+			
+		},
+		methods:{
+			
+		}
+	}
+</script>

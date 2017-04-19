@@ -39,6 +39,9 @@
                     i{
                         font-size: 40px;
                     }
+                    i.btn{
+                        font-size: 26px;
+                    }
                     .q-title{
                         padding:5px 0px;
                     }
@@ -48,6 +51,8 @@
                 }
 
                 .q-more{
+                    color:#336699;
+                    display: block;
                     text-align: right;
                     padding:10px 15px 10px 0px;
                 }
@@ -149,11 +154,11 @@
                             我的备忘录
                         </i-col>
                         <i-col :md="3" :lg="2"  class="q-right">
-                            88
+                            <i class="iconfont icon-tianjia btn" @click="$router.go('/memo')"></i>
                         </i-col>
                     </Row>
                     <i-table :content="self" :columns="memoCol" :show-header="false" :data="memoData"></i-table>
-                    <div class="q-more">更多...</div>
+                    <a v-link="{path: '/memo'}" class="q-more">更多...</a>
                </div>
             </i-col>
             <i-col span="6">
