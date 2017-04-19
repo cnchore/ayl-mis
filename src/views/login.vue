@@ -99,7 +99,7 @@ import server,{ storage } from '../libs/server'
                             self.$Loading.finish();
                             if(res.success){
                                 storage.session.set('userInfo',res.data.user);
-                                self.$router.go('/store');
+                                self.$router.go('/index');
                             }else{
                                 self.$Message.error(res.message);
                             }

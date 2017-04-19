@@ -57,7 +57,7 @@
             width="800"
             :mask-closable="false" 
             scrollable=>
-             <i-form v-ref:form-validate :model="modelForm" :rules="ruleValidate" :label-width="100">
+             <i-form v-ref:form-validate :model="modelForm" :rules="ruleValidate" :label-width="120">
                 <Row>
                     <i-col span="10">
                         <Form-item label="活动类型" prop="activityType">
@@ -78,7 +78,7 @@
                           <i-input :value.sync="modelForm.title" placeholder="请输入活动标题"></i-input>
                         </Form-item>
                         <Form-item label="活动摘要" prop="summary">
-                          <i-input :value.sync="modelForm.summary" type="textarea" :rows="2" placeholder="请输入活动摘要"></i-input>
+                          <i-input :value.sync="modelForm.summary" type="textarea" :rows="3" placeholder="请输入活动摘要"></i-input>
                         </Form-item>
                         <Form-item label="活动开始时间" prop="startTimeStr">
                             <Date-picker type="datetime" :value="modelForm.startTime" format="yyyy-MM-dd HH:mm:ss" @on-change="strDateChange"  placeholder="选择日期"></Date-picker>

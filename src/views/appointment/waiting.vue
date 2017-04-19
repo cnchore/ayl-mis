@@ -2,11 +2,11 @@
 	
 </style>
 <template>
-    <l-header active-key="2"></l-header>
+    <l-header active-key="3"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="2" active-key="2-5"></left-menu>
+                <left-menu active-Menu="3" active-key="3-1"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
@@ -16,14 +16,20 @@
                     <i-form v-ref:form-inline :model="seachForm"  inline>
                         <Form-item prop="storeName">
                             <div class="l-sel-inline">
-                                <span slot="prepend">标题</span>
-                                <i-input :value.sync="seachForm.titleLike"  placeholder="请输入标题" ></i-input>
+                                <span slot="prepend">客户名称</span>
+                                <i-input :value.sync="seachForm.titleLike"  placeholder="请输入名称" ></i-input>
                             </div>
                         </Form-item>
                         <Form-item prop="storeName">
                             <div class="l-sel-inline">
-                                <span slot="prepend">发布时间</span>
-                                <Date-picker type="date" :value="seachForm.publishTime" format="yyyy-MM-dd" @on-change="createDateChange"  placeholder="选择时间"></Date-picker>
+                                <span slot="prepend">客户电话</span>
+                                <i-input :value.sync="seachForm.titleLike"  placeholder="请输入电话" ></i-input>
+                            </div>
+                        </Form-item>
+                        <Form-item prop="storeName">
+                            <div class="l-sel-inline">
+                                <span slot="prepend">区域</span>
+                                <i-input :value.sync="seachForm.titleLike"  placeholder="请输入区域" ></i-input>
                             </div>
                         </Form-item>
                         <Form-item>
@@ -49,15 +55,56 @@
 	        :visible.sync="modalVisible"
 	        title="新增／修改"
 	        @on-ok="modelSubmit"
-	        width=700
+	        width=800
 	        
 			:mask-closable="false"
 	        >
-	        <i-form v-ref:form-validate :model="modelForm" :rules="modeRule" :label-width="100">
-		        <Form-item label="标题" prop="title">
+	        <i-form v-ref:form-validate :model="modelForm" :rules="modeRule" :label-width="130">
+		        <Row>
+		        <i-col span="12">
+		        <Form-item label="流水单号" prop="title">
 		            <i-input :value.sync="modelForm.title" placeholder="请输入标题"></i-input>
 		        </Form-item>
-		        <Form-item label="内容" prop="content">
+		        <Form-item label="预约人姓名" prop="title">
+		            <i-input :value.sync="modelForm.title" placeholder="请输入标题"></i-input>
+		        </Form-item>
+		        <Form-item label="上门量尺时间" prop="title">
+		            <i-input :value.sync="modelForm.title" placeholder="请输入标题"></i-input>
+		        </Form-item>
+		        <Form-item label="上门时间" prop="title">
+		            <Date-picker type="date" :value="seachForm.publishTime" format="yyyy-MM-dd" @on-change="createDateChange"  placeholder="选择时间"></Date-picker>
+		        </Form-item>
+		        <Form-item label="装修项目" prop="title">
+		            <i-input :value.sync="modelForm.title" placeholder="请输入标题"></i-input>
+		        </Form-item>
+		        <Form-item label="所属代理商" prop="title">
+		            <i-input :value.sync="modelForm.title" placeholder="请输入标题"></i-input>
+		        </Form-item>
+				</i-col>
+				<i-col span="12">
+				<Form-item label="&nbsp;">
+		        </Form-item>
+		        <Form-item label="预约人手机" prop="title">
+		            <i-input :value.sync="modelForm.title" placeholder="请输入标题"></i-input>
+		        </Form-item>
+		        <Form-item label="预计装修时间" prop="title">
+		           <Date-picker type="date" :value="seachForm.publishTime" format="yyyy-MM-dd" @on-change="createDateChange"  placeholder="选择时间"></Date-picker>
+		        </Form-item>
+		        <Form-item label="上门设计师电话" prop="title">
+		            <i-input :value.sync="modelForm.title" placeholder="请输入标题"></i-input>
+		        </Form-item>
+		        <Form-item label="工程预算" prop="title">
+		            <i-input :value.sync="modelForm.title" placeholder="请输入标题"></i-input>
+		        </Form-item>
+		        <Form-item label="所在城市" prop="title">
+		            <Cascader :data="addressData" @on-change="addrSelected" :value.sync="addressValue" trigger="hover"></Cascader>
+		        </Form-item>
+				</i-col>
+				</Row>
+		        <Form-item label="装修地址" prop="title">
+		            <i-input :value.sync="modelForm.title" placeholder="请输入标题"></i-input>
+		        </Form-item>
+		        <Form-item label="说明" prop="content">
 		            <i-input :value.sync="modelForm.content" type="textarea" :rows="3" placeholder="请输入公告内容"></i-input>
 		        </Form-item>
 		    </i-form>
@@ -73,6 +120,7 @@ import server from '../../libs/server'
 import LeftMenu from '../../components/left-menu'
 import LHeader from '../../components/header'
 import LTitle from '../../components/title'
+import chinaAddress from '../../components/china-address-0408'
 	export default{
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
@@ -90,6 +138,8 @@ import LTitle from '../../components/title'
 				spanLeft: 4,
                 spanRight: 20,
                 modelForm:{},
+                addressData:chinaAddress,
+                addressValue:[],
                 modeRule:{
                 	title: [
                         { required: true, message: '标题不能为空', trigger: 'blur' }
@@ -101,30 +151,39 @@ import LTitle from '../../components/title'
                 modelLoading:false,
 				tableCol: [
 				{
-					key:'title',title:'标题',className:'l-min-width l-ellipsis'
+					key:'title',title:'预约单号',width:250
 				},
 				{
-					width:100,key:'state',title:'状态',
+					key:'title',title:'客户名称',width:120
+				},
+				{
+					key:'title',title:'客户电话',width:130
+				},
+				{
+					key:'title',title:'客户地址',className:'l-m-min-width l-ellipsis'
+				},
+				{
+					width:100,key:'state',title:'当前阶段',
 
 					render(row,column,index){
 						return `{{getStatusName(${row.state})}}`;
 					}
 				},
 				{
-					key:'createTime',title:'创建时间',width:200
+					key:'createTime',title:'发送人',width:120
 				},
 				
 				{
-					key:'publishTime',title:'更新时间',width:200
+					key:'publishTime',title:'预约时间',width:200
 				},
 				{
-					key:'content',title:'内容',className:'l-m-min-width l-ellipsis'
+					key:'content',title:'接受时间',width:200
 				},
 				{
 					title: '操作',
 					key: 'action',
 					fixed:'right',
-					className:'l-m-min-width',
+					width:200,
 					align: 'center',
 					render (row, column, index) {
 					return `
@@ -155,6 +214,27 @@ import LTitle from '../../components/title'
 			this.getList();
 		},
 		methods:{
+			addrSelected(value,selectedData){
+                //console.log(selectedData);
+                if(selectedData.length>0){
+                    this.modelForm.provinceId=selectedData[0].value;
+                    this.modelForm.province=selectedData[0].label;
+                    this.modelForm.cityId=selectedData[1].value;
+                    this.modelForm.city=selectedData[1].label;
+                    this.modelForm.areaId=selectedData[2].value;
+                    this.modelForm.area=selectedData[2].label;
+                    this.modelForm.cityCode=selectedData[2].code;
+                }else{
+                    this.modelForm.provinceId='';
+                    this.modelForm.province='';
+                    this.modelForm.cityId='';
+                    this.modelForm.city='';
+                    this.modelForm.areaId='';
+                    this.modelForm.area='';
+                    this.modelForm.cityCode='';
+                }
+
+            },
             getStatusName(v){
             	
                 switch(v){

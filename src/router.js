@@ -11,6 +11,32 @@ const routers = {
         },
         meta: { title:'艾臣营销管理平台－登录' }
     },
+    //用户中心
+    '/info': {
+        component(resolve) {
+            require(['./views/user/info.vue'], resolve);
+        },
+        meta: { title:'艾臣营销管理平台－基本信息' }
+    },
+    '/info/edit': {
+        component(resolve) {
+            require(['./views/user/info-edit.vue'], resolve);
+        },
+        meta: { title:'艾臣营销管理平台－基本信息编辑' }
+    },
+    '/pwd/update': {
+        component(resolve) {
+            require(['./views/user/pwd-update.vue'], resolve);
+        },
+        meta: { title:'艾臣营销管理平台－修改密码' }
+    },
+    '/memo': {
+        component(resolve) {
+            require(['./views/user/memo.vue'], resolve);
+        },
+        meta: { title:'艾臣营销管理平台－备忘录' }
+    },
+    //安居艾臣
     '/store': {
         component(resolve) {
             require(['./views/aysl/store.vue'], resolve);
@@ -96,6 +122,31 @@ const routers = {
             require(['./views/hhr/partner-bonus.vue'], resolve);
         },
         meta: { requiresAuth: true,title:'艾臣营销管理平台－分红管理' }
+    },
+    //预约管理
+    '/waiting': {
+        component(resolve) {
+            require(['./views/appointment/waiting.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－待办事项' }
+    },
+    '/appointment/edit': {
+        component(resolve) {
+            require(['./views/appointment/edit.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－订货单编辑' }
+    },
+    '/complete': {
+        component(resolve) {
+            require(['./views/appointment/complete.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－已办事项' }
+    },
+    '/trash': {
+        component(resolve) {
+            require(['./views/appointment/trash.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－废弃箱' }
     }
 
 };

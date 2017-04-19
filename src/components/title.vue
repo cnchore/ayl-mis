@@ -4,7 +4,11 @@
         <Icon type="navicon" size="32"></Icon>
     </i-button>
 
-    <h3>艾臣营销管理平台</h3>
+    <Breadcrumb style="display: inline-block;">
+        <Breadcrumb-item :href="item.href" v-for="item in breads">{{item.text}}</Breadcrumb-item>
+    </Breadcrumb>
+
+
     <i-button type="primary" v-show="isShow" style="float: right; margin-right: 15px; margin-top: 8px; " icon="ios-plus-empty" @click="add">新增</i-button>  
 </template> 
 <script>
@@ -25,8 +29,15 @@
             spanRight:{
                 type:Number,
                 default:20
+            },
+            breads:{
+                type:Array,
+                default:function(){
+                    return [{text:'首页',href:'/index'}]
+                }
             }
         },
+        
         ready(){
             let w=window.document.body.clientWidth;
             if(w&&w<=1024){

@@ -114,17 +114,25 @@ import server,{ storage } from '../libs/server'
                         break;
                     case '2':
                         this.$router.go('/partner/account');
+                        break;
                     case '3':
+                        this.$router.go('/waiting');
+                        break;
                     case '4':
                     case '5':
                     case '6':
                     case '7':
-                    case '8-1':
-                    case '8-2':
+                    
                         this.$Notice.info({
                                 title:'提示',
                                 desc:'开发中,敬请期待...'
                             });
+                        break;
+                    case '8-1':
+                        this.$router.go('/info');
+                        break;
+                    case '8-2':
+                        this.$router.go('/pwd/update');
                         break;
                     case '8-3':
                         this.loginOut();
