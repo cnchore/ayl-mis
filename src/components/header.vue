@@ -47,10 +47,7 @@
                             <i class="iconfont icon-xiaoxi"></i>
                         </Menu-item>
                         <Submenu key="8" class="q-right">
-                            <template slot="title">
-                                
-                                张得帅
-                            </template>
+                            <template slot="title">{{userInfo.userName}}</template>
                             
                                 <Menu-item key="8-1">
                                 <Icon type="information"></Icon>
@@ -83,6 +80,11 @@ import server,{ storage } from '../libs/server'
             spanRight:{
                 type:Number,
                 default:20
+            }
+        },
+        data(){
+            return {
+                userInfo:storage.session.get('userInfo')
             }
         },
         ready(){

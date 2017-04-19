@@ -31,39 +31,78 @@
 							 	<i class="iconfont icon-bianji btn" title="编辑" @click="edit"></i>
 							 </div>       
 						</Form-item>
-	                	<Row>
+						<Row v-if="userInfo.type==1">
+							<i-col span="12" >
+								<Form-item label="用户名：">
+							           {{userInfo.userName}} 
+						        </Form-item>
+						        <Form-item label="性别：">
+							           {{loginerInfo.sex?'男':'女'}} 
+						        </Form-item>
+						        <Form-item label="组织部门：">
+							           {{loginerInfo.orgName}} 
+						        </Form-item>
+						        <Form-item label="固定电话：">
+							           {{loginerInfo.fixedPhone}} 
+						        </Form-item>
+						        <Form-item label="QQ号码：">
+							           {{loginerInfo.qq}} 
+						        </Form-item>
+							</i-col>
+							<i-col span="12" >
+								<Form-item label="姓名：">
+							           {{loginerInfo.realName}} 
+						        </Form-item>
+						        <Form-item label="出生日期：">
+							           {{loginerInfo.birthdayStr}} 
+						        </Form-item>
+						        <Form-item label="&nbsp;">
+							           
+						        </Form-item>
+						        <Form-item label="移动电话：">
+							           {{loginerInfo.mobilePhone}} 
+						        </Form-item>
+						        <Form-item label="电子邮箱：">
+							           {{loginerInfo.email}} 
+						        </Form-item>
+							</i-col>
+						</Row>
+	                	<Row v-show="userInfo.type==2">
 	                		<i-col span="12" >
-	 							<Form-item label="门店名称">
-							            
+	 							<Form-item label="门店名称：">
+							           {{loginerInfo.agentName}} 
 						        </Form-item>
-						        <Form-item label="账号">
+						        <Form-item label="账号：">
+						        		{{userInfo.userName}}
 						        </Form-item>
-						        <Form-item label="门店类型">
+						        <Form-item label="门店类型：">
+						            	
+						        </Form-item>
+			                   <Form-item label="是否开业：">
 						            
 						        </Form-item>
-			                   <Form-item label="是否开业">
-						            
+						        <Form-item label="代理产品：">
+							            {{loginerInfo.products}}
 						        </Form-item>
-						        <Form-item label="代理产品">
-							            
+						        <Form-item label="所属地区：">
+						        		{{loginerInfo.province}}{{loginerInfo.city}}{{loginerInfo.area}}
 						        </Form-item>
-						        <Form-item label="所属地区">
-						        </Form-item>
-						        <Form-item label="门店地址">
-						            
+						        <Form-item label="门店地址：">
+						            	{{loginerInfo.address}}
 						        </Form-item>
 						     </i-col>
 	                		<i-col span="12">
-		                    	<Form-item label="联系人">
-							            
+		                    	<Form-item label="联系人：">
+							            {{loginerInfo.contacter}}
 						        </Form-item>
-						        <Form-item label="手机号码">
+						        <Form-item label="手机号码：">
+						        	{{loginerInfo.contactPhone}}
 						        </Form-item>
-						        <Form-item label="电话">
-						            
+						        <Form-item label="性别：">
+						            {{loginerInfo.sex?'男':'女'}}
 						        </Form-item>
-			                   <Form-item label="邮箱">
-						            
+			                   <Form-item label="证件号：">
+						            {{loginerInfo.certificateNo}}
 						        </Form-item>
 	                		</i-col>
 	                	</Row>
@@ -78,7 +117,7 @@
     </div>
 </template>
 <script>
-import server from '../../libs/server'
+import server,{ storage }  from '../../libs/server'
 import LeftMenu from '../../components/left-menu'
 import LHeader from '../../components/header'
 import LTitle from '../../components/title'
@@ -92,13 +131,22 @@ import LTitle from '../../components/title'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
-                
+                userInfo:storage.session.get('userInfo'),
+                loginerInfo:{}
 			}
 		},
 		ready(){
-			
+			this.getList();
 		},
 		methods:{
+			getList(){
+				let self=this;
+				self.$Loading.start();
+				server.getLoginerInfo().then((res)=>{
+					self.$Loading.finish();
+					self.loginerInfo=res.data.rowsObject;
+				})
+			},
 			edit(){
 				this.$router.go('/info/edit')
 			}

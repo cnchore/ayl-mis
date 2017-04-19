@@ -57,6 +57,9 @@
 			margin-right: 15px;
 		}
 	}
+	.q-cell-memo em{
+		text-decoration: overline;
+	}
 </style>
 <template>
     <l-header active-key="0"></l-header>
@@ -343,7 +346,7 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
                     const cell = deepCopy(cell_tmpl);
                     const time = clearHours(new Date(this.year, this.month, i));
                     cell.type = time === today ? 'today' : 'normal';
-                    
+                    cell.memo='memo';
                     cell.text = i;
                     cell.selected = time === selectDay;
                    
@@ -408,7 +411,7 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
                     const cell = deepCopy(cell_tmpl);
                     const time = clearHours(new Date(rightYear, rightMonth, i));
                     cell.type = time === today ? 'today' : 'normal';
-                    
+                    cell.memo='memo';
                     cell.text = i;
                     cell.selected = time === selectDay;
                    
@@ -509,6 +512,7 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
                     {
                         [`${prefixCls}-cell-selected`]: cell.selected,
                         [`${prefixCls}-cell-today`]: cell.type === 'today',
+                        ['q-cell-memo']: cell.memo === 'memo',
                         [`${prefixCls}-cell-prev-month`]: cell.type === 'prev-month',
                         [`${prefixCls}-cell-next-month`]: cell.type === 'next-month'
                     }

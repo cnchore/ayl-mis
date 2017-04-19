@@ -26,15 +26,15 @@
 	                		</i-col>
 	                		<i-col span="14" >
 	 							
-						        <Form-item label="旧密码">
-		            <i-input :value.sync="modelForm.title" placeholder="请输入旧密码"></i-input>
+						        <Form-item label="旧密码" prop="oldPassWord">
+		            				<i-input :value.sync="modelForm.oldPassWord" type="password" placeholder="请输入旧密码"></i-input>
 							            
 						        </Form-item>
-						        <Form-item label="新密码">
-		            <i-input :value.sync="modelForm.title" placeholder="请输入新密码"></i-input>
+						        <Form-item label="新密码" prop="newPassWord">
+		            				<i-input :value.sync="modelForm.newPassWord" type="password" placeholder="请输入新密码"></i-input>
 						        </Form-item>
-						        <Form-item label="确定秘密">
-		            <i-input :value.sync="modelForm.title" placeholder="请再次输入新密码"></i-input>
+						        <Form-item label="确定密码" prop="secondPassWord">
+		            				<i-input :value.sync="modelForm.secondPassWord" type="password" placeholder="请再次输入新密码"></i-input>
 						            
 						        </Form-item>
 						     </i-col>
@@ -44,8 +44,8 @@
 	                	</Row>
 	                	<Form-item>
 						        	<div class="q-form-btn">
-						            <i-button type="primary" size="large">保存</i-button>
-						            <i-button type="ghost" size="large">取消</i-button>
+						            <i-button type="primary" size="large" @click="submit">保存</i-button>
+						            <i-button type="ghost" size="large" @click="cancel">取消</i-button>
 						            </div>
 				        </Form-item>
                      </i-form>
@@ -73,14 +73,51 @@ import LTitle from '../../components/title'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
-                modelForm:{}
+                modelForm:{
+					oldPassWord:'',//旧密码
+					newPassWord:'',//新密码
+					secondPassWord:''//确认密码
+                },
+                ruleValidate: {
+                    oldPassWord: [
+                    { required: true, message: '旧密码不能为空', trigger: 'blur' }
+                    ],
+                    newPassWord: [
+                    { required: true, message: '新密码不能为空', trigger: 'blur' }
+                    ],
+                    secondPassWord: [
+                    { required: true, message: '确认密码不能为空', trigger: 'blur' }
+                    ]
+                }
 			}
 		},
 		ready(){
 			
 		},
 		methods:{
-			
+			submit(){
+				let self=this;
+				self.$Loading.start();
+				server.updateMypwd(self.modelForm).then((res)=>{
+					self.$Loading.finish();
+					if(res.success){
+                        self.$Notice.success({
+                            title:'密码修改成功',
+                            desc:res.message
+                        });
+                    }else{
+                        self.$Notice.error({
+                            title:'密码修改失败',
+                            desc:res.message
+                        });
+                    }
+				})
+			},	
+			cancel(){
+				for (var item in this.modelForm) {
+					this.modelForm[item]=''
+				}
+			}
 		}
 	}
 </script>

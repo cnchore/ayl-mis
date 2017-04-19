@@ -4,6 +4,8 @@ import Vue from 'vue'
 
 const serverPath={
 	getDict:'/sys/dictionary/getList',
+	getOrgList:'/sys/org/getList',
+
 	getStoreAllList:'/sys/store/getList',
 	getStoreList:'/sys/store/getPage',
 	addStore:'/sys/store/add',
@@ -15,6 +17,9 @@ const serverPath={
 	getGpsByAddress:'/common/getGpsByAddress',
 	login:'/sys/user/login',
 	loginOut:'/sys/user/loginOut',
+	getLoginerInfo:'/sys/user/getLoginerInfo',
+	updateLoginerInfo:'/sys/user/updateLoginerInfo',
+	updateMyPwd:'/sys/user/updateMyPwd',
 
 	getPublish:'/mem/publish/getPage',
 	getAllPublish:'/mem/publish/getList',
@@ -310,6 +315,15 @@ export default {
 			params.parentId=parentId;
 		}
     	return this.getPromise(serverPath.getDict,params,'getDict');
+	},
+	//获取组织机构
+	getOrgList(parentId=null){
+		if(parentId){
+	    	return this.getPromise(serverPath.getOrgList,{parentId},'getOrgList');
+		}
+		else{
+	    	return this.getPromise(serverPath.getOrgList,'getOrgList');
+		}
 	},
 	//门店展示管理
 	getStoreList(page=1,rows=10,storeNameLike=''){
@@ -750,5 +764,57 @@ export default {
 		}
     	return this.postPromise(serverPath.addParnerBonus,_list,'addParnerBonus');
 
+	},
+	//根据当前登录人信息查询用户信息
+	getLoginerInfo(){
+		return this.getPromise(serverPath.getLoginerInfo,'getLoginerInfo');
+
+	},
+	//更新当前登录人用户信息
+	updateLoginerInfo(formData){
+		let _list={
+			id:formData.id,//主键
+			realName:formData.realName,//姓名
+			sex:formData.sex,//性别 ：true男 false 女
+			orgName:formData.orgName,//所属部门名称
+			orgId:formData.orgId,//所属部门id
+			fixedPhone:formData.fixedPhone,//固定电话
+			mobilePhone:formData.mobilePhone,//移动电话
+			email:formData.email,//电子邮箱
+			qq:formData.qq,//qq号码
+			birthdayStr:formData.birthdayStr//出生日期
+		}
+		if(formData.agentName){
+			_list={
+				id:formData.id,//主键
+				userId:formData.userId,//用户id
+				agentName:formData.agentName,//代理商名称
+				agentCode:formData.agentCode,//代理商编号
+				province:formData.province,//省会
+				provinceId:formData.provinceId,//省会id
+				city:formData.city,//城市
+				cityId:formData.cityId,//城市id
+				area:formData.area,//区域
+				areaId:formData.areaId,//区域id
+				contacter:formData.contacter,//联系人
+				contactPhone:formData.contactPhone,//联系电话
+				sex:formData.sex,//性别：true男 false 女
+				birthdayStr:formData.birthdayStr,//出生日期
+				certificateNo:formData.certificateNo,//证件号
+				address:formData.address,//地址
+				products:formData.products,//代理产品，用“,”隔开
+				productIds:formData.productIds//代理产品ids，用“,”隔开
+			}
+		}
+    	return this.postPromise(serverPath.updateLoginerInfo,_list,'updateLoginerInfo');
+	},
+	//修改我的密码
+	updateMyPwd(formData){
+		let _list={
+			oldPassWord:formData.oldPassWord,//旧密码
+			newPassWord:formData.newPassWord,//新密码
+			secondPassWord:formData.secondPassWord//确认密码
+		}
+    	return this.postPromise(serverPath.updateMyPwd,_list,'updateMyPwd');
 	}
 }
