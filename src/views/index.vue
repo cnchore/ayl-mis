@@ -134,7 +134,7 @@
                             <i class="iconfont icon-wodedaiban"></i>
                         </i-col>
                         <i-col :md="18" :lg="20">
-                            成交总金额
+                            我的待办业务
                         </i-col>
                         <i-col :md="3" :lg="2" class="q-right">
                             88

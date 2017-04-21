@@ -110,6 +110,37 @@
             </Menu-item>
        
     </Menu>
+    <Menu :active-key="activeKey" class="q-menu q-lg-icon"
+    v-show="activeMenu==='4'" width="auto" @on-select="handleSelect">
+        
+            <Menu-item key="4-1">
+                <Icon type="document-text"></Icon>
+                <span>订单管理</span>
+            </Menu-item>
+            <Menu-item key="4-2">
+                <Icon type="document"></Icon>
+                客户管理
+            </Menu-item>
+            
+    </Menu>
+    <Menu :active-key="activeKey" class="q-menu q-lg-icon"
+    v-show="activeMenu==='5'" width="auto" @on-select="handleSelect">
+        
+            <Menu-item key="5-1">
+                <Icon type="document-text"></Icon>
+                <span>经销商管理</span>
+            </Menu-item>
+            
+    </Menu>
+    <Menu :active-key="activeKey" class="q-menu q-lg-icon"
+    v-show="activeMenu==='9'" width="auto" @on-select="handleSelect">
+        
+            <Menu-item key="9-1">
+                <Icon type="document-text"></Icon>
+                <span>人员管理</span>
+            </Menu-item>
+            
+    </Menu>
 </template>
 <script>
 	export default{
@@ -195,6 +226,21 @@
                     case '3-3':
                         this.$router.go('/trash');
                         break;
+                    case '4-1':
+                        this.$router.go('/');
+                        break;
+                    case '4-2':
+                        this.$router.go('/order/ownerInfo');
+                        break;
+
+                    case '5-1':
+                        this.$router.go('/agent/index');
+                        break;
+
+                    case '9-1':
+                        this.$router.go('/staff');
+                        break;
+
                 }
             }
 		}

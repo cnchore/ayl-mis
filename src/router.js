@@ -147,7 +147,40 @@ const routers = {
             require(['./views/appointment/trash.vue'], resolve);
         },
         meta: { requiresAuth: true,title:'艾臣营销管理平台－废弃箱' }
-    }
+    },
+    //订单管理
+    '/order/ownerInfo': {
+        component(resolve) {
+            require(['./views/order/ownerInfo.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－客户管理' }
+    },
+    '/order/owner/edit': {
+        component(resolve) {
+            require(['./views/order/owner-edit.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－客户编辑' }
+    },
+    //经销商管理
+    '/agent/index': {
+        component(resolve) {
+            require(['./views/agentUser/agent.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－经销商管理' }
+    },
+    '/agent/edit': {
+        component(resolve) {
+            require(['./views/agentUser/add-or-edit.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－经销商编辑' }
+    },
+    //人员管理
+    '/staff': {
+        component(resolve) {
+            require(['./views/agentUser/staff.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－人员管理' }
+    },
 
 };
 export default routers;

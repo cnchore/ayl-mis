@@ -5,7 +5,7 @@
     </i-button>
 
     <Breadcrumb style="display: inline-block;">
-        <Breadcrumb-item :href="item.href" v-for="item in breads">{{item.text}}</Breadcrumb-item>
+        <Breadcrumb-item @click="gohref(item.href)" v-for="item in breads">{{item.text}}</Breadcrumb-item>
     </Breadcrumb>
 
 
@@ -80,6 +80,10 @@
             },
             add(){
                 this.$emit('on-add')
+            },
+            gohref(v){
+                v=v.replace('/index#!','')
+                this.$router.go(v);
             }
         }
     }

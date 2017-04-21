@@ -98,7 +98,7 @@ import LTitle from '../../components/title'
 			submit(){
 				let self=this;
 				self.$Loading.start();
-				server.updateMypwd(self.modelForm).then((res)=>{
+				server.updateMyPwd(self.modelForm).then((res)=>{
 					self.$Loading.finish();
 					if(res.success){
                         self.$Notice.success({

@@ -76,10 +76,10 @@
 						        		{{userInfo.userName}}
 						        </Form-item>
 						        <Form-item label="门店类型：">
-						            	
+						            	{{loginerInfo.isAgent?'非直营':'直营'}}
 						        </Form-item>
 			                   <Form-item label="是否开业：">
-						            
+						            	{{loginerInfo.status==1?'已开业':'未开业'}}
 						        </Form-item>
 						        <Form-item label="代理产品：">
 							            {{loginerInfo.products}}
@@ -144,7 +144,11 @@ import LTitle from '../../components/title'
 				self.$Loading.start();
 				server.getLoginerInfo().then((res)=>{
 					self.$Loading.finish();
-					self.loginerInfo=res.data.rowsObject;
+					if(!res.data){
+						self.loginerInfo={}
+					}else{
+						self.loginerInfo=res.data;
+					}
 				})
 			},
 			edit(){
