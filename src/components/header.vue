@@ -27,9 +27,13 @@
                         <i class="iconfont icon-hehuoren"></i>
                         <span>艾臣合伙人</span>
                     </Menu-item>
-                    <Menu-item key="5">
+                    <Menu-item key="5" v-show="userInfo.type==1">
                         <i class="iconfont icon-mendian"></i>
                         <span>经销商管理</span>
+                    </Menu-item>
+                    <Menu-item key="9" v-show="userInfo.type==2">
+                        <i class="iconfont icon-mendian"></i>
+                        <span>门店管理</span>
                     </Menu-item>
                     <Menu-item key="6">
                         <i class="iconfont icon-tongji"></i>
@@ -120,11 +124,15 @@ import server,{ storage } from '../libs/server'
                     case '3':
                         this.$router.go('/waiting');
                         break;
-                    case '4':
+                    
                     case '5':
+                         this.$router.go('/agent/index');
+                        break;
+                    case '4':
+                        this.$router.go('/order/ownerInfo')
+                        break;
                     case '6':
                     case '7':
-                    
                         this.$Notice.info({
                                 title:'提示',
                                 desc:'开发中,敬请期待...'
@@ -139,6 +147,10 @@ import server,{ storage } from '../libs/server'
                     case '8-3':
                         this.loginOut();
                         break;
+                    case '9':
+                        this.$router.go('/staff');
+                        break;
+                        
                 }
             },
             loginOut(){

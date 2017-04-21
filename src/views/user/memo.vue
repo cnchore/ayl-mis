@@ -139,34 +139,35 @@
                 				<h1>{{value.getDate()}}</h1>
                 				<div>
                 					<span>{{value.getFullYear()}}年 {{value.getMonth()+1}}月</span>
-                            		<i class="iconfont icon-tianjia btn"></i>
+                            		<i class="iconfont icon-tianjia btn" @click="addOrUpdate()"></i>
                 				</div>
                 			</div>
                 			<i-table :content="self" :columns="tableCol" :data="tableData"></i-table>
 		                    <div style="margin: 10px;overflow: hidden">
 		                        <div style="float: right;">
-		                            <Page :total="rowsTotal" show-total show-elevator :current.sync="pageIndex" @on-change="changePage"></Page>
+		                            <Page :total="rowsTotal" :page-size="5" show-total show-elevator :current.sync="pageIndex" @on-change="changePage"></Page>
 		                        </div>
 		                    </div>
 		                    
-	                    	<i-form v-ref:form-validate :model="modelForm" :rules="modeRule" :label-width="100">
-						        <Form-item label="标题" prop="title">
-						            <i-input :value.sync="modelForm.title" placeholder="请输入标题"></i-input>
+	                    	<i-form v-ref:form-validate v-show="formVisable" :model="modelForm" :rules="modeRule" :label-width="100">
+						        <Form-item label="备忘时间" prop="memoTime">
+						          
+						            <Date-picker type="datetime" :value="modelForm.memoTime" format="yyyy-MM-dd HH:mm:ss" @on-change="createDateChange"  placeholder="选择时间"></Date-picker>
 						        </Form-item>
 						        <Form-item label="内容" prop="content">
 						            <i-input :value.sync="modelForm.content" type="textarea" :rows="3" placeholder="请输入备忘内容"></i-input>
 						        </Form-item>
 						        <Form-item label="优先级">
-						            <Radio-group :model.sync="modelForm.radio">
-						                <Radio value="0">高</Radio>
-						                <Radio value="1">中</Radio>
-						                <Radio value="2">低</Radio>
+						            <Radio-group :model.sync="modelForm.memoLevel">
+						                <Radio value="3">高</Radio>
+						                <Radio value="2">中</Radio>
+						                <Radio value="1">一般</Radio>
 						            </Radio-group>
 						        </Form-item>
 						        <Form-item>
 						        	<div class="q-form-btn">
-						            <i-button type="primary">保存</i-button>
-						            <i-button type="ghost">取消</i-button>
+						            <i-button type="primary" @click="modelSubmit">保存</i-button>
+						            <i-button type="ghost" @click="formVisable=false">取消</i-button>
 						            </div>
 						        </Form-item>
 						    </i-form>
@@ -244,7 +245,7 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
 			return{
 				datePrefixCls:datePrefixCls,
 				breads:[{text:'首页',href:'/index#!/index'},{text:'备忘录',href:''}],
-				rowsTotal:10,
+				rowsTotal:5,
 				pageIndex:1,
 				self:this,
 				tableData:[],
@@ -254,41 +255,52 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
 	            rightYear:{},
 	            rightMonth:{},
 	            value:new Date(),
+	            valueStr:this.getDateStr(new Date().getFullYear(),new Date().getMonth(),new Date().getDate()),
 				prefixCls: prefixCls,
                 readCells: [],
                 rightReadCells:[],
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
-                modelForm:{radio:1},
+                modelForm:{},
                 modeRule:{
                 	content: [
                         { required: true, message: '内容不能为空', trigger: 'blur' }
+                    ],
+                    memoLevel: [
+                        { required: true, message: '优先级不能为空', trigger: 'blur' }
+                    ],
+                    memoTime: [
+                        { required: true, message: '备忘时间不能为空', trigger: 'blur' }
                     ]
                 },
+                formVisable:false,
                 modelLoading:false,
 				tableCol: [
-				
 				{
-					key:'createTime',title:'时间',width:200
-				},
-				{
-					key:'title',title:'备忘',className:'l-min-width l-ellipsis'
-				},
-				{
-					width:80,key:'state',title:'优先级',
+					width:35,key:'memoLevel',
 
 					render(row,column,index){
-						return `{{getStatusName(${row.state})}}`;
+						return `<span class="l-s-Error">{{getStatusName(${row.memoLevel})}}</span>`;
 					}
 				},
 				{
+					key:'memoTime',title:'备忘时间',width:200
+				},
+				{
+					key:'content',title:'备忘',className:'l-min-width l-ellipsis'
+				},
+				
+				{
 					title: '操作',
-					key: 'action',width:60,
+					key: 'action',width:160,
 					align: 'center',
 					render (row, column, index) {
 					return `
-						<i-button type="primary" icon="edit" @click="modelShow(${row.id})" size="small">修改</i-button>
+						<i-button type="primary" icon="edit" @click="addOrUpdate(${row.id})" size="small">修改</i-button>
+						<i-button type="primary"
+							@click="del(${row.id})"
+							 icon="ios-trash" size="small">删除</i-button>
 					`;
 					}   
 				}]
@@ -301,6 +313,7 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
 			cells: {
                 handler (cells) {
                     this.readCells = cells;
+
                 },
                 immediate: true
             },
@@ -309,6 +322,12 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
                     this.rightReadCells = rightCells;
                 },
                 immediate: true
+            },
+            valueStr:{
+            	handler(valueStr){
+            		this.getList();
+            	},
+            	immediate:true
             }
 		},
 		computed:{
@@ -332,21 +351,33 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
                         const cell = deepCopy(cell_tmpl);
                         cell.type = 'prev-month';
                         cell.text = dateCountOfLastMonth - (day - 1) + i;
-                        let prevMonth = this.month - 1;
-                        let prevYear = this.year;
-                        if (this.month === 0) {
-                            prevMonth = 11;
-                            prevYear -= 1;
-                        }
+                        
                        
                         cells.push(cell);
                     }
                 }
+                let nextMonth = this.month + 1;
+                let nextYear = this.year;
+                if (this.month === 11) {
+                    nextMonth = 0;
+                    nextYear += 1;
+                }
+                let memoList=this.getNoPageList(this.getDateStr(this.year,this.month,1),this.getDateStr(nextYear,nextMonth,1));
+
                 for (let i = 1; i <= dateCountOfMonth; i++) {
                     const cell = deepCopy(cell_tmpl);
                     const time = clearHours(new Date(this.year, this.month, i));
                     cell.type = time === today ? 'today' : 'normal';
-                    cell.memo='memo';
+                    if(typeOf(memoList)=== 'array'){
+                    	memoList.forEach((item)=>{
+	                    	let d=new Date(item.memoTime).getDate();
+	                    	if(d===i){
+	                    		cell.memo='memo';
+	                    	}
+	                    })
+                    }
+                    
+                    //cell.memo='memo';
                     cell.text = i;
                     cell.selected = time === selectDay;
                    
@@ -357,12 +388,7 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
                     const cell = deepCopy(cell_tmpl);
                     cell.type = 'next-month';
                     cell.text = i;
-                    let nextMonth = this.month + 1;
-                    let nextYear = this.year;
-                    if (this.month === 11) {
-                        nextMonth = 0;
-                        nextYear += 1;
-                    }
+                    
                    
                     cells.push(cell);
                 }
@@ -397,21 +423,32 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
                         const cell = deepCopy(cell_tmpl);
                         cell.type = 'prev-month';
                         cell.text = dateCountOfLastMonth - (day - 1) + i;
-                        let prevMonth = rightMonth - 1;
-                        let prevYear = rightYear;
-                        if (rightMonth === 0) {
-                            prevMonth = 11;
-                            prevYear -= 1;
-                        }
+                        
                        
                         cells.push(cell);
                     }
                 }
+                let nextMonth = this.rightMonth + 1;
+                let nextYear = this.rightYear;
+                if (this.rightMonth === 11) {
+                    nextMonth = 0;
+                    nextYear += 1;
+                }
+                let memoList=this.getNoPageList(this.getDateStr(this.rightYear,this.rightMonth,1),this.getDateStr(nextYear,nextMonth,1));
+
                 for (let i = 1; i <= dateCountOfMonth; i++) {
                     const cell = deepCopy(cell_tmpl);
                     const time = clearHours(new Date(rightYear, rightMonth, i));
                     cell.type = time === today ? 'today' : 'normal';
-                    cell.memo='memo';
+                    if(typeOf(memoList)=== 'array'){
+                    	memoList.forEach((item)=>{
+	                    	let d=new Date(item.memoTime).getDate();
+	                    	if(d===i){
+	                    		cell.memo='memo';
+	                    	}
+	                    })
+                    }
+                    //cell.memo='memo';
                     cell.text = i;
                     cell.selected = time === selectDay;
                    
@@ -422,12 +459,7 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
                     const cell = deepCopy(cell_tmpl);
                     cell.type = 'next-month';
                     cell.text = i;
-                    let nextMonth = rightMonth + 1;
-                    let nextYear = rightYear;
-                    if (rightMonth === 11) {
-                        nextMonth = 0;
-                        nextYear += 1;
-                    }
+                    
                    
                     cells.push(cell);
                 }
@@ -435,6 +467,39 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
             }
 		},
 		methods:{
+			getNoPageList(memoTimeStart,memoTimeEnd){
+				server.getMemoAll({memoTimeStart,memoTimeEnd}).then((res)=>{
+					if(res.success){
+						return res.data;
+					}else{
+						return []
+					}
+				})
+			},
+			getList(page=1,rows=5){
+                let self=this;
+                self.$Loading.start();
+                let _list={};
+                _list.memoTime=this.valueStr;
+                _list.page=page;
+                _list.rows=rows;
+                server.getMemoList(_list).then((res)=>{
+                    self.$Loading.finish();
+                    if(res.data&&res.data.rowsObject){
+	                    self.tableData=res.data.rowsObject;
+	                    self.rowsTotal=res.data.total;
+	                }
+                })
+            },
+			
+			changePage(index){
+                this.pageIndex=index+0;
+                this.getList(index+0,5);
+			},
+			search(name){
+                this.pageIndex=1;
+                this.getList(1,5);
+			},
 			getDateOfCell (cell,t=null) {
                 let year = this.year;
                 let month = this.month;
@@ -459,14 +524,35 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
                         month++;
                     }
                 }
+                let monthStr=month+1;
+                let dayStr=day+1;
+                if(monthStr<10){
+                	monthStr='0'+monthStr;
+                }
+                if(dayStr<10){
+                	dayStr='0'+dayStr;
+                }
+                this.valueStr=this.getDateStr(year,month,day);
                 return new Date(year,month,day);
                 //return year+'-'+month+'-'+day;
+            },
+            getDateStr(year,month,day){
+            	let monthStr=month+1;
+                let dayStr=day;
+                if(monthStr<10){
+                	monthStr='0'+monthStr;
+                }
+                if(dayStr<10){
+                	dayStr='0'+dayStr;
+                }
+                return year+'-'+monthStr+'-'+dayStr;
             },
             handleClick (event) {
                 const target = event.target;
                 if (target.tagName === 'EM') {
                     const cell = this.cells[parseInt(event.target.getAttribute('index'))];
                     const newDate = this.getDateOfCell(cell);
+                    
                     this.value=newDate;
                     //console.log(newDate);
                 }
@@ -501,11 +587,101 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
                 }
             },
 			getStatusName(v){
+				switch(v){
+					case 1:
+						return '!';
+					case 2:
+						return '!!';
+					case 3:
+						return '!!!';
+				}
+			},
+			addOrUpdate(id){
+				let self=this;
+				console.log(id);
+				if(id){
+					self.$Loading.start();
+	                server.getMemoByid(id).then((res)=>{
+	                	self.$Loading.finish();
+	                    if(res.success){
+	                        self.modelForm=res.data;
+	                        self.formVisable=true;
+	                    }else{
+	                        self.modelForm={};
+	                    }
+	                })
+
+				}else{
+					self.modelForm={};
+					self.formVisable=true;
+				}
+			},
+			modelSubmit(){
+				let self=this;
+				self.modelLoading=true;
+				if(self.modelForm.id){
+					server.updateMemo(self.modelForm).then((res)=>{
+						self.modelLoading=false;
+	                    if(res.success){
+	                        self.$Notice.success({
+	                            title:'修改成功',
+	                            desc:res.message
+	                        });
+							self.formVisable=false;
+	                        self.getList(self.pageIndex,10);
+	                    }else{
+	                        self.$Notice.error({
+	                            title:'修改失败',
+	                            desc:res.message
+	                        });
+	                    }
+	                })
+				}else{
+	                server.addMemo(self.modelForm).then((res)=>{
+	                	self.modelLoading=false;
+	                    if(res.success){
+	                        self.$Notice.success({
+	                            title:'新增成功',
+	                            desc:res.message
+	                        });
+	                        self.formVisable=false;
+	                        self.getList(self.pageIndex,10);
+	                    }else{
+	                        self.$Notice.error({
+	                            title:'新增失败',
+	                            desc:res.message
+	                        });
+	                    }
+	                })
+				}
 
 			},
-			modelShow(id){
-
+			del(id){
+				let self=this;
+				self.$Modal.confirm({
+                    onOk:function(){
+                       server.delMemo(id).then((res)=>{
+		                    if(res.success){
+		                        self.$Notice.success({
+		                            title:'删除成功',
+		                            desc:res.message
+		                        });
+		                        self.getList(self.pageIndex,10);
+		                    }else{
+		                        self.$Notice.error({
+		                            title:'删除失败',
+		                            desc:res.message
+		                        });
+		                    }
+		                }) 
+                    },
+                    content:'您确认删除这条备忘吗？'
+                })
+                
 			},
+			createDateChange(e){
+            	this.modelForm.memoTimeStr=e;
+            },
 			getCellCls (cell) {
                 return [
                     `${prefixCls}-cell`,

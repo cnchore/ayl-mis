@@ -95,7 +95,39 @@ const serverPath={
 	publishNotice:'/sys/notice/publish',
 
 	getCouponApply:'/partner/couponApply/getPage',
-	verifyCouponApply:'/partner/couponApply/verify'
+	verifyCouponApply:'/partner/couponApply/verify',
+
+	//经销商管理
+	getAgentList:'/sys/agentUser/getPage',
+	getAgentByid:'/sys/agentUser/getById',
+	addAgent:'/sys/agentUser/addAgent',
+	updateAgent:'/sys/agentUser/updateAgent',
+	changeAgent:'/sys/user/changeStatus',
+
+	//人员管理
+	getStaffList:'/sys/staff/getPage',
+	getStaffAll:'/sys/staff/getList',
+	getStaffByid:'/sys/staff/getById',
+	addStaff:'/sys/staff/add',
+	updateStaff:'/sys/staff/update',
+	changeStaff:'/sys/staff/changeState',
+
+	//备忘录
+	getMemoList:'/sys/memo/getPage',
+	getMemoAll:'/sys/memo/getList',
+	getMemoByid:'/sys/memo/getById',
+	addMemo:'/sys/memo/add',
+	updateMemo:'/sys/memo/update',
+	delMemo:'/sys/memo/deleteById',
+
+	//客户管理
+	getOwnerList:'/owner/ownerInfo/getPage',
+	getOwnerByid:'/owner/ownerInfo/getById',
+	addOwner:'/owner/ownerInfo/add',
+	updateOwner:'/owner/ownerInfo/update',
+	delOwner:'/owner/ownerInfo/deleteById',
+	//预约管理
+	getAppointmentList:'/owner/appointment/getPage',
 
 }
 
@@ -213,7 +245,7 @@ export default {
 		          }
 		        }, (error)=>{
 		          resolve(ret)
-		          console.log(requestName,error);
+		          console.error(requestName,error);
 		        })
 	    })
     	return promise
@@ -816,5 +848,217 @@ export default {
 			secondPassWord:formData.secondPassWord//确认密码
 		}
     	return this.postPromise(serverPath.updateMyPwd,_list,'updateMyPwd');
-	}
+	},
+	//经销商管理
+	getAgentList(searchData){
+		return this.getPromise(serverPath.getAgentList,searchData,'getAgentList');
+	},
+	getAgentByid(id){
+		return this.getPromise(serverPath.getAgentByid,{id},'getAgentByid');
+	},
+	addAgent(formData){
+		let _list={
+		userName:formData.userName,
+		agentName:formData.agentName,//代理商名称
+		agentCode:formData.agentCode,//代理商编号
+		province:formData.province,//省会
+		provinceId:formData.provinceId,//省会id
+		city:formData.city,//城市
+		cityId:formData.cityId,//城市id
+		area:formData.area,//区域
+		areaId:formData.areaId,//区域id
+		contacter:formData.contacter,//联系人
+		contactPhone:formData.contactPhone,//联系电话
+		sex:formData.sex,//性别
+		birthday:formData.birthday,//出生日期
+		certificateNo:formData.certificateNo,//证件号
+		address:formData.address,//地址
+		products:formData.products,//代理产品，用“,”隔开
+		productIds:formData.productIds,//代理产品ids，用“,”隔开
+		isAgent:formData.isAgent,//是否代理商：false:直营    true:非直营
+		pwd:formData.pwd,//密码
+		confirmPwd:formData.confirmPwd//确认密码
+
+		}
+    	return this.postPromise(serverPath.addAgent,_list,'addAgent');
+	},
+	updateAgent(formData){
+		let _list={
+		id:formData.id,//主键
+		userId:formData.userId,//用户id
+		agentName:formData.agentName,//代理商名称
+		agentCode:formData.agentCode,//代理商编号
+		province:formData.province,//省会
+		provinceId:formData.provinceId,//省会id
+		city:formData.city,//城市
+		cityId:formData.cityId,//城市id
+		area:formData.area,//区域
+		areaId:formData.areaId,//区域id
+		contacter:formData.contacter,//联系人
+		contactPhone:formData.contactPhone,//联系电话
+		sex:formData.sex,//性别
+		//birthday:formData.birthday,//出生日期
+		certificateNo:formData.certificateNo,//证件号
+		address:formData.address,//地址
+		products:formData.products,//代理产品，用“,”隔开
+		productIds:formData.productIds,//代理产品ids，用“,”隔开
+		isAgent:formData.isAgent,//是否代理商：false:直营    true:非直营
+		
+		}
+		if(formData.pwd){
+			_list.pwd=formData.pwd;
+			_list.confirmPwd=formData.confirmPwd;
+		}
+    	return this.postPromise(serverPath.updateAgent,_list,'updateAgent');
+	},
+	changeAgent(id,status){
+    	return this.postPromise(serverPath.changeAgent,{id,status},'changeAgent');
+	},
+
+	//人员管理
+	getStaffList(searchData){
+		return this.getPromise(serverPath.getStaffList,searchData,'getStaffList');
+	},
+	getStaffAll(searchData){
+		return this.getPromise(serverPath.getStaffAll,searchData,'getStaffAll');
+	},
+	getStaffByid(id){
+		return this.getPromise(serverPath.getStaffByid,{id},'getStaffByid');
+
+	},
+	addStaff(formData){
+		let _list={
+			staffName:formData.staffName,//员工姓名
+			staffPhone:formData.staffPhone,//员工电话
+			remark:formData.remark//备注
+		}
+		if(formData.sourceId){
+			_list.sourceId=formData.sourceId;
+			_list.source=formData.source;
+		}
+		return this.postPromise(serverPath.addStaff,_list,'addStaff');
+	},
+	updateStaff(formData){
+		let _list={
+			id:formData.id,//主键
+			staffName:formData.staffName,//员工姓名
+			staffPhone:formData.staffPhone,//员工电话
+			remark:formData.remark//备注
+		}
+		if(formData.sourceId){
+			_list.sourceId=formData.sourceId;
+			_list.source=formData.source;
+		}
+		return this.postPromise(serverPath.updateStaff,_list,'updateStaff');
+	},
+	changeStaff(id){
+		return this.postPromise(serverPath.changeStaff,{id},'changeStaff');
+
+	},
+	//备忘录
+	getMemoList(searchData){
+		return this.getPromise(serverPath.getMemoList,searchData,'getMemoList');
+	},
+	getMemoAll(searchData){
+		return this.getPromise(serverPath.getMemoAll,searchData,'getMemoAll');
+	},
+	getMemoByid(id){
+		return this.getPromise(serverPath.getMemoByid,{id},'getMemoByid');
+	},
+	addMemo(formData){
+		let _list={
+			content:formData.content,//备忘内容  
+			memoTimeStr:formData.memoTimeStr,//备忘时间
+			memoLevel:formData.memoLevel//备忘级别 :1一般 2中级 3高级
+		}
+		return this.postPromise(serverPath.addMemo,_list,'addMemo');
+	},
+	updateMemo(formData){
+		let _list={
+			id:formData.id,
+			content:formData.content,//备忘内容  
+			memoTimeStr:formData.memoTimeStr,//备忘时间
+			memoLevel:formData.memoLevel//备忘级别 :1一般 2中级 3高级
+		}
+		return this.postPromise(serverPath.updateMemo,_list,'updateMemo');
+	},
+	delMemo(id){
+		return this.postPromise(serverPath.delMemo,{id},'delMemo');
+
+	},
+	//客户管理
+	getOwnerList(searchData){
+		return this.getPromise(serverPath.getOwnerList,searchData,'getOwnerList');
+	},
+	getOwnerByid(id){
+		return this.getPromise(serverPath.getOwnerByid,{id},'getOwnerByid');
+
+	},
+	addOwner(formData){
+		let _list={
+			name:formData.name,//客户姓名
+			mobilePhone:formData.mobilePhone,//客户电话
+			decorateProject:formData.decorateProject,//装修项目，以，隔开
+			province:formData.province,//省会
+			provinceId:formData.provinceId,//省会id
+			city:formData.city,//城市
+			cityId:formData.cityId,//城市id
+			area:formData.area,//区域
+			areaId:formData.areaId,//区域id
+			address:formData.address,//详细地址
+			remark:formData.remark,//备注
+			belongIds:formData.belongIds,//客户归属id集合，以，隔开
+			belongNames:formData.belongNames//客户归属集合，以，隔开
+		}
+		if(formData.attachList){
+			formData.attachList.forEach((item,index)=>{
+				if(item.attachAddress){
+					_list["attachList["+index+"].attachAddress"]=item.attachAddress;
+					_list["attachList["+index+"].attachName"]=item.attachName;
+				}
+			})
+			
+		}
+		return this.postPromise(serverPath.addOwner,_list,'addOwner');
+
+	},
+	updateOwner(formData){
+		let _list={
+			id:formData.id,//主键
+			name:formData.name,//客户姓名
+			mobilePhone:formData.mobilePhone,//客户电话
+			decorateProject:formData.decorateProject,//装修项目，以，隔开
+			province:formData.province,//省会
+			provinceId:formData.provinceId,//省会id
+			city:formData.city,//城市
+			cityId:formData.cityId,//城市id
+			area:formData.area,//区域
+			areaId:formData.areaId,//区域id
+			address:formData.address,//详细地址
+			remark:formData.remark,//备注
+			belongIds:formData.belongIds,//客户归属id集合，以，隔开
+			belongNames:formData.belongNames//客户归属集合，以，隔开
+		}
+		if(formData.attachList){
+			formData.attachList.forEach((item,index)=>{
+				if(item.attachAddress){
+					_list["attachList["+index+"].attachAddress"]=item.attachAddress;
+					_list["attachList["+index+"].attachName"]=item.attachName;
+				}
+			})
+			
+		}
+		return this.postPromise(serverPath.updateOwner,_list,'updateOwner');
+
+	},
+	delOwner(id){
+		return this.postPromise(serverPath.delOwner,{id},'delOwner');
+
+	},
+	//预约管理
+	getAppointmentList(searchData){
+		return this.getPromise(serverPath.getAppointmentList,searchData,'getAppointmentList');
+
+	},
+
 }

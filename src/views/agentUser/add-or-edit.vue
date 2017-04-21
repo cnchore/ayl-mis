@@ -7,11 +7,11 @@
 }
 </style>
 <template>
-    <l-header active-key="0"></l-header>
+    <l-header active-key="5"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="0" active-key="0-1"></left-menu>
+                <left-menu active-Menu="5" active-key="5-1"></left-menu>
             </i-col>
             <i-col :span="spanRight">
 
@@ -24,54 +24,13 @@
                 		<Form-item>
 		            				
 						</Form-item>
-	                	<Row v-if="userInfo.type==1" class="q-info-row">
-							<i-col span="12" >
-								<Form-item label="用户名：">
-							           {{userInfo.userName}} 
-						        </Form-item>
-						        <Form-item label="性别：">
-						        	<Radio-group :model.sync="modelForm.sex">
-						                <Radio value="true">男</Radio>
-						                <Radio value="false">女</Radio>
-						            </Radio-group>
-						        </Form-item>
-						        <Form-item label="组织部门：">
-						           <i-select :model.sync="modelForm.orgId" placeholder="请选择">
-	                                    <i-option v-for="item in orgList" :value="item.value">{{ item.label }}</i-option>
-	                                </i-select>
-						        </Form-item>
-						        <Form-item label="固定电话：">
-                          			<i-input :value.sync="modelForm.fixedPhone" placeholder="请输入固定电话"></i-input>
-						        </Form-item>
-						        <Form-item label="QQ号码：">
-                          			<i-input :value.sync="modelForm.qq" placeholder="请输入QQ号码"></i-input>
-						        </Form-item>
-							</i-col>
-							<i-col span="12" >
-								<Form-item label="姓名：">
-                          			<i-input :value.sync="modelForm.realName" placeholder="请输入姓名"></i-input>
-						        </Form-item>
-						        <Form-item label="出生日期：">
-                                	<Date-picker type="date" :value="modelForm.birthdayStr" format="yyyy-MM-dd" @on-change="strDateChange"  placeholder="选择日期"></Date-picker>
-						        </Form-item>
-						        <Form-item label="&nbsp;">
-							           
-						        </Form-item>
-						        <Form-item label="移动电话：">
-                          			<i-input :value.sync="modelForm.mobilePhone" placeholder="请输入移动电话"></i-input>
-						        </Form-item>
-						        <Form-item label="电子邮箱：">
-                          			<i-input :value.sync="modelForm.email" placeholder="请输入电子邮箱"></i-input>
-						        </Form-item>
-							</i-col>
-						</Row>
-	                	<Row v-show="userInfo.type==2" class="q-info-row">
+	                	<Row v-show="userInfo.type==1" class="q-info-row">
 	                		<i-col span="12" >
 	 							<Form-item label="门店名称：">
                           			<i-input :value.sync="modelForm.agentName" placeholder="请输入门店名称"></i-input>
 						        </Form-item>
 						        <Form-item label="账号：">
-						        		{{userInfo.userName}}
+						        	<i-input :value.sync="modelForm.userName" placeholder="请输入账号"></i-input>
 						        </Form-item>
 						        <Form-item label="门店类型：">
 						            	
@@ -109,6 +68,10 @@
 						        </Form-item>
 						     </i-col>
 	                		<i-col span="12">
+	                		
+	                			<Form-item label="门店编号：">
+                          			<i-input :value.sync="modelForm.agentCode" placeholder="请输入门店编号"></i-input>
+						        </Form-item>
 		                    	<Form-item label="联系人：">
                           			<i-input :value.sync="modelForm.contacter" placeholder="请输入联系人"></i-input>
 						        </Form-item>
@@ -127,6 +90,12 @@
 						        </Form-item>
 			                   <Form-item label="证件号：">
                           			<i-input :value.sync="modelForm.certificateNo" placeholder="请输入证件号"></i-input>
+						        </Form-item>
+						        <Form-item label="密码：">
+                          			<i-input :value.sync="modelForm.pwd" type="password" placeholder="请输入密码"></i-input>
+						        </Form-item>
+						        <Form-item label="确认密码：">
+                          			<i-input :value.sync="modelForm.confirmPwd" type="password" placeholder="请再次输入密码"></i-input>
 						        </Form-item>
 	                		</i-col>
 	                	</Row>
@@ -158,22 +127,40 @@ import chinaAddress from '../../components/china-address-0408'
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
 			return{
-				breads:[{text:'首页',href:'/index#!/index'},{text:'基本信息',href:'/index#!/info'},{text:'编辑',href:''}],
+				breads:[{text:'首页',href:'/index'},{text:'经销商列表',href:'/agent/index'},{text:'编辑',href:''}],
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
-                modelForm:{},
+                modelForm:{productTypesList:[]},
                 subLoading:false,
                 addressData:chinaAddress,
                 addressValue:[],
-                checkGroup:['1','2','3'],
-                orgList:[],
+                checkGroup:[],
                 userInfo:storage.session.get('userInfo'),
+                id:null,
 
 			}
 		},
+		route:{
+            data:function(transition){
+                if(transition.to.query &&transition.to.query.id){
+                    let t=transition.to.query.id;
+                    this.id=t;
+                    
+                }
+            }
+        },
 		ready(){
-			this.getList();
+			if(this.userInfo.type==2){
+				this.$router.go('/index');
+				return;
+			}
+			if(this.id){
+				this.getList();
+
+			}else{
+				this.getDict();
+			}
 			
 		},
 		methods:{
@@ -196,22 +183,26 @@ import chinaAddress from '../../components/china-address-0408'
                 }
 
             },
-            getOrgList(){
+            getDict(){
+            	//ProductCategory_bigType
             	let self=this;
-            	server.getOrgList().then((res)=>{
-            		self.orgList=[];
-            		res.data.forEach((item)=>{
-            			self.orgList.push({
-            				value:item.id,
-            				label:item.orgName
-            			})
-            		})
-            	})
+				server.getDict('ProductCategory_bigType').then((res)=>{
+					self.modelForm.productTypesList=[];
+                    if(res.data.length>0){
+                        res.data.forEach((item)=>{
+                             self.modelForm.productTypesList.push({
+                                id:item.id,
+                                dicName:item.dicName
+                            })
+                        })
+                        
+                    }
+                }) 
             },
 			getList(){
 				let self=this;
 				self.$Loading.start();
-				server.getLoginerInfo().then((res)=>{
+				server.getAgentByid(self.id).then((res)=>{
 					self.$Loading.finish();
 					if(res.data){
 						return server.jsonParse(res.data);
@@ -241,9 +232,8 @@ import chinaAddress from '../../components/china-address-0408'
                     		}
                     	})
                     }
-                    if(self.modelForm.orgId){
-                    	self.getOrgList();
-                    }
+                   	self.modelForm.pwd='';
+                   	self.modelForm.confirmPwd='';
                     if(self.modelForm.sex!=undefined){
                     	self.modelForm.sex=self.modelForm.sex.toString();
                     }
@@ -253,9 +243,7 @@ import chinaAddress from '../../components/china-address-0408'
                 	
 				})
 			},
-			strDateChange(e){
-                this.modelForm.birthdayStr=e;
-            },
+			
             submit(){
             	let self=this;
 				self.subLoading=true;
@@ -271,30 +259,43 @@ import chinaAddress from '../../components/china-address-0408'
             		})
 
             	}
-            	if(self.modelForm.orgId){
-            		self.orgList.forEach((item)=>{
-            			if(item.value==self.modelForm.orgId){
-            				self.modelForm.orgName=item.label;
-
-            			}
-            		})
-            	}
+            	
 				self.$Loading.start();
-				server.updateLoginerInfo(self.modelForm).then((res)=>{
-					self.$Loading.finish();
-					if(res.success){
-                        self.$Notice.success({
-                            title:'修改成功',
-                            desc:res.message
-                        });
-                    }else{
-                        self.$Notice.error({
-                            title:'修改失败',
-                            desc:res.message
-                        });
-                    }
-                    self.subLoading=false;
-				})
+				if(self.id){
+					//self.modelForm.userId=userInfo.id;
+					server.updateAgent(self.modelForm).then((res)=>{
+						self.$Loading.finish();
+						if(res.success){
+	                        self.$Notice.success({
+	                            title:'修改成功',
+	                            desc:res.message
+	                        });
+	                    }else{
+	                        self.$Notice.error({
+	                            title:'修改失败',
+	                            desc:res.message
+	                        });
+	                    }
+	                    self.subLoading=false;
+					})
+				}else{
+					server.addAgent(self.modelForm).then((res)=>{
+						self.$Loading.finish();
+						if(res.success){
+	                        self.$Notice.success({
+	                            title:'新增成功',
+	                            desc:res.message
+	                        });
+	                    }else{
+	                        self.$Notice.error({
+	                            title:'新增失败',
+	                            desc:res.message
+	                        });
+	                    }
+	                    self.subLoading=false;
+					})
+				}
+				
             },
 			
 		}

@@ -131,8 +131,7 @@ import chinaAddress from '../../components/china-address-0408'
 				tableData:[],
 				modalVisible:false,
 				seachForm:{
-					titleLike:'',
-					publishTime:''
+					stateType:2
 				},
 				leftMenu:true,
 				spanLeft: 4,
@@ -151,16 +150,19 @@ import chinaAddress from '../../components/china-address-0408'
                 modelLoading:false,
 				tableCol: [
 				{
-					key:'title',title:'预约单号',width:250
+					key:'billCode',title:'预约单号',width:250
 				},
 				{
-					key:'title',title:'客户名称',width:120
+					key:'name',title:'客户名称',width:120
 				},
 				{
-					key:'title',title:'客户电话',width:130
+					key:'mobilePhone',title:'客户电话',width:130
 				},
 				{
-					key:'title',title:'客户地址',className:'l-m-min-width l-ellipsis'
+					title:'客户地址',className:'l-m-min-width l-ellipsis',
+					render(row){
+						return `${row.province}${row.city}${row.area}${row.address}`;
+					}
 				},
 				{
 					width:100,key:'state',title:'当前阶段',
@@ -170,14 +172,14 @@ import chinaAddress from '../../components/china-address-0408'
 					}
 				},
 				{
-					key:'createTime',title:'发送人',width:120
+					key:'dealer',title:'发送人',width:120
 				},
 				
 				{
-					key:'publishTime',title:'预约时间',width:200
+					key:'appointDate',title:'预约时间',width:200
 				},
 				{
-					key:'content',title:'接受时间',width:200
+					key:'updateTime',title:'接受时间',width:200
 				},
 				{
 					title: '操作',
@@ -250,12 +252,15 @@ import chinaAddress from '../../components/china-address-0408'
                 let self=this;
                 self.$Loading.start();
                 let _list=self.seachForm;
+                
                 _list.page=page;
                 _list.rows=rows;
-                server.getNotice(_list).then((res)=>{
+                server.getAppointmentList(_list).then((res)=>{
                     self.$Loading.finish();
-                    self.tableData=res.data.rowsObject;
-                    self.rowsTotal=res.data.total;
+                    if(res.data&&res.data.rowsObject){
+	                    self.tableData=res.data.rowsObject;
+	                    self.rowsTotal=res.data.total;
+	                }
                 })
             },
 			
