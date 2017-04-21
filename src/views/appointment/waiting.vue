@@ -61,56 +61,67 @@
 	        >
 	        <i-form v-ref:form-validate :model="modelForm" :rules="modeRule" :label-width="130">
 		        <Row>
+		        <i-col span="24">
+		        	 <Form-item label="流水单号">
+		            {{modelForm.billCode}}
+		        </Form-item>
+		        </i-col>
 		        <i-col span="12">
-		        <Form-item label="流水单号" prop="title">
-		            <i-input :value.sync="modelForm.title" placeholder="请输入标题"></i-input>
+		       
+		        <Form-item label="预约人姓名" prop="name">
+		            <i-input :value.sync="modelForm.name" placeholder="请输入姓名"></i-input>
 		        </Form-item>
-		        <Form-item label="预约人姓名" prop="title">
-		            <i-input :value.sync="modelForm.title" placeholder="请输入标题"></i-input>
+		        <Form-item label="上门量尺时间" prop="">
+		           <Date-picker type="datetime" :value="modelForm.homeTime" format="yyyy-MM-dd HH:mm:ss" @on-change="homeTimeDateChange"  placeholder="选择时间"></Date-picker>
 		        </Form-item>
-		        <Form-item label="上门量尺时间" prop="title">
-		            <i-input :value.sync="modelForm.title" placeholder="请输入标题"></i-input>
+		        <Form-item label="上门设计师" prop="">
+		            <i-input :value.sync="modelForm.designer" placeholder="请输入上门设计师"></i-input>
 		        </Form-item>
-		        <Form-item label="上门时间" prop="title">
-		            <Date-picker type="date" :value="seachForm.publishTime" format="yyyy-MM-dd" @on-change="createDateChange"  placeholder="选择时间"></Date-picker>
+		        <Form-item label="装修项目" prop="">
+		            <Checkbox-group :model.sync="decorateCkList">
+				        <Checkbox :value="item.id" v-for="item in decorateList">
+				        	<span>{{item.dicName}}</span>
+				        </Checkbox>
+				    </Checkbox-group>
 		        </Form-item>
-		        <Form-item label="装修项目" prop="title">
-		            <i-input :value.sync="modelForm.title" placeholder="请输入标题"></i-input>
-		        </Form-item>
-		        <Form-item label="所属代理商" prop="title">
-		            <i-input :value.sync="modelForm.title" placeholder="请输入标题"></i-input>
+		        <Form-item label="所属代理商" prop="byAgent">
+		            <i-select :model.sync="agentListCk">
+				        <i-option v-for="item in agentList" :value="item.id">{{ item.agentName }}</i-option>
+				    </i-select>
 		        </Form-item>
 				</i-col>
 				<i-col span="12">
-				<Form-item label="&nbsp;">
-		        </Form-item>
-		        <Form-item label="预约人手机" prop="title">
-		            <i-input :value.sync="modelForm.title" placeholder="请输入标题"></i-input>
+				
+		        <Form-item label="预约人手机" prop="mobilePhone">
+		            <i-input :value.sync="modelForm.mobilePhone" placeholder="请输入手机号码"></i-input>
 		        </Form-item>
 		        <Form-item label="预计装修时间" prop="title">
-		           <Date-picker type="date" :value="seachForm.publishTime" format="yyyy-MM-dd" @on-change="createDateChange"  placeholder="选择时间"></Date-picker>
+		           <Date-picker type="date" :value="modelForm.decoratingTime" format="yyyy-MM-dd" @on-change="decoratingDateChange"  placeholder="选择时间"></Date-picker>
 		        </Form-item>
-		        <Form-item label="上门设计师电话" prop="title">
-		            <i-input :value.sync="modelForm.title" placeholder="请输入标题"></i-input>
+		        <Form-item label="上门设计师电话">
+		            <i-input :value.sync="modelForm.designerPhone" placeholder="请输入电话"></i-input>
 		        </Form-item>
-		        <Form-item label="工程预算" prop="title">
-		            <i-input :value.sync="modelForm.title" placeholder="请输入标题"></i-input>
+		        <Form-item label="工程预算" >
+		        	 <i-select :model.sync="modelForm.budgetRange">
+				        <i-option v-for="item in budgetRangeList" :value="item.dicName">{{ item.dicName }}</i-option>
+				    </i-select>
 		        </Form-item>
-		        <Form-item label="所在城市" prop="title">
+		        <Form-item label="所在城市" prop="addressValue">
 		            <Cascader :data="addressData" @on-change="addrSelected" :value.sync="addressValue" trigger="hover"></Cascader>
 		        </Form-item>
 				</i-col>
 				</Row>
-		        <Form-item label="装修地址" prop="title">
-		            <i-input :value.sync="modelForm.title" placeholder="请输入标题"></i-input>
+		        <Form-item label="装修地址" prop="address">
+		            <i-input :value.sync="modelForm.address" placeholder="请输入地址"></i-input>
 		        </Form-item>
-		        <Form-item label="说明" prop="content">
-		            <i-input :value.sync="modelForm.content" type="textarea" :rows="3" placeholder="请输入公告内容"></i-input>
+		        <Form-item label="说明">
+		            <i-input :value.sync="modelForm.remark" type="textarea" :rows="3" placeholder="请输入说明"></i-input>
 		        </Form-item>
 		    </i-form>
 		    <div slot="footer">
                 <i-button type="ghost" size="large" @click="modalVisible=fasle">取消</i-button>
-                <i-button type="primary" size="large" :loading="modelLoading" @click="modelSubmit">确定</i-button>
+                <i-button type="primary" size="large" :loading="modelLoading" @click="modelSubmit">保存</i-button>
+                <i-button type="primary" size="large" :loading="modelLoading" >提交</i-button>
             </div>
 	    </Modal>
     </div>
@@ -131,14 +142,21 @@ import chinaAddress from '../../components/china-address-0408'
 				tableData:[],
 				modalVisible:false,
 				seachForm:{
-					stateType:2
+					stateType:1
 				},
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
-                modelForm:{},
+                modelForm:{
+         
+                },
                 addressData:chinaAddress,
                 addressValue:[],
+                decorateCkList:[],
+                decorateList:[],
+                agentListCk:[],
+                agentList:[],
+                budgetRangeList:[],
                 modeRule:{
                 	title: [
                         { required: true, message: '标题不能为空', trigger: 'blur' }
@@ -189,23 +207,12 @@ import chinaAddress from '../../components/china-address-0408'
 					align: 'center',
 					render (row, column, index) {
 					return `
+						<i-button type="primary" v-show="${row.state}==1"  icon="edit" @click="modelShow(${row.id})" size="small">修改</i-button>
 						
-						<i-button type="primary" 
-							v-show="${row.state}==0"
-							@click="updateState(${row.id},'您确认发布吗？')"
-							 size="small">发布</i-button>
-
 						<i-button type="primary"
 							v-show="${row.state}==1" 
-							@click="updateState(${row.id},'您确认结束发布吗？')"
-							 size="small">结束发布</i-button>
-
-						<i-button type="primary" v-show="${row.state}==0"  icon="edit" @click="modelShow(${row.id})" size="small">修改</i-button>
-						
-						<i-button type="primary"
-							v-show="${row.state}==0" 
 							@click="del(${row.id})"
-							 icon="ios-trash" size="small">删除</i-button>
+							 icon="ios-trash" size="small">作废</i-button>
 
 					`;
 					}   
@@ -214,6 +221,8 @@ import chinaAddress from '../../components/china-address-0408'
 		},
 		ready(){
 			this.getList();
+			this.getDict();
+			this.getAgentList();
 		},
 		methods:{
 			addrSelected(value,selectedData){
@@ -247,6 +256,48 @@ import chinaAddress from '../../components/china-address-0408'
                     case 2:
                     return "结束发布";
                 }
+            },
+            getAgentList(){
+            	let self=this;
+            	server.getAgentAll({}).then((res)=>{
+            		self.agentList=[];
+                    if(res.data&&res.data.length>0){
+                        res.data.forEach((item)=>{
+                             self.agentList.push({
+                             	id:item.id,
+                                agentName:item.agentName
+                            })
+                        })
+                        
+                    }
+            	})
+            },
+            getDict(){
+            	//ProductCategory_bigType
+            	let self=this;
+				server.getDict('ProductIntroduceCategory_Item').then((res)=>{
+					self.decorateList=[];
+                    if(res.data&&res.data.length>0){
+                        res.data.forEach((item)=>{
+                             self.decorateList.push({
+                             	id:item.id,
+                                dicName:item.dicName
+                            })
+                        })
+                        
+                    }
+                })
+                server.getDict('budgetRange_item').then((res)=>{
+                	self.budgetRangeList=[];
+                	if(res.data&&res.data.length>0){
+                        res.data.forEach((item)=>{
+                             self.budgetRangeList.push({
+                                dicName:item.dicName
+                            })
+                        })
+                        
+                    }
+                }) 
             },
             getList(page=1,rows=10){
                 let self=this;
@@ -294,25 +345,28 @@ import chinaAddress from '../../components/china-address-0408'
 			modelSubmit(){
 				let self=this;
 				self.modelLoading=true;
+				if(self.agentListCk.length>0){
+					self.modelForm.byAgentUserId=self.agentListCk.join(',');
+					self.modelForm.byAgent='';
+					self.agentList.forEach((item)=>{
+						if(self.agentListCk.findIndex((v)=>v===item.id)){
+							self.modelForm.byAgent+=item.agentName+',';
+						}
+					})
+				}
+				if(self.decorateCkList.length>0){
+					self.modelForm.decorateProjectTypes=self.decorateCkList.join(',');
+					self.modelForm.decorateProject='';
+					self.decorateList.forEach((item)=>{
+						if(self.decorateCkList.findIndex((v)=>v===item.id)){
+							self.modelForm.decorateProject+=item.dicName+',';
+						}
+					})
+				}
 				if(self.modelForm.id){
-					server.updateNotice(self.modelForm).then((res)=>{
-						self.modelLoading=false;
-	                    if(res.success){
-	                        self.$Notice.success({
-	                            title:'修改成功',
-	                            desc:res.message
-	                        });
-							self.modalVisible=false;
-	                        self.getList(self.pageIndex,10);
-	                    }else{
-	                        self.$Notice.error({
-	                            title:'修改失败',
-	                            desc:res.message
-	                        });
-	                    }
-	                })
+					
 				}else{
-	                server.addNotice(self.modelForm).then((res)=>{
+	                server.addAppoint(self.modelForm).then((res)=>{
 	                	self.modelLoading=false;
 	                    if(res.success){
 	                        self.$Notice.success({
@@ -377,8 +431,11 @@ import chinaAddress from '../../components/china-address-0408'
                 })
                 
             },
-            createDateChange(e){
-            	this.seachForm.publishTime=e;
+            decoratingDateChange(e){
+            	this.modelForm.decoratingTime=e;
+            },
+            homeTimeDateChange(e){
+            	this.modelForm.homeTime=e;
             }
 		}
 	}

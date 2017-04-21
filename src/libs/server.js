@@ -99,6 +99,7 @@ const serverPath={
 
 	//经销商管理
 	getAgentList:'/sys/agentUser/getPage',
+	getAgentAll:'/sys/agentUser/getList',
 	getAgentByid:'/sys/agentUser/getById',
 	addAgent:'/sys/agentUser/addAgent',
 	updateAgent:'/sys/agentUser/updateAgent',
@@ -128,6 +129,8 @@ const serverPath={
 	delOwner:'/owner/ownerInfo/deleteById',
 	//预约管理
 	getAppointmentList:'/owner/appointment/getPage',
+	addAppoint:'/owner/appointment/addAppoint',
+	saveAppoint:'/owner/appointment/save',
 
 }
 
@@ -853,6 +856,9 @@ export default {
 	getAgentList(searchData){
 		return this.getPromise(serverPath.getAgentList,searchData,'getAgentList');
 	},
+	getAgentAll(searchData){
+		return this.getPromise(serverPath.getAgentAll,searchData,'getAgentAll');
+	},
 	getAgentByid(id){
 		return this.getPromise(serverPath.getAgentByid,{id},'getAgentByid');
 	},
@@ -1060,5 +1066,61 @@ export default {
 		return this.getPromise(serverPath.getAppointmentList,searchData,'getAppointmentList');
 
 	},
+	addAppoint(formData){
+		let _list={
+			name:formData.name,//姓名（联系人）
+			mobilePhone:formData.mobilePhone,//手机号码
+			province:formData.province,//省会
+			provinceId:formData.provinceId,//省会id
+			city:formData.city,//城市
+			cityId:formData.cityId,//城市id
+			area:formData.area,//区域
+			areaId:formData.areaId,//区域id
+			address:formData.address,//预约地址
+			designer:formData.designer,//设计师名称
+			designerPhone:formData.designerPhone,//设计师联系电话
+			remark:formData.remark,//备注
+			homeTimeStr:formData.homeTime,//上门时间
+			decoratingTimeStr:formData.decoratingTime,//预计装修时间
+			byAgent:formData.byAgent,//所属代理商
+			byAgentUserId:formData.byAgentUserId,//所属代理商用户id
+			state:formData.state,//状态：
+			decorateProject:formData.decorateProject,//装修项目内容
+			decorateProjectTypes:formData.decorateProjectTypes,//装修项目内容类型
+			budgetRange:formData.budgetRange,//工程预算范围
+			isAgent:formData.isAgent,//是否代理商：false:直营    true:非直营
+			isOnlySave:formData.isOnlySave,//是否只是保存，true 只保存
 
+		}
+		return this.postPromise(serverPath.addAppoint,_list,'addAppoint');
+	},
+	saveAppoint(formData){
+		let _list={
+			id:formData.id,
+			name:formData.name,//姓名（联系人）
+			mobilePhone:formData.mobilePhone,//手机号码
+			province:formData.province,//省会
+			provinceId:formData.provinceId,//省会id
+			city:formData.city,//城市
+			cityId:formData.cityId,//城市id
+			area:formData.area,//区域
+			areaId:formData.areaId,//区域id
+			address:formData.address,//预约地址
+			designer:formData.designer,//设计师名称
+			designerPhone:formData.designerPhone,//设计师联系电话
+			remark:formData.remark,//备注
+			homeTimeStr:formData.homeTime,//上门时间
+			decoratingTimeStr:formData.decoratingTime,//预计装修时间
+			byAgent:formData.byAgent,//所属代理商
+			byAgentUserId:formData.byAgentUserId,//所属代理商用户id
+			state:formData.state,//状态：
+			decorateProject:formData.decorateProject,//装修项目内容
+			decorateProjectTypes:formData.decorateProjectTypes,//装修项目内容类型
+			budgetRange:formData.budgetRange,//工程预算范围
+			isAgent:formData.isAgent,//是否代理商：false:直营    true:非直营
+			isOnlySave:formData.isOnlySave,//是否只是保存，true 只保存
+
+		}
+		return this.postPromise(serverPath.saveAppoint,_list,'saveAppoint');
+	},
 }

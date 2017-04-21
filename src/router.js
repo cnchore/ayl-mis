@@ -161,6 +161,12 @@ const routers = {
         },
         meta: { requiresAuth: true,title:'艾臣营销管理平台－客户编辑' }
     },
+    '/order/owner/look': {
+        component(resolve) {
+            require(['./views/order/owner-look.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－客户资料查看' }
+    },
     //经销商管理
     '/agent/index': {
         component(resolve) {
