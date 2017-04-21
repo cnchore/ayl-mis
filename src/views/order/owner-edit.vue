@@ -130,44 +130,38 @@
                     	</div>
                     	<div class="container q-table">
                     		<i-form :model="modelForm" :label-width="100" :rules="ruleForm">
-                    			<Row>
-                    				<i-col span="12">
-                    					<Form-item label="联系人姓名" prop="name">
-								            <i-input :value.sync="modelForm.name" placeholder="请输入..."></i-input>
-								        </Form-item>
-		                    			<Form-item label="装修项目" prop="decorate">
-								           <Checkbox-group :model.sync="checkGroup">
-										        <Checkbox :value="item.dicName" v-for="item in decorate">
-										        	<span>{{item.dicName}}</span>
-										        </Checkbox>
-										    </Checkbox-group>
-								        </Form-item>
-                    				</i-col>
-                    				<i-col span="12">
-                    					<Form-item label="联系人手机" prop="mobilePhone">
-								            <i-input :value.sync="modelForm.mobilePhone" placeholder="请输入手机号码"></i-input>
-								        </Form-item>
-		                    			<Form-item label="客户归属">
-								            <i-select :model.sync="belongIds" multiple>
-										        <i-option v-for="item in belongList" :value="item.value">{{ item.label }}</i-option>
-										    </i-select>
-								        </Form-item>
-                    				</i-col>
-                    				<i-col span="24">
-                    					<Form-item label="所在地区" prop="addressValue">
-						        			<Cascader :data="addressData" @on-change="addrSelected" :value.sync="addressValue" trigger="hover"></Cascader>
-								           
-								        </Form-item>
-                    					<Form-item label="详细地址" prop="address">
-								            <i-input :value.sync="modelForm.address" placeholder="请输入详细地址"></i-input>
-								        </Form-item>
-								        
-		                    			<Form-item label="备注">
-								            <i-input :value.sync="modelForm.remark" type="textarea" :autosize="{minRows: 3,maxRows: 5}" placeholder="请输入..."></i-input>
-								        </Form-item>
-                    				</i-col>
+                    			
+            					<Form-item label="联系人姓名" prop="name">
+						            <i-input :value.sync="modelForm.name" placeholder="请输入..."></i-input>
+						        </Form-item>
+                    			
+            					<Form-item label="联系人手机" prop="mobilePhone">
+						            <i-input :value.sync="modelForm.mobilePhone" placeholder="请输入手机号码"></i-input>
+						        </Form-item>
+                    			<Form-item label="客户归属">
+						            <i-select :model.sync="belongIdsCk" multiple>
+								        <i-option v-for="item in belongList" :value="item.value">{{ item.label }}</i-option>
+								    </i-select>
+						        </Form-item>
+						        <Form-item label="装修项目" prop="decorate">
+						           <Checkbox-group :model.sync="decorateCkList">
+								        <Checkbox :value="item.dicName" v-for="item in decorateList">
+								        	<span>{{item.dicName}}</span>
+								        </Checkbox>
+								    </Checkbox-group>
+						        </Form-item>
+            					<Form-item label="所在地区" prop="addressValue">
+				        			<Cascader :data="addressData" @on-change="addrSelected" :value.sync="addressValue" trigger="hover"></Cascader>
+						           
+						        </Form-item>
+            					<Form-item label="详细地址" prop="address">
+						            <i-input :value.sync="modelForm.address" placeholder="请输入详细地址"></i-input>
+						        </Form-item>
+						        
+                    			<Form-item label="备注">
+						            <i-input :value.sync="modelForm.remark" type="textarea" :autosize="{minRows: 3,maxRows: 5}" placeholder="请输入..."></i-input>
+						        </Form-item>
 			
-                    			</Row>
 						    </i-form>
                     	</div>
                     </div>
@@ -208,11 +202,11 @@
 		                                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
 		                                </template>
 		                            </div>
-		                            <div class="double" v-show="item.state===1">
+		                            <div class="double" v-show="item.status === 'finished' ||item.state===1">
 		                            	<i-input :value.sync="item.attachName" class="q-text-center" placeholder="请输入名称"></i-input>
 		                            </div>
-		                            <div v-show="item.state===1">item.createTime</div>
-		                            <div v-show="item.state===1">
+		                            <div v-show="item.status === 'finished' ||item.state===1">{{item.createTime}}</div>
+		                            <div v-show="item.status === 'finished' ||item.state===1">
 		                            	<a :href="item.attachAddress" target="_blank">
 		                           			<Icon type="ios-download-outline" title="下载"></Icon>
 		                            	</a>
@@ -249,15 +243,13 @@ import chinaAddress from '../../components/china-address-0408'
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
 			return{
-				breads:[{text:'首页',href:'/index'},{text:'客户管理',href:'/order/ownerInfo'},{text:'客户新增',href:''}],
+				breads:[{text:'首页',href:'/index'},{text:'客户管理',href:'/order/ownerInfo'},{text:'客户新增/编辑',href:''}],
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
                 baseUrl:server.getBaseUrl(),
                 uploadData:{bucket:'dc-test'},
                 defaultList: [],
-                imgName: '',
-                visible: false,
                 modelForm:{},
                 ruleForm:{
                 	name: [
@@ -278,9 +270,9 @@ import chinaAddress from '../../components/china-address-0408'
                 },
                 addressData:chinaAddress,
                 addressValue:[],
-                checkGroup:[],
-                decorate:[],
-                belongIds:[],
+                decorateCkList:[],
+                decorateList:[],
+                belongIdsCk:[],
                 belongList:[],
                 modelLoading:false,
                 id:null,
@@ -294,8 +286,8 @@ import chinaAddress from '../../components/china-address-0408'
 				this.getList();
 			}else{
 				this.modelForm={};
-				this.belongIds=[];
-				this.checkGroup=[];
+				this.belongIdsCk=[];
+				this.decorateCkList=[];
 				this.defaultList=[];
 				this.addressValue=[];
 			}
@@ -320,30 +312,45 @@ import chinaAddress from '../../components/china-address-0408'
 				server.getOwnerByid(self.id).then((res)=>{
 					if(res.success&&res.data){
 						self.modelForm=res.data;
-						if(res.attachList){
+						if(res.data.attachList){
 							self.defaultList=[];
-							res.attachList.forEach((item)=>{
+							res.data.attachList.forEach((item)=>{
 								self.defaultList.push({
 									attachName:item.attachName,
 									attachAddress:item.attachAddress,
 									state:item.status,
 									createTime:item.createTime,
-									avatar:require('../../imgs/noimg.png')
+									avatar:self.getFileType(item.attachAddress)
 								})
 							})
 						}
-						if(res.belongIds){
-							self.belongIds=res.belongIds.split(',');
+						if(res.data.provinceId){
+							self.addressValue.push(res.data.provinceId)
 						}
-						if(res.decorateProject){
-							self.checkGroup=res.decorateProject.split(',');
+						if(res.data.cityId){
+							self.addressValue.push(res.data.cityId)
 						}
-
+						if(res.data.areaId){
+							self.addressValue.push(res.data.areaId)
+						}
+						if(res.data.belongIds){
+							let ckList=res.data.belongIds.split(',');
+							self.belongIdsCk=[];
+							ckList.forEach((ck)=>{
+								self.belongIdsCk.push(parseInt(ck));
+							})
+							
+						}
+						if(res.data.decorateProject){
+							self.decorateCkList=res.data.decorateProject.split(',');
+						}
+						console.log(self.belongIdsCk,self.decorateCkList,self.addressValue);
 					}
 				})
 			},
 			addrSelected(value,selectedData){
                 //console.log(selectedData);
+                console.log(this.addressValue)
                 if(selectedData.length>0){
                     this.modelForm.provinceId=selectedData[0].value;
                     this.modelForm.province=selectedData[0].label;
@@ -365,10 +372,10 @@ import chinaAddress from '../../components/china-address-0408'
             	//ProductCategory_bigType
             	let self=this;
 				server.getDict('ProductIntroduceCategory_Item').then((res)=>{
-					self.decorate=[];
-                    if(res.data.length>0){
+					self.decorateList=[];
+                    if(res.data&&res.data.length>0){
                         res.data.forEach((item)=>{
-                             self.decorate.push({
+                             self.decorateList.push({
                                 dicName:item.dicName
                             })
                         })
@@ -393,15 +400,20 @@ import chinaAddress from '../../components/china-address-0408'
 			submit(){
 				let self=this;
 				self.modelLoading=true;
-				self.modelForm.attachList=self.uploadList;
-				if(self.checkGroup.length>0){
-					self.modelForm.decorateProject=self.checkGroup.join(',');
+				if(self.uploadList.length>0){
+					self.modelForm.attachList=self.uploadList;
+				}else{
+					self.modelForm.attachList=self.defaultList;
+
 				}
-				if(self.belongIds.length>0){
-					self.modelForm.belongIds=self.belongIds.join(',');
+				if(self.decorateCkList.length>0){
+					self.modelForm.decorateProject=self.decorateCkList.join(',');
+				}
+				if(self.belongIdsCk.length>0){
+					self.modelForm.belongIds=self.belongIdsCk.join(',');
 					self.modelForm.belongNames='';
 					self.belongList.forEach((item)=>{
-						if(self.belongIds.findIndex((v)=>v===item.value)){
+						if(self.belongIdsCk.findIndex((v)=>v===item.value)){
 							self.modelForm.belongNames+=item.label+',';
 						}
 					})
@@ -445,31 +457,40 @@ import chinaAddress from '../../components/china-address-0408'
             },
             handleSuccess (res, file) {
                 // 因为上传过程为实例，这里模拟添加 url
+                //console.log(res,file)
                 file.attachAddress = res.data;
-                file.attachName=res.name;
-                if(res.type.indexOf('image')>-1){
-	                file.avatar = server.image.thumb(res.data,60,60);
-	            }else{
-	            	file.avatar=this.getFileType(res.type);
-	            }
+                let nameList=res.data.split('@|@');
+                if(nameList&&nameList.length>1){
+                	file.attachName=nameList[1].substr(0,nameList[1].lastIndexOf('.'));
+		            file.avatar=this.getFileType(res.data);
+                }
+                
 	            file.createTime=new Date().toLocaleString();
-	            file.state=1;
+	            //file.state=1;
                
             },
             getFileType(v){
-            	switch(v){
-            		case 'application/msword':
+            	if(!v){
+            		return null;
+            	}
+            	let l=v.lastIndexOf('.');
+            	switch(v.substr(l)){
+            		case '.doc':
+            		case '.docx':
             			return require('../../imgs/doc.png');
-            		case 'image/vnd.dwg':
+            		case '.dwg':
             			return require('../../imgs/noimg.png');
-					case 'application/pdf':
+					case '.pdf':
             			return require('../../imgs/pdf.png');
-        			case 'application/vnd.ms-powerpoint':
+        			case '.ppt':
             			return require('../../imgs/noimg.png');
-        			case 'application/vnd.ms-excel':
+        			case '.xls':
             			return require('../../imgs/xls.png');
-            		case 'aplication/zip':
+            		case '.zip':
             			return require('../../imgs/zip.png');
+            		case '.jpg':
+            		case '.png':
+            			return server.image.thumb(v,60,60);
             		default :
             			return require('../../imgs/noimg.png');
 

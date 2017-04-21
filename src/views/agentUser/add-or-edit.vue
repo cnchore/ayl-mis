@@ -121,8 +121,6 @@ import LeftMenu from '../../components/left-menu'
 import LHeader from '../../components/header'
 import LTitle from '../../components/title'
 import chinaAddress from '../../components/china-address-0408'
-	
-	
 	export default{
 		components:{LHeader,LeftMenu,LTitle},
 		data(){

@@ -72,7 +72,7 @@ import LTitle from '../../components/title'
                         return ``;
                     }
                 },
-				{title:'电话',key:'mobilePhone',width:120},
+				{title:'电话',key:'mobilePhone',width:130},
 				{title:'客户地址',key:'address',className:'l-min-width l-ellipsis'},
 				{title:'客户来源',key:'sourceType',width:120,
                     render(row){
@@ -126,7 +126,7 @@ import LTitle from '../../components/title'
                 this.getList(1,10);
 			},
             look(id){
-
+                this.$router.go('/order/owner/look?id='+id)
             },
 			addOrUpdate(id){
 				let self=this;
