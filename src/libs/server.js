@@ -131,6 +131,11 @@ const serverPath={
 	getAppointmentList:'/owner/appointment/getPage',
 	addAppoint:'/owner/appointment/addAppoint',
 	saveAppoint:'/owner/appointment/save',
+	delAppoint:'/owner/appointment/cancel',
+	restoreAppoint:'/owner/appointment/restore',
+	getAppointByid:'/owner/appointment/getAppointInfo',
+	ownerSaveAppoint:'/owner/appointment/save',
+	nextAppoint:'',
 
 }
 
@@ -1066,6 +1071,9 @@ export default {
 		return this.getPromise(serverPath.getAppointmentList,searchData,'getAppointmentList');
 
 	},
+	getAppointByid(appointId){
+		return this.getPromise(serverPath.getAppointByid,{appointId},'getAppointByid');
+	},
 	addAppoint(formData){
 		let _list={
 			name:formData.name,//姓名（联系人）
@@ -1121,6 +1129,54 @@ export default {
 			isOnlySave:formData.isOnlySave,//是否只是保存，true 只保存
 
 		}
+
 		return this.postPromise(serverPath.saveAppoint,_list,'saveAppoint');
+	},
+	ownerSaveAppoint(formData){
+		let _list={
+			id:formData.id,//主键  
+			state:formData.state,//状态：
+			isOnlySave:formData.isOnlySave//是否只是保存，true 只保存
+		}
+		if(formData.couponIds){
+			_list.couponIds=formData.couponIds;
+		}
+		
+		if(formData.costVoList){
+			formData.costVoList.forEach((item,index)=>{
+				if(item.costType){
+					if(item.id){
+						_list["costVoList["+index+"].id"]=item.id;
+					}
+					_list["costVoList["+index+"].costType"]=item.costType;
+					_list["costVoList["+index+"].costValue"]=item.costValue;
+					_list["costVoList["+index+"].desc"]=item.desc;
+				}
+			})
+			
+		}
+		if(formData.attachmentVoList){
+			formData.attachmentVoList.forEach((item,index)=>{
+				if(item.attachAddress){
+					if(item.id){
+						_list["attachmentVoList["+index+"].id"]=item.id;
+					}
+					_list["attachmentVoList["+index+"].attachAddress"]=item.attachAddress;
+					_list["attachmentVoList["+index+"].attachName"]=item.attachName;
+				}
+			})
+			
+		}
+
+		return this.postPromise(serverPath.ownerSaveAppoint,_list,'ownerSaveAppoint');
+	},
+	delAppoint(id){
+		return this.postPromise(serverPath.delAppoint,{id},'delAppoint');
+	},
+	restoreAppoint(id){
+		return this.postPromise(serverPath.restoreAppoint,{id},'restoreAppoint');
+	},
+	nextAppoint(id){
+		return this.postPromise(serverPath.nextAppoint,{id},'nextAppoint');
 	},
 }

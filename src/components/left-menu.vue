@@ -111,6 +111,19 @@
        
     </Menu>
     <Menu :active-key="activeKey" class="q-menu q-lg-icon"
+    v-show="activeMenu==='10'" width="auto" @on-select="handleSelect">
+        
+            <Menu-item key="10-1">
+                <Icon type="document-text"></Icon>
+                <span>待办事项</span>
+            </Menu-item>
+            <Menu-item key="10-2">
+                <Icon type="document"></Icon>
+                已办事项
+            </Menu-item>
+            
+    </Menu>
+    <Menu :active-key="activeKey" class="q-menu q-lg-icon"
     v-show="activeMenu==='4'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="4-1">
@@ -226,6 +239,13 @@
                     case '3-3':
                         this.$router.go('/trash');
                         break;
+                    case '10-1':
+                        this.$router.go('/owner/waiting');
+                        break;
+                    case '10-2':
+                        this.$router.go('/owner/complete');
+                        break;
+
                     case '4-1':
                         this.$router.go('/');
                         break;
