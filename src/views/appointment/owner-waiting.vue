@@ -2,11 +2,11 @@
 	
 </style>
 <template>
-    <l-header active-key="3"></l-header>
+    <l-header active-key="10"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="3" active-key="3-2"></left-menu>
+                <left-menu active-Menu="10" active-key="10-1"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
@@ -26,7 +26,12 @@
                                 <i-input :value.sync="seachForm.mobilePhoneLike"  placeholder="请输入电话" ></i-input>
                             </div>
                         </Form-item>
-                        
+                        <Form-item prop="storeName">
+                            <div class="l-sel-inline">
+                                <span slot="prepend">区域</span>
+                                <i-input :value.sync="seachForm.areaLike"  placeholder="请输入区域" ></i-input>
+                            </div>
+                        </Form-item>
                         <Form-item>
                             <i-button type="ghost" icon="search" @click="search('formInline')">搜索</i-button>
                         </Form-item>
@@ -112,22 +117,23 @@
     </div>
 </template>
 <script>
-import server from '../../libs/server'
+import server,{storage} from '../../libs/server'
 import LeftMenu from '../../components/left-menu'
 import LHeader from '../../components/header'
 import LTitle from '../../components/title'
+import chinaAddress from '../../components/china-address-0408'
 	export default{
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
 			return{
-				breads:[{text:'首页',href:'/index'},{text:'预约管理',href:'/waiting'},{text:'已办事项',href:''}],
+				breads:[{text:'首页',href:'/index'},{text:'预约管理',href:'/owner/waiting'},{text:'待办事项',href:''}],
 				rowsTotal:10,
 				pageIndex:1,
 				self:this,
 				tableData:[],
 				modalVisible:false,
 				seachForm:{
-					stateType:2
+					stateType:1
 				},
 				leftMenu:true,
 				spanLeft: 4,
@@ -135,8 +141,8 @@ import LTitle from '../../components/title'
                 modelForm:{
          
                 },
-                
-                modelLoading:false,
+                addressData:chinaAddress,
+                addressValue:[],
 				tableCol: [
 				{
 					key:'billCode',title:'预约单号',width:250
@@ -154,9 +160,6 @@ import LTitle from '../../components/title'
 					}
 				},
 				{
-					key:'decorateProject',title:'装修项目',className:'l-m-min-width'
-				},
-				{
 					width:100,key:'state',title:'当前阶段',
 
 					render(row,column,index){
@@ -170,7 +173,9 @@ import LTitle from '../../components/title'
 				{
 					key:'appointDate',title:'预约时间',width:200
 				},
-				
+				{
+					key:'updateTime',title:'接收时间',width:200
+				},
 				{
 					title: '操作',
 					key: 'action',
@@ -179,17 +184,46 @@ import LTitle from '../../components/title'
 					align: 'center',
 					render (row, column, index) {
 					return `
-						<i-button type="primary" icon="eye"  size="small" @click="modelShow(${row.id})" >查看</i-button>
+						<i-button type="primary" icon="eye" @click="modelShow(${row.id})" size="small">查看</i-button>
+						<i-button type="primary" @click="actionShow(${row.id})" size="small">查看订货单</i-button>
+						<i-button type="primary" @click="actionShow(${row.id},true)" size="small">编辑订货单</i-button>
+						<i-button type="primary" @click="nextAppoint(${row.id})" size="small">提交</i-button>
 					`;
 					}   
 				}]
 			}
 		},
 		ready(){
+			let userInfo=storage.session.get('userInfo');
+			if(userInfo&&userInfo.type!=2){
+				this.$router.go('/index');
+				return;
+			}
 			this.getList();
+			
 		},
 		methods:{
-			
+			addrSelected(value,selectedData){
+                //console.log(selectedData);
+                if(selectedData.length>0){
+                    this.modelForm.provinceId=selectedData[0].value;
+                    this.modelForm.province=selectedData[0].label;
+                    this.modelForm.cityId=selectedData[1].value;
+                    this.modelForm.city=selectedData[1].label;
+                    this.modelForm.areaId=selectedData[2].value;
+                    this.modelForm.area=selectedData[2].label;
+                    this.modelForm.cityCode=selectedData[2].code;
+                }else{
+                    this.modelForm.provinceId='';
+                    this.modelForm.province='';
+                    this.modelForm.cityId='';
+                    this.modelForm.city='';
+                    this.modelForm.areaId='';
+                    this.modelForm.area='';
+                    this.modelForm.cityCode='';
+                }
+
+            },
             getStatusName(v){
             	
                 switch(v){
@@ -211,7 +245,7 @@ import LTitle from '../../components/title'
                     return "总部确认";
                 }
             },
-           
+            
             getList(page=1,rows=10){
                 let self=this;
                 self.$Loading.start();
@@ -236,7 +270,6 @@ import LTitle from '../../components/title'
                 this.pageIndex=1;
                 this.getList(1,10);
 			},
-
 			modelShow(id=null){
 				let self=this;
 				if(id){
@@ -245,15 +278,43 @@ import LTitle from '../../components/title'
 	                	self.$Loading.finish();
 	                    if(res.success){
 	                        self.modelForm=res.data.appointmentVo;
+	                        
 	                        self.modalVisible=true;
 	                    }else{
 	                        self.modelForm={};
 	                    }
 	                })
-            	}else{
-            		self.modelForm={};
-            		self.modalVisible=true;
             	}
+			},
+			actionShow(id=null,t){
+				if(t){
+					this.$router.go('/appointment/edit?id='+id)
+				}else{
+					this.$router.go('/appointment/look?id='+id)
+				}
+			},
+			
+			nextAppoint(){
+				let self=this;
+				self.$Modal.confirm({
+                    onOk:function(){
+                       server.nextAppoint(id).then((res)=>{
+		                    if(res.success){
+		                        self.$Notice.success({
+		                            title:'提交成功',
+		                            desc:res.message
+		                        });
+		                        self.getList(self.pageIndex,10);
+		                    }else{
+		                        self.$Notice.error({
+		                            title:'提交失败',
+		                            desc:res.message
+		                        });
+		                    }
+		                }) 
+                    },
+                    content:'您确认提交给下一步吗？'
+                })
 			},
 			
 		}

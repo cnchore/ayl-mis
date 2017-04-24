@@ -10,26 +10,26 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="modelShow" ></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="modelShow" :breads="breads" ></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm"  inline>
                         <Form-item prop="storeName">
                             <div class="l-sel-inline">
                                 <span slot="prepend">客户名称</span>
-                                <i-input :value.sync="seachForm.titleLike"  placeholder="请输入名称" ></i-input>
+                                <i-input :value.sync="seachForm.nameLike"  placeholder="请输入名称" ></i-input>
                             </div>
                         </Form-item>
                         <Form-item prop="storeName">
                             <div class="l-sel-inline">
                                 <span slot="prepend">客户电话</span>
-                                <i-input :value.sync="seachForm.titleLike"  placeholder="请输入电话" ></i-input>
+                                <i-input :value.sync="seachForm.mobilePhoneLike"  placeholder="请输入电话" ></i-input>
                             </div>
                         </Form-item>
                         <Form-item prop="storeName">
                             <div class="l-sel-inline">
                                 <span slot="prepend">区域</span>
-                                <i-input :value.sync="seachForm.titleLike"  placeholder="请输入区域" ></i-input>
+                                <i-input :value.sync="seachForm.areaLike"  placeholder="请输入区域" ></i-input>
                             </div>
                         </Form-item>
                         <Form-item>
@@ -95,7 +95,7 @@
 		        <Form-item label="预约人手机" prop="mobilePhone">
 		            <i-input :value.sync="modelForm.mobilePhone" placeholder="请输入手机号码"></i-input>
 		        </Form-item>
-		        <Form-item label="预计装修时间" prop="title">
+		        <Form-item label="预计装修时间" prop="">
 		           <Date-picker type="date" :value="modelForm.decoratingTime" format="yyyy-MM-dd" @on-change="decoratingDateChange"  placeholder="选择时间"></Date-picker>
 		        </Form-item>
 		        <Form-item label="上门设计师电话">
@@ -121,21 +121,33 @@
 		    <div slot="footer">
                 <i-button type="ghost" size="large" @click="modalVisible=fasle">取消</i-button>
                 <i-button type="primary" size="large" :loading="modelLoading" @click="modelSubmit">保存</i-button>
-                <i-button type="primary" size="large" :loading="modelLoading" >提交</i-button>
+                <i-button type="primary" size="large" :loading="modelLoading" @click="modelSave" >提交</i-button>
             </div>
 	    </Modal>
     </div>
 </template>
 <script>
-import server from '../../libs/server'
+import server,{storage} from '../../libs/server'
 import LeftMenu from '../../components/left-menu'
 import LHeader from '../../components/header'
 import LTitle from '../../components/title'
 import chinaAddress from '../../components/china-address-0408'
+
+	Array.prototype.unique = function () {
+		var newArr = [];
+		for (var i = 0; i < this.length; i++) {
+			if (newArr.indexOf(this[i]) == -1) {
+				newArr.push(this[i]);
+			}
+		}
+		return newArr;
+	}
+
 	export default{
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
 			return{
+				breads:[{text:'首页',href:'/index'},{text:'预约管理',href:'/waiting'},{text:'待办事项',href:''}],
 				rowsTotal:10,
 				pageIndex:1,
 				self:this,
@@ -179,7 +191,7 @@ import chinaAddress from '../../components/china-address-0408'
 				{
 					title:'客户地址',className:'l-m-min-width l-ellipsis',
 					render(row){
-						return `${row.province}${row.city}${row.area}${row.address}`;
+						return `${row.province}${row.city}${row.area}${row.address?row.address:''}`;
 					}
 				},
 				{
@@ -197,7 +209,7 @@ import chinaAddress from '../../components/china-address-0408'
 					key:'appointDate',title:'预约时间',width:200
 				},
 				{
-					key:'updateTime',title:'接受时间',width:200
+					key:'updateTime',title:'接收时间',width:200
 				},
 				{
 					title: '操作',
@@ -207,12 +219,11 @@ import chinaAddress from '../../components/china-address-0408'
 					align: 'center',
 					render (row, column, index) {
 					return `
-						<i-button type="primary" v-show="${row.state}==1"  icon="edit" @click="modelShow(${row.id})" size="small">修改</i-button>
-						
+						<i-button type="primary" icon="edit" @click="modelShow(${row.id})" size="small">修改</i-button>
+						<i-button type="primary"  size="small">提交</i-button>
 						<i-button type="primary"
-							v-show="${row.state}==1" 
 							@click="del(${row.id})"
-							 icon="ios-trash" size="small">作废</i-button>
+							 icon="ios-trash" size="small">删除</i-button>
 
 					`;
 					}   
@@ -220,9 +231,15 @@ import chinaAddress from '../../components/china-address-0408'
 			}
 		},
 		ready(){
+			let userInfo=storage.session.get('userInfo');
+			if(userInfo&&userInfo.type!=1){
+				this.$router.go('/index');
+				return;
+			}
 			this.getList();
 			this.getDict();
 			this.getAgentList();
+
 		},
 		methods:{
 			addrSelected(value,selectedData){
@@ -249,12 +266,22 @@ import chinaAddress from '../../components/china-address-0408'
             getStatusName(v){
             	
                 switch(v){
-                    case 0:
-                    return "草稿";
+                	case 0:
+                	return "取消作废";
                     case 1:
-                    return "发布";
+                    return "预约处理";
                     case 2:
-                    return "结束发布";
+                    return "待设计报价";
+                    case 3:
+                    return "待确认";
+                    case 31:
+                	return "待重新设计报价";
+                    case 4:
+                    return "待下单";
+                    case 5:
+                    return "待总部确认";
+                    case 6:
+                    return "总部确认";
                 }
             },
             getAgentList(){
@@ -264,7 +291,7 @@ import chinaAddress from '../../components/china-address-0408'
                     if(res.data&&res.data.length>0){
                         res.data.forEach((item)=>{
                              self.agentList.push({
-                             	id:item.id,
+                             	id:item.userId,
                                 agentName:item.agentName
                             })
                         })
@@ -324,14 +351,37 @@ import chinaAddress from '../../components/china-address-0408'
                 this.getList(1,10);
 			},
 
-			modelShow(id){
+			modelShow(id=null){
 				let self=this;
+				self.agentListCk='';
+            	self.decorateCkList=[];
+
 				if(id){
 					self.$Loading.start();
-	                server.getNoticeByid(id).then((res)=>{
+	                server.getAppointByid(id).then((res)=>{
 	                	self.$Loading.finish();
 	                    if(res.success){
-	                        self.modelForm=res.data;
+	                        self.modelForm=res.data.appointmentVo;
+	                        if(self.modelForm.provinceId){
+		                        self.addressValue.push(self.modelForm.provinceId);
+		                    }
+		                    if(self.modelForm.cityId){
+		                        self.addressValue.push(self.modelForm.cityId);
+		                    }
+		                    if(self.modelForm.areaId){
+		                        self.addressValue.push(self.modelForm.areaId);
+		                    }
+		                    if(self.modelForm.decorateProjectTypes){
+
+		                    	let ckList=self.modelForm.decorateProjectTypes.split(',');
+		                    	ckList.forEach((item)=>{
+		                    		self.decorateCkList.push(parseInt(item));
+		                    	})
+
+		                    }
+		                    if(self.modelForm.byAgentUserId){
+		                    	self.agentListCk=self.modelForm.byAgentUserId;
+		                    }
 	                        self.modalVisible=true;
 	                    }else{
 	                        self.modelForm={};
@@ -339,45 +389,65 @@ import chinaAddress from '../../components/china-address-0408'
 	                })
             	}else{
             		self.modelForm={};
+            		
             		self.modalVisible=true;
             	}
 			},
 			modelSubmit(){
 				let self=this;
 				self.modelLoading=true;
-				if(self.agentListCk.length>0){
-					self.modelForm.byAgentUserId=self.agentListCk.join(',');
-					self.modelForm.byAgent='';
+				if(self.agentListCk){
+					self.modelForm.byAgentUserId=self.agentListCk;
 					self.agentList.forEach((item)=>{
-						if(self.agentListCk.findIndex((v)=>v===item.id)){
-							self.modelForm.byAgent+=item.agentName+',';
+						if(self.agentListCk==item.id){
+							self.modelForm.byAgent=item.agentName;
 						}
+
 					})
 				}
 				if(self.decorateCkList.length>0){
-					self.modelForm.decorateProjectTypes=self.decorateCkList.join(',');
+					self.modelForm.decorateProjectTypes=self.decorateCkList.unique().join(',');
+
 					self.modelForm.decorateProject='';
 					self.decorateList.forEach((item)=>{
-						if(self.decorateCkList.findIndex((v)=>v===item.id)){
-							self.modelForm.decorateProject+=item.dicName+',';
-						}
+						self.decorateCkList.forEach((ck)=>{
+							if(ck===item.id){
+								self.modelForm.decorateProject+=item.dicName+',';
+							}
+						})
+						
 					})
 				}
 				if(self.modelForm.id){
-					
+					server.saveAppoint(self.modelForm).then((res)=>{
+	                	self.modelLoading=false;
+	                    if(res.success){
+	                        self.$Notice.success({
+	                            title:'保存成功',
+	                            desc:res.message
+	                        });
+	                        //self.modalVisible=false;
+	                        self.getList(self.pageIndex,10);
+	                    }else{
+	                        self.$Notice.error({
+	                            title:'保存失败',
+	                            desc:res.message
+	                        });
+	                    }
+	                })
 				}else{
 	                server.addAppoint(self.modelForm).then((res)=>{
 	                	self.modelLoading=false;
 	                    if(res.success){
 	                        self.$Notice.success({
-	                            title:'新增成功',
+	                            title:'保存成功',
 	                            desc:res.message
 	                        });
-	                        self.modalVisible=false;
+	                        //self.modalVisible=false;
 	                        self.getList(self.pageIndex,10);
 	                    }else{
 	                        self.$Notice.error({
-	                            title:'新增失败',
+	                            title:'保存失败',
 	                            desc:res.message
 	                        });
 	                    }
@@ -389,7 +459,7 @@ import chinaAddress from '../../components/china-address-0408'
 				let self=this;
 				self.$Modal.confirm({
                     onOk:function(){
-                       server.delNotice(id).then((res)=>{
+                       server.delAppoint(id).then((res)=>{
 		                    if(res.success){
 		                        self.$Notice.success({
 		                            title:'删除成功',
@@ -404,33 +474,72 @@ import chinaAddress from '../../components/china-address-0408'
 		                    }
 		                }) 
                     },
-                    content:'您确认删除这条内容吗？'
+                    content:'您确认删除这条预约吗？'
                 })
                 
 			},
-			updateState(id,title){
-                let self=this;
-                self.$Modal.confirm({
-                    onOk:function(){
-                        server.publishNotice(id).then((res)=>{
-		                    if(res.success){
-		                        self.$Notice.success({
-		                            title:'成功',
-		                            desc:res.message
-		                        });
-		                        self.getList(self.pageIndex,10);
-		                    }else{
-		                        self.$Notice.error({
-		                            title:'失败',
-		                            desc:res.message
-		                        });
-		                    }
-		                })
-                    },
-                    content:title
-                })
-                
-            },
+			modelSave(){
+				let self=this;
+				self.modelLoading=true;
+				if(self.agentListCk){
+					self.modelForm.byAgentUserId=self.agentListCk;
+					self.agentList.forEach((item)=>{
+						if(self.agentListCk==item.id){
+							self.modelForm.byAgent=item.agentName;
+						}
+
+					})
+				}
+				if(self.decorateCkList.length>0){
+					self.modelForm.decorateProjectTypes=self.decorateCkList.join(',');
+					self.modelForm.decorateProject='';
+					self.decorateList.forEach((item)=>{
+						self.decorateCkList.forEach((ck)=>{
+							if(ck==item.id){
+								self.modelForm.decorateProject+=item.dicName+',';
+							}
+						})
+						
+					})
+				}
+				self.modelForm.isOnlySave=false;
+				if(self.modelForm.id){
+					server.saveAppoint(self.modelForm).then((res)=>{
+	                	self.modelLoading=false;
+	                    if(res.success){
+	                        self.$Notice.success({
+	                            title:'提交成功',
+	                            desc:res.message
+	                        });
+	                        self.modalVisible=false;
+	                        self.getList(self.pageIndex,10);
+	                    }else{
+	                        self.$Notice.error({
+	                            title:'提交失败',
+	                            desc:res.message
+	                        });
+	                    }
+	                })
+				}else{
+	                server.addAppoint(self.modelForm).then((res)=>{
+	                	self.modelLoading=false;
+	                    if(res.success){
+	                        self.$Notice.success({
+	                            title:'提交成功',
+	                            desc:res.message
+	                        });
+	                        self.modalVisible=false;
+	                        self.getList(self.pageIndex,10);
+	                    }else{
+	                        self.$Notice.error({
+	                            title:'提交失败',
+	                            desc:res.message
+	                        });
+	                    }
+	                })
+				}
+			},
+			
             decoratingDateChange(e){
             	this.modelForm.decoratingTime=e;
             },

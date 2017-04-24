@@ -10,11 +10,14 @@
                         <i class="iconfont icon-zhuye"></i>
                         <span>首页</span>
                     </Menu-item>
-                    <Menu-item key="3">
+                    <Menu-item key="3" v-show="userInfo.type===1">
                         <i class="iconfont icon-yuyueguanli"></i>
                         <span>预约管理</span>
                     </Menu-item>
-
+                    <Menu-item key="10" v-show="userInfo.type===2">
+                        <i class="iconfont icon-yuyueguanli"></i>
+                        <span>预约管理</span>
+                    </Menu-item>
                     <Menu-item key="4">
                         <i class="iconfont icon-dingdan"></i>
                         <span>客户订单管理</span>
@@ -124,7 +127,9 @@ import server,{ storage } from '../libs/server'
                     case '3':
                         this.$router.go('/waiting');
                         break;
-                    
+                    case '10':
+                        this.$router.go('/owner/waiting');
+                        break;
                     case '5':
                          this.$router.go('/agent/index');
                         break;

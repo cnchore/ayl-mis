@@ -166,49 +166,24 @@
                         	<i class="iconfont icon-tianjia"></i>公共附件区
                     	</div>
                     	<div class="container">
-                    		<div class="q-left">
-                    		<Upload
-                                v-ref:upload
-                                :show-upload-list="false"
-                                :default-file-list="defaultList"
-                                :on-success="handleSuccess"
-                                :format="['jpg','jpeg','png','doc','docx','xls','xlsx','pdf','dwg']"
-                                :max-size="10240"
-                                :on-format-error="handleFormatError"
-                                :on-exceeded-size="handleMaxSize"
-                                :before-upload="handleBeforeUpload"
-                                multiple
-                                type="drag"
-                                :action="baseUrl+'/common/imgUpload'"
-                                :data="uploadData"
-                                style="display: inline-block;width:158px;">
-                                <div class="q-img-add">
-                                    <Icon type="ios-plus-empty" size="64"></Icon>
-                                </div>
-                            </Upload>
-                            </div>
+                    		
                             <div class="q-right">
 	                            <div class="q-img-list" v-for="item in uploadList">
 		                    		<div class="l-upload-list" >
-		                                <template v-if="item.status === 'finished'">
+		                                <template >
 		                                    <img :src="item.avatar">
 		                                    <div class="l-upload-list-cover">
 		                                        <a :href="item.attachAddress" target="_blank">
 				                           			<Icon type="ios-download-outline" title="下载"></Icon>
 				                            	</a>
-		                                        <Icon type="ios-trash-outline" @click="handleRemove(item)"></Icon>
 		                                    </div>
 		                                </template>
-		                                <template v-else>
-		                                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-		                                </template>
+		                               
 		                            </div>
-		                            <i-input :value.sync="item.attachName" class="q-text-center" placeholder="请输入名称"></i-input>
+		                            <div>{{item.attachName}}</div>
 
 	                            </div>
-	                            <div class="q-top-b">
-	                            	<a href="#">下载报价单模版</a>
-	                            </div>
+	                            
                             </div>
                          </div>   
                     </div>
@@ -227,14 +202,13 @@
 						    </Row>
 						    <Row class="q-row" v-for="item in costVoList">
 						        <i-col span="5">{{item.costName}}</i-col>
-						        <i-col span="7" :class="{'q-col':item.costType===4}">
-		            				<i-input v-show="item.costType!=11 && item.costType!=12" :value.sync="item.costValue" ></i-input>
+						        <i-col span="7">
+						        	<span v-show="item.costType!=11 && item.costType!=12" >{{item.costValue}}</span>
 		            				<span v-show="item.costType===11">{{getSaleToal}}</span>
 		            				<span v-show="item.costType===12">{{getDealToal}}</span>
-		            				<a  v-show="item.costType===4" href="#">选择现金券</a>
 						        </i-col>
 						        <i-col span="12">
-		            				<i-input :value.sync="item.desc" ></i-input>
+						        	{{item.desc}}
 						        </i-col>
 						    </Row>
 						    
@@ -294,11 +268,7 @@
 						    </i-form>
                     	</div>
                     </div>
-                    <div class="q-btns">
-                    	<i-button type="primary" :loading="modelLoading" @click="ownerSaveAppoint(true)" size="large">保存</i-button>
-                    	<i-button type="primary" :loading="modelLoading" @click="ownerSaveAppoint(false)" size="large">提交</i-button>
-                    	<i-button type="ghost" size="large">取消</i-button>
-                    </div>
+                    
                 </div>
                 <div class="layout-copy">
                     版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
@@ -317,12 +287,10 @@ import LTitle from '../../components/title'
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
 			return{
-				breads:[{text:'首页',href:'/index#!/index'},{text:'预约管理',href:'/owner/waiting'},{text:'订货单编辑',href:''}],
+				breads:[{text:'首页',href:'/index#!/index'},{text:'预约管理',href:'/index#!/waiting'},{text:'订货单查看',href:''}],
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
-                baseUrl:server.getBaseUrl(),
-                uploadData:{bucket:'dc-test'},
                 defaultList: [],
                 
                 modelLoading:false,
@@ -412,45 +380,7 @@ import LTitle from '../../components/title'
 	                })
             	}
 			},
-			ownerSaveAppoint(t){
-				let self=this;
-				self.modelLoading=true;
-				self.modelForm.isOnlySave=t;
-				self.modelForm.attachmentVoList=self.uploadList;
-				self.modelForm.costVoList=self.costVoList;
-				server.ownerSaveAppoint(self.modelForm).then((res)=>{
-	                	self.modelLoading=false;
-	                    if(res.success){
-	                        self.$Notice.success({
-	                            title:t?'保存成功':'提交成功',
-	                            desc:res.message
-	                        });
-	                        //self.modalVisible=false;
-	                        self.getList();
-	                    }else{
-	                        self.$Notice.error({
-	                            title:t?'保存失败':'提交失败',
-	                            desc:res.message
-	                        });
-	                    }
-	                })
-			},
 			
-            handleRemove (file) {
-                // 从 upload 实例删除数据
-                const fileList = this.$refs.upload.fileList;
-                this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
-            },
-            handleSuccess (res, file) {
-                // 因为上传过程为实例，这里模拟添加 url
-                file.attachAddress = res.data;
-                let nameList=res.data.split('@|@');
-                if(nameList&&nameList.length>1){
-                	file.attachName=nameList[1].substr(0,nameList[1].lastIndexOf('.'));
-		            file.avatar=this.getFileType(res.data);
-                }
-               
-            },
             getFileType(v){
             	if(!v){
             		return null;
@@ -478,28 +408,7 @@ import LTitle from '../../components/title'
 
             	}
             },
-            handleFormatError (file) {
-                this.$Notice.warning({
-                    title: '文件格式不正确',
-                    desc: '文件 ' + file.name + ' 格式不正确，请上传 jpg、png、doc、docx、xls、xlsx、pdf、dwg 格式'
-                });
-            },
-            handleMaxSize (file) {
-                this.$Notice.warning({
-                    title: '超出文件大小限制',
-                    desc: '文件 ' + file.name + ' 太大，不能超过 10M'
-                });
-            },
-            handleBeforeUpload () {
-                
-                const check = this.uploadList.length < 16;
-                if (!check) {
-                    this.$Notice.warning({
-                        title: '最多只能上传 15 张图片'
-                    });
-                }
-                return check;
-            },
+            
 		}
 	}
 </script>

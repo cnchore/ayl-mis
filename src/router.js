@@ -136,6 +136,12 @@ const routers = {
         },
         meta: { requiresAuth: true,title:'艾臣营销管理平台－订货单编辑' }
     },
+    '/appointment/look': {
+        component(resolve) {
+            require(['./views/appointment/look.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－订货单查看' }
+    },
     '/complete': {
         component(resolve) {
             require(['./views/appointment/complete.vue'], resolve);
@@ -147,6 +153,18 @@ const routers = {
             require(['./views/appointment/trash.vue'], resolve);
         },
         meta: { requiresAuth: true,title:'艾臣营销管理平台－废弃箱' }
+    },
+    'owner/waiting': {
+        component(resolve) {
+            require(['./views/appointment/owner-waiting.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－待办事项' }
+    },
+    'owner/complete': {
+        component(resolve) {
+            require(['./views/appointment/owner-complete.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－已办事项' }
     },
     //订单管理
     '/order/ownerInfo': {
