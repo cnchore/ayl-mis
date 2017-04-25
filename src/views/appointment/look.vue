@@ -128,11 +128,11 @@
 	}
 </style>
 <template>
-    <l-header active-key="3"></l-header>
+    <l-header active-key="10"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="3" active-key="3-1"></left-menu>
+                <left-menu active-Menu="10" active-key="10-1"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
@@ -140,23 +140,15 @@
                 </div>
                 <br/>
                 <div class="layout-content" >
-                	<div class="q-imgs" v-show="false">
+                	<div class="q-imgs" v-show="optionList[0]">
                 		<div class="q-title">
                         	<i class="iconfont icon-tianjia"></i>客户意见区
                     	</div>
                 		<div class="container q-table">
                 			<Collapse active-key="1">
-						        <Panel key="1">
-						            2017-04-19 对大样图设计及报价存在疑问
-						            <p slot="content">对大样图设计及报价存在疑问，能否详细门窗报价部门，并给予优惠。对大样图设计及报价存在疑问，能否详细门窗报价部门，并给予优惠。对大样图设计及报价存在疑问，能否详细门窗报价部门，并给予优惠。</p>
-						        </Panel>
-						        <Panel key="2">
-						            2017-04-18 对大样图设计及报价存在疑问
-						            <p slot="content">对大样图设计及报价存在疑问，能否详细门窗报价部门，并给予优惠。对大样图设计及报价存在疑问，能否详细门窗报价部门，并给予优惠。对大样图设计及报价存在疑问，能否详细门窗报价部门，并给予优惠。对大样图设计及报价存在疑问，能否详细门窗报价部门，并给予优惠。</p>
-						        </Panel>
-						        <Panel key="3">
-						            2017-04-17 对大样图设计及报价存在疑问
-						            <p slot="content">对大样图设计及报价存在疑问，能否详细门窗报价部门，并给予优惠。对大样图设计及报价存在疑问，能否详细门窗报价部门，并给予优惠。对大样图设计及报价存在疑问，能否详细门窗报价部门，并给予优惠。对大样图设计及报价存在疑问，能否详细门窗报价部门，并给予优惠。对大样图设计及报价存在疑问，能否详细门窗报价部门，并给予优惠。</p>
+						        <Panel :key="item.id" v-for="item in optionList">
+						            {{item.createTime}}
+						            <p slot="content">{{item.remark}}</p>
 						        </Panel>
 						    </Collapse>
                 		</div>
@@ -168,21 +160,21 @@
                     	<div class="container">
                     		
                             <div class="q-right">
-	                            <div class="q-img-list" v-for="item in uploadList">
+                            	<template v-for="(index,item) in uploadList">
+                            	<div v-show="getIsShowDate(index,item.createTime.substr(0,10))">{{item.createTime.substr(0,10)}}</div>
+	                            <div class="q-img-list" >
 		                    		<div class="l-upload-list" >
-		                                <template >
-		                                    <img :src="item.avatar">
-		                                    <div class="l-upload-list-cover">
-		                                        <a :href="item.attachAddress" target="_blank">
-				                           			<Icon type="ios-download-outline" title="下载"></Icon>
-				                            	</a>
-		                                    </div>
-		                                </template>
-		                               
+	                                    <img :src="item.avatar">
+	                                    <div class="l-upload-list-cover">
+	                                        <a :href="item.attachAddress" target="_blank">
+			                           			<Icon type="ios-download-outline" title="下载"></Icon>
+			                            	</a>
+	                                    </div>
 		                            </div>
 		                            <div>{{item.attachName}}</div>
 
 	                            </div>
+	                            </template>
 	                            
                             </div>
                          </div>   
@@ -203,7 +195,9 @@
 						    <Row class="q-row" v-for="item in costVoList">
 						        <i-col span="5">{{item.costName}}</i-col>
 						        <i-col span="7">
-						        	<span v-show="item.costType!=11 && item.costType!=12" >{{item.costValue}}</span>
+						        	<span v-show="item.costType!=4 && item.costType!=11 && item.costType!=12" >{{item.costValue}}</span>
+
+		            				<span v-show="item.costType===4">{{getCouponToal}}</span>
 		            				<span v-show="item.costType===11">{{getSaleToal}}</span>
 		            				<span v-show="item.costType===12">{{getDealToal}}</span>
 						        </i-col>
@@ -258,11 +252,11 @@
                     	<div class="container q-table">
                     		<i-form :model="modelForm" :label-width="100">
                     			<Form-item label="经销商备注">
-						            <i-input :value.sync="modelForm.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
+                    				{{modelForm.remark}}
 						        </Form-item>
                     		
                     			<Form-item label="总部备注">
-						            <i-input :value.sync="modelForm.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
+                    				{{modelForm.remark}}
 						        </Form-item>
 						        
 						    </i-form>
@@ -287,7 +281,7 @@ import LTitle from '../../components/title'
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
 			return{
-				breads:[{text:'首页',href:'/index#!/index'},{text:'预约管理',href:'/index#!/waiting'},{text:'订货单查看',href:''}],
+				breads:[{text:'首页',href:'/index#!/index'},{text:'预约管理',href:'/owner/waiting'},{text:'订货单查看',href:''}],
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
@@ -310,6 +304,9 @@ import LTitle from '../../components/title'
                 	{costName:'成交金额',costValue:0,desc:'',costType:12},
                 ],
                 id:null,
+                optionList:[],
+                couponList:[],
+                targetKeysCoupon:[],
 			}
 		},
 		ready(){
@@ -328,7 +325,13 @@ import LTitle from '../../components/title'
         },
 		computed: {
            uploadList () {
-                return this.$refs.upload ? this.$refs.upload.fileList : [];
+           		let _list=this.defaultList ? this.defaultList : [];
+           		if(_list.length>2){
+           			_list.sort(function(a,b){
+           				return a.createTime-b.createTime;
+           			})
+           		}
+                return _list;
             },
             getSaleToal(){
             	//成交总金额＝（销售总金额＊折扣－优惠券）－现金券
@@ -343,10 +346,39 @@ import LTitle from '../../components/title'
             	return t;
             },
             getDealToal(){
-            	return this.getSaleToal*this.costVoList[4].costValue-this.costVoList[5].costValue-this.costVoList[6].costValue;
+            	return this.getSaleToal*this.costVoList[4].costValue-this.costVoList[5].costValue-this.getCouponToal;
+            },
+            getCouponToal(){
+            	let t=0;
+            	this.targetKeysCoupon.forEach((item)=>{
+            		this.couponList.forEach((cl)=>{
+            			if(cl.key===item){
+            				t+=parseFloat(cl.value);
+            			}
+            		})
+            		
+            	})
+            	return t;
             }
         },
 		methods:{
+			getIsShowDate(index,dateStr){
+				if(!dateStr){
+					return false;
+				}
+				let b=false;
+				if(index>0){
+					if(this.uploadList[index-1].createTime.substr(0,10)===dateStr){
+						b=false;
+					}else{
+						b=true;
+					}
+				}else{
+					b=true;
+				}
+				console.info(b);
+				return b;
+			},
 			getList(){
 				let self=this;
 				if(self.id){
@@ -355,24 +387,49 @@ import LTitle from '../../components/title'
 	                	self.$Loading.finish();
 	                    if(res.success){
 	                        self.modelForm=res.data.appointmentVo;
-	                        if(self.modelForm.attachmentVoList){
-	                        	self.modelForm.attachmentVoList.forEach((item)=>{
+	                        if(res.data.agentAttach&&res.data.agentAttach[0]){
+	                        	res.data.agentAttach.forEach((item)=>{
 								self.defaultList.push({
 									attachName:item.attachName,
 									attachAddress:item.attachAddress,
 									state:item.status,
-									avatar:self.getFileType(item.attachAddress)
+									avatar:self.getFileType(item.attachAddress),
+									createTime:item.createTime
 								})
 							})
 	                        }
-	                        if(self.modelForm.costVoList){
-	                        	self.modelForm.costVoList.forEach((item)=>{
+	                        if(res.data.costList){
+	                        	res.data.costList.forEach((item)=>{
 	                        		self.costVoList.forEach((citem,index)=>{
 	                        			if(item.costType===citem.costType){
 	                        				self.costVoList[index].costValue=item.costValue;
 	                        			}
 	                        		})
 	                        	})
+	                        }
+	                        if(res.data.optionList){
+	                        	self.optionList=res.data.optionList;
+	                        	
+	                        }
+	                        if(res.data.couponList){
+	                        	self.couponList=[];
+	                        	res.data.couponList.forEach((item)=>{
+	                        		if(item.state!=2){
+		                        		self.couponList.push({
+		                        			key:item.id,
+		                        			name:item.applyCouponName,
+		                        			code:item.couponCode,
+		                        			value:item.couponValue,
+		                        			orderId:item.orderId,
+		                        			orderCode:item.orderCode,
+		                        			state:item.state
+		                        		});
+		                        	}
+	                        	})
+	                        	self.targetKeysCoupon=self.couponList
+	                        		.filter((v)=>v.orderId===self.modelForm.id && v.orderCode===self.modelForm.billCode)
+	                        		.map(item=>item.key);
+
 	                        }
 	                    }else{
 	                        self.modelForm={};

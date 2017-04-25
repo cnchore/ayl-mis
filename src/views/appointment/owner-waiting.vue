@@ -180,7 +180,7 @@ import chinaAddress from '../../components/china-address-0408'
 					title: '操作',
 					key: 'action',
 					fixed:'right',
-					width:200,
+					className:'l-m-min-width',
 					align: 'center',
 					render (row, column, index) {
 					return `
@@ -294,7 +294,7 @@ import chinaAddress from '../../components/china-address-0408'
 				}
 			},
 			
-			nextAppoint(){
+			nextAppoint(id){
 				let self=this;
 				self.$Modal.confirm({
                     onOk:function(){
