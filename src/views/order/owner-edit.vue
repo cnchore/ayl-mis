@@ -276,6 +276,7 @@ import chinaAddress from '../../components/china-address-0408'
                 belongList:[],
                 modelLoading:false,
                 id:null,
+               
 
 			}
 		},

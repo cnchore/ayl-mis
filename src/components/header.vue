@@ -18,7 +18,11 @@
                         <i class="iconfont icon-yuyueguanli"></i>
                         <span>预约管理</span>
                     </Menu-item>
-                    <Menu-item key="4">
+                    <Menu-item key="4" v-show="userInfo.type===1">
+                        <i class="iconfont icon-dingdan"></i>
+                        <span>客户订单管理</span>
+                    </Menu-item>
+                     <Menu-item key="11" v-show="userInfo.type===2">
                         <i class="iconfont icon-dingdan"></i>
                         <span>客户订单管理</span>
                     </Menu-item>
@@ -134,7 +138,10 @@ import server,{ storage } from '../libs/server'
                          this.$router.go('/agent/index');
                         break;
                     case '4':
-                        this.$router.go('/order/ownerInfo')
+                        this.$router.go('/order/list')
+                        break;
+                    case '11':
+                         this.$router.go('/order/ownerInfo')
                         break;
                     case '6':
                     case '7':

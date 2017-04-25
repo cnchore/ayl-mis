@@ -135,7 +135,16 @@ const serverPath={
 	restoreAppoint:'/owner/appointment/restore',
 	getAppointByid:'/owner/appointment/getAppointInfo',
 	ownerSaveAppoint:'/owner/appointment/save',
-	nextAppoint:'',
+	nextAppoint:'/owner/appointment/next',
+	//订单管理
+	getOrderList:'/owner/order/getPage',
+	getOrderByid:'/owner/order/getById',
+	changeOrder:'/owner/order/changeState',
+	ownerAddOrder:'/owner/order/addOrder',
+	ownerUpdateOrder:'/owner/order/editOrder',
+	confirmOrder:'/owner/order/confirmOrder',
+	ownerOrderNext:'/owner/order/next',
+
 
 }
 
@@ -1136,7 +1145,9 @@ export default {
 		let _list={
 			id:formData.id,//主键  
 			state:formData.state,//状态：
-			isOnlySave:formData.isOnlySave//是否只是保存，true 只保存
+			isOnlySave:formData.isOnlySave,//是否只是保存，true 只保存
+			billCode:formData.billCode
+
 		}
 		if(formData.couponIds){
 			_list.couponIds=formData.couponIds;
@@ -1179,4 +1190,158 @@ export default {
 	nextAppoint(id){
 		return this.postPromise(serverPath.nextAppoint,{id},'nextAppoint');
 	},
+	//订单管理
+	getOrderList(searchData){
+		return this.getPromise(serverPath.getOrderList,searchData,'getOrderList');
+	},
+	getOrderByid(id){
+		return this.getPromise(serverPath.getOrderByid,{id},'getOrderByid');
+	},
+	changeOrder(id,state){
+		//1：确认订单 2：生产中 3：产品入库 4：已发货 5：已收货
+		return this.postPromise(serverPath.changeOrder,{id,state},'changeOrder');
+	},
+	ownerAddOrder(formData){
+		let _list={
+			name:formData.name,//姓名（联系人）
+			mobilePhone:formData.mobilePhone,//手机号码
+			province:formData.province,//省会
+			provinceId:formData.provinceId,//省会id
+			city:formData.city,//城市
+			cityId:formData.cityId,//城市id
+			area:formData.area,//区域
+			areaId:formData.areaId,//区域id
+			address:formData.address,//预约地址
+			decorateProject:formData.decorateProject,//装修项目内容
+			decorateProjectTypes:formData.decorateProjectTypes,//装修项目内容类型
+			remark:formData.remark,//
+			isOnlySave:formData.isOnlySave,//是否只是保存，true 只保存
+			//billCode:formData.billCode
+
+		}
+		if(formData.couponIds){
+			_list.couponIds=formData.couponIds;
+		}
+		
+		if(formData.costVoList){
+			formData.costVoList.forEach((item,index)=>{
+				if(item.costType){
+					if(item.id){
+						_list["costVoList["+index+"].id"]=item.id;
+					}
+					_list["costVoList["+index+"].costType"]=item.costType;
+					_list["costVoList["+index+"].costValue"]=item.costValue;
+					_list["costVoList["+index+"].desc"]=item.desc;
+				}
+			})
+			
+		}
+		if(formData.attachmentVoList){
+			formData.attachmentVoList.forEach((item,index)=>{
+				if(item.attachAddress){
+					if(item.id){
+						_list["attachmentVoList["+index+"].id"]=item.id;
+					}
+					_list["attachmentVoList["+index+"].attachAddress"]=item.attachAddress;
+					_list["attachmentVoList["+index+"].attachName"]=item.attachName;
+				}
+			})
+			
+		}
+		return this.postPromise(serverPath.ownerAddOrder,_list,'ownerAddOrder');
+	},
+	ownerUpdateOrder(formData){
+		let _list={
+			id:formData.id,//主键
+			name:formData.name,//姓名（联系人）
+			mobilePhone:formData.mobilePhone,//手机号码
+			province:formData.province,//省会
+			provinceId:formData.provinceId,//省会id
+			city:formData.city,//城市
+			cityId:formData.cityId,//城市id
+			area:formData.area,//区域
+			areaId:formData.areaId,//区域id
+			address:formData.address,//预约地址
+			decorateProject:formData.decorateProject,//装修项目内容
+			decorateProjectTypes:formData.decorateProjectTypes,//装修项目内容类型
+			remark:formData.remark,//
+			isOnlySave:formData.isOnlySave,//是否只是保存，true 只保存
+			//billCode:formData.billCode
+
+		}
+		if(formData.couponIds){
+			_list.couponIds=formData.couponIds;
+		}
+		
+		if(formData.costVoList){
+			formData.costVoList.forEach((item,index)=>{
+				if(item.costType){
+					if(item.id){
+						_list["costVoList["+index+"].id"]=item.id;
+					}
+					_list["costVoList["+index+"].costType"]=item.costType;
+					_list["costVoList["+index+"].costValue"]=item.costValue;
+					_list["costVoList["+index+"].desc"]=item.desc;
+				}
+			})
+			
+		}
+		if(formData.attachmentVoList){
+			formData.attachmentVoList.forEach((item,index)=>{
+				if(item.attachAddress){
+					if(item.id){
+						_list["attachmentVoList["+index+"].id"]=item.id;
+					}
+					_list["attachmentVoList["+index+"].attachAddress"]=item.attachAddress;
+					_list["attachmentVoList["+index+"].attachName"]=item.attachName;
+				}
+			})
+			
+		}
+		return this.postPromise(serverPath.ownerUpdateOrder,_list,'ownerUpdateOrder');
+	},
+	confirmOrder(formData){
+		let _list={
+			id:formData.id,//主键  
+			remark:formData.remark,//
+			isOnlySave:formData.isOnlySave,//是否只是保存，true 只保存
+			//billCode:formData.billCode
+
+		}
+		if(formData.couponIds){
+			_list.couponIds=formData.couponIds;
+		}
+		
+		if(formData.costVoList){
+			formData.costVoList.forEach((item,index)=>{
+				if(item.costType){
+					if(item.id){
+						_list["costVoList["+index+"].id"]=item.id;
+					}
+					_list["costVoList["+index+"].costType"]=item.costType;
+					_list["costVoList["+index+"].costValue"]=item.costValue;
+					_list["costVoList["+index+"].desc"]=item.desc;
+				}
+			})
+			
+		}
+		if(formData.attachmentVoList){
+			formData.attachmentVoList.forEach((item,index)=>{
+				if(item.attachAddress){
+					if(item.id){
+						_list["attachmentVoList["+index+"].id"]=item.id;
+					}
+					_list["attachmentVoList["+index+"].attachAddress"]=item.attachAddress;
+					_list["attachmentVoList["+index+"].attachName"]=item.attachName;
+				}
+			})
+			
+		}
+		return this.postPromise(serverPath.confirmOrder,_list,'confirmOrder');
+	},
+	ownerOrderNext(id){
+		return this.postPromise(serverPath.ownerOrderNext,{id},'ownerOrderNext');
+	},
+
+
 }
