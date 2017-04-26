@@ -139,6 +139,7 @@ const serverPath={
 	//订单管理
 	getOrderList:'/owner/order/getPage',
 	getOrderByid:'/owner/order/getById',
+	getOrderInfo:'/owner/order/getOrderInfo',
 	changeOrder:'/owner/order/changeState',
 	ownerAddOrder:'/owner/order/addOrder',
 	ownerUpdateOrder:'/owner/order/editOrder',
@@ -1197,6 +1198,9 @@ export default {
 	getOrderByid(id){
 		return this.getPromise(serverPath.getOrderByid,{id},'getOrderByid');
 	},
+	getOrderInfo(orderId){
+		return this.getPromise(serverPath.getOrderInfo,{orderId},'getOrderInfo');
+	},
 	changeOrder(id,state){
 		//1：确认订单 2：生产中 3：产品入库 4：已发货 5：已收货
 		return this.postPromise(serverPath.changeOrder,{id,state},'changeOrder');
@@ -1214,6 +1218,7 @@ export default {
 			address:formData.address,//预约地址
 			decorateProject:formData.decorateProject,//装修项目内容
 			decorateProjectTypes:formData.decorateProjectTypes,//装修项目内容类型
+			agentRemark:formData.agentRemark,
 			remark:formData.remark,//
 			isOnlySave:formData.isOnlySave,//是否只是保存，true 只保存
 			//billCode:formData.billCode
@@ -1265,6 +1270,7 @@ export default {
 			decorateProject:formData.decorateProject,//装修项目内容
 			decorateProjectTypes:formData.decorateProjectTypes,//装修项目内容类型
 			remark:formData.remark,//
+			agentRemark:formData.agentRemark,
 			isOnlySave:formData.isOnlySave,//是否只是保存，true 只保存
 			//billCode:formData.billCode
 
@@ -1304,6 +1310,8 @@ export default {
 		let _list={
 			id:formData.id,//主键  
 			remark:formData.remark,//
+			limitDays:formData.limitDays,
+			level:formData.level,
 			isOnlySave:formData.isOnlySave,//是否只是保存，true 只保存
 			//billCode:formData.billCode
 

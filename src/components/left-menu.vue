@@ -263,10 +263,11 @@
                         this.$router.go('/order/list');
                         break;
                     case '4-2':
-                        alert('开发中，请等待');
+                        this.$router.go('/order/hq/ownerInfo');
                         break;
                     case '11-1':
-                        alert('开发中，请等待');
+                        this.$router.go('/owner/order/list');
+                        
                         break;
                     case '11-2':
                         this.$router.go('/order/ownerInfo');

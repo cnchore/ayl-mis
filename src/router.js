@@ -172,7 +172,7 @@ const routers = {
         },
         meta: { requiresAuth: true,title:'艾臣营销管理平台－已办事项' }
     },
-    //订单管理
+    //订单管理－经销商-客户管理
     '/order/ownerInfo': {
         component(resolve) {
             require(['./views/order/ownerInfo.vue'], resolve);
@@ -191,6 +191,20 @@ const routers = {
         },
         meta: { requiresAuth: true,title:'艾臣营销管理平台－客户资料查看' }
     },
+    //总部－客户管理
+    '/order/hq/ownerInfo': {
+        component(resolve) {
+            require(['./views/order/hq-ownerInfo.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－客户管理' }
+    },
+    '/order/hq/owner/look': {
+        component(resolve) {
+            require(['./views/order/hq-owner-look.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－客户资料查看' }
+    },
+    //总部订单管理
     '/order/list': {
         component(resolve) {
             require(['./views/order/list.vue'], resolve);
@@ -206,6 +220,25 @@ const routers = {
     '/order/look': {
         component(resolve) {
             require(['./views/order/order-look.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－订单查看' }
+    },
+    //经销商-订单管理
+    '/owner/order/list': {
+        component(resolve) {
+            require(['./views/order/owner-order-list.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－订单管理' }
+    },
+    '/owner/order/edit': {
+        component(resolve) {
+            require(['./views/order/owner-order-edit.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－订单编辑' }
+    },
+    '/owner/order/look': {
+        component(resolve) {
+            require(['./views/order/owner-order-look.vue'], resolve);
         },
         meta: { requiresAuth: true,title:'艾臣营销管理平台－订单查看' }
     },

@@ -112,11 +112,11 @@
 	}
 </style>
 <template>
-    <l-header active-key="11"></l-header>
+    <l-header active-key="4"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="11" active-key="11-2"></left-menu>
+                <left-menu active-Menu="4" active-key="4-2"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
@@ -230,7 +230,7 @@ import LTitle from '../../components/title'
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
 			return{
-				breads:[{text:'首页',href:'/index'},{text:'客户管理',href:'/order/ownerInfo'},{text:'客户资料查看',href:''}],
+				breads:[{text:'首页',href:'/index'},{text:'客户管理',href:'/order/hq/ownerInfo'},{text:'客户资料查看',href:''}],
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
@@ -242,9 +242,9 @@ import LTitle from '../../components/title'
 				self:this,
 				tableData:[],
 				tableCol: [
-				{title:'订单编号',
+				{title:'订单编号',key:'orderNo',
 					render(row){
-						return `<a v-link="{path:'/owner/order/look?id='+${row.id}}">${row.orderNo}</a>`;
+						return `<a v-link="{path:'/order/look?id='+${row.id}}">${row.orderNo}</a>`;
 					}
 				},
 				{title:'下单日期',key:'createTime'},
@@ -267,6 +267,7 @@ import LTitle from '../../components/title'
 			if(this.id){
 				this.getList();
 			}
+			
 		},
 		route:{
             data:function(transition){
