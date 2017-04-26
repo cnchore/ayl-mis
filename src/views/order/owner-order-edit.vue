@@ -145,11 +145,11 @@
 	}
 </style>
 <template>
-    <l-header active-key="4"></l-header>
+    <l-header active-key="11"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="4" active-key="4-1"></left-menu>
+                <left-menu active-Menu="11" active-key="11-1"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
@@ -157,36 +157,102 @@
                 </div>
                 <br/>
                 <div class="layout-content" >
-                	<div class="q-imgs" v-show="optionList[0]">
-                		<div class="q-title">
-                        	<i class="iconfont icon-tianjia"></i>客户意见区
+                	<div class="q-imgs">
+                    	<div class="q-title">
+                        	<i class="iconfont icon-tianjia"></i>客户信息
                     	</div>
-                		<div class="container q-table">
-                			<Collapse active-key="1">
-						        <Panel :key="item.id" v-for="item in optionList">
-						            {{item.createTime}}
-						            <p slot="content">{{item.remark}}</p>
-						        </Panel>
-						    </Collapse>
-                		</div>
-                	</div>
+                    	<div class="container q-table">
+                    		<i-form :model="modelForm" :label-width="100" :rules="ruleForm">
+                    			
+            					<Form-item label="联系人姓名" prop="name">
+						            <i-input :value.sync="modelForm.name" placeholder="请输入..."></i-input>
+						        </Form-item>
+                    			
+            					<Form-item label="联系人手机" prop="mobilePhone">
+						            <i-input :value.sync="modelForm.mobilePhone" placeholder="请输入手机号码"></i-input>
+						        </Form-item>
+                    			
+						        <Form-item label="装修项目" prop="decorate">
+						           <Checkbox-group :model.sync="decorateCkList">
+								        <Checkbox :value="item.id" v-for="item in decorateList">
+								        	<span>{{item.dicName}}</span>
+								        </Checkbox>
+								    </Checkbox-group>
+						        </Form-item>
+            					<Form-item label="所在地区" prop="addressValue">
+				        			<Cascader :data="addressData" @on-change="addrSelected" :value.sync="addressValue" trigger="hover"></Cascader>
+						           
+						        </Form-item>
+            					<Form-item label="详细地址" prop="address">
+						            <i-input :value.sync="modelForm.address" placeholder="请输入详细地址"></i-input>
+						        </Form-item>
+						    </i-form>
+                    	</div>
+                    </div>
                     <div class="q-imgs">
                         <div class="q-title">
                         	<i class="iconfont icon-tianjia"></i>公共附件区
                     	</div>
                     	<div class="container center">
                     		<div class="q-tab" :class="{'q-active':tabIndex===1}" @click="tabIndex=1">经销商附件区</div>
-                    		<div class="q-tab" :class="{'q-active':tabIndex===2}" @click="tabIndex=2">总部附件区</div>
+                    		<div class="q-tab" v-show="id" :class="{'q-active':tabIndex===2}" @click="tabIndex=2">总部附件区</div>
                     	</div>
                     	<div class="container">
                     		<div class="q-left">
-                    		
+                    		<Upload
+                                v-ref:upload
+                                :show-upload-list="false"
+                                :default-file-list="defaultList"
+                                :on-success="handleSuccess"
+                                :format="['jpg','jpeg','png','doc','docx','xls','xlsx','pdf','dwg']"
+                                :max-size="10240"
+                                :on-format-error="handleFormatError"
+                                :on-exceeded-size="handleMaxSize"
+                                :before-upload="handleBeforeUpload"
+                                multiple
+                                type="drag"
+                                :action="baseUrl+'/common/imgUpload'"
+                                :data="uploadData"
+                                style="display: inline-block;width:158px;">
+                                <div class="q-img-add">
+                                    <Icon type="ios-plus-empty" size="64"></Icon>
+                                </div>
+                            </Upload>
                             </div>
                             <div class="q-right" v-show="tabIndex===1">
-                            	<template v-for="(index,item) in agentAttach">
+                            	<template v-for="(index,item) in uploadList">
                             		
                             	<div v-show="item.status === 'finished' && getIsShowDate(index,item.createTime.substr(0,10),false)">{{item.createTime.substr(0,10)}}</div>
-	                            <div class="q-img-list" v-show="item.state===1">
+	                           
+	                            <div class="q-img-list" >
+		                    		<div class="l-upload-list" >
+		                                <template v-if="item.status === 'finished'">
+		                                    <img :src="item.avatar">
+		                                    <div class="l-upload-list-cover">
+		                                        <a :href="item.attachAddress" target="_blank">
+				                           			<Icon type="ios-download-outline" title="下载"></Icon>
+				                            	</a>
+		                                        <Icon type="ios-trash-outline" @click="handleRemove(item)"></Icon>
+		                                    </div>
+		                                </template>
+		                                <template v-else>
+		                                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+		                                </template>
+		                            </div>
+		                            <i-input :value.sync="item.attachName" v-show="item.status==='finished'" class="q-text-center" placeholder="请输入名称"></i-input>
+
+	                            </div>
+                            	</template>
+
+	                            <div class="q-top-b">
+	                            	<a href="#">下载报价单模版</a>
+	                            </div>
+                            </div>
+                            <div class="q-right" v-show="tabIndex===2 && id">
+                            	<template v-for="(index,item) in orgAttach">
+                            		
+                            	<div v-show="item.status === 'finished' && getIsShowDate(index,item.createTime.substr(0,10),true)">{{item.createTime.substr(0,10)}}</div>
+	                    		 <div class="q-img-list" v-show="item.state===1">
 		                    		<div class="l-upload-list" >
 	                                    <img :src="item.avatar">
 	                                    <div class="l-upload-list-cover">
@@ -198,29 +264,7 @@
 		                            <span v-show="item.state===1">{{item.attachName}}</span>
 
 	                            </div>
-                            	</template>
-
-	                            <div class="q-top-b">
-	                            	<a href="#">下载报价单模版</a>
-	                            </div>
-                            </div>
-                            <div class="q-right" v-show="tabIndex===2">
-                            	<template v-for="(index,item) in defaultList">
-                            		
-                            	<div v-show="item.status === 'finished' && getIsShowDate(index,item.createTime.substr(0,10),true)">{{item.createTime.substr(0,10)}}</div>
-	                            <div class="q-img-list" >
-		                    		<div  v-show="item.state===1" class="l-upload-list" >
-		                                    <img :src="item.avatar">
-		                                    <div class="l-upload-list-cover">
-		                                        <a :href="item.attachAddress" target="_blank">
-				                           			<Icon type="ios-download-outline" title="下载"></Icon>
-				                            	</a>
-		                                    </div>
-		                                
-		                            </div>
-		                            <span  v-show="item.state===1">{{item.attachName}}</span>
-
-	                            </div>
+	                            
                             	</template>
 
 	                            <div class="q-top-b">
@@ -243,40 +287,44 @@
 						        <i-col span="24">经销商报价区</i-col>
 						    </Row>
 						    <template v-for="item in costVoList">
-						     <Row class="q-row title" v-show="item.costType===7">
+						     <Row class="q-row title" v-show="item.costType===7 && id">
 						        <i-col span="24">总部报价区</i-col>
 						    </Row>
-						    <Row class="q-row" >
+						    <Row class="q-row" v-show="(item.costType===1 || item.costType===2 || item.costType===3 || item.costType===5 || item.costType===6 || item.costType===4 || item.costType===11 || item.costType===12) || (id && (item.costType===7 || item.costType===8 ))">
 						        <i-col span="5">{{item.costName}}</i-col>
 						        <i-col span="7">
-		            				<span v-show="item.costType===1 || item.costType===2 || item.costType===3 || item.costType===5 || item.costType===6 ||item.costType===7 || item.costType===8">{{item.costValue}}</span>
+		            				<span v-show="id && (item.costType===7 || item.costType===8 )">{{item.costValue}}</span>
+		            				<i-input v-show="item.costType===1 || item.costType===2 || item.costType===3 || item.costType===5 || item.costType===6" :value.sync="item.costValue" ></i-input>
 
 		            				<span v-show="item.costType===4">{{getCouponToal}}</span>
 		            				<span v-show="item.costType===11">{{getSaleToal}}</span>
 		            				<span v-show="item.costType===12">{{getDealToal}}</span>
+		            				<a  v-show="item.costType===4 && getSaleToal>5000 && couponList && couponList[0]" @click="modalVisible=true">选择现金券</a>
+
 						        </i-col>
 						        <i-col span="12">
-						        	{{item.desc}}
-
+						        	<i-input v-show="item.costType===1 || item.costType===2 || item.costType===3 || item.costType===5 || item.costType===6" :value.sync="item.desc" ></i-input>
+						        	<span v-show="id && (item.costType===7 || item.costType===8 )">{{item.desc}}</span>
+			
 						        </i-col>
 						    </Row>
 						    </template>	
-						    <Row class="q-row">
+						    <Row class="q-row" v-show="id">
 						        <i-col span="5">折后金额</i-col>
 						        <i-col span="7">{{getDiscout}}</i-col>
 						        <i-col span="12">&nbsp;</i-col>
 						    </Row>
-						    <Row class="q-row">
+						    <Row class="q-row" v-show="id">
 						        <i-col span="5">交货日期</i-col>
 						        <i-col span="7">
 						        	{{modelForm.limitDays}}
 						        </i-col>
 						        <i-col span="12">&nbsp;</i-col>
 						    </Row>
-						    <Row class="q-row">
+						    <Row class="q-row" v-show="id">
 						        <i-col span="5">优先级</i-col>
 						        <i-col span="7">
-									{{modelForm.level?modelForm.level===1?'低':modelForm.level===2?'中':'高':'无'}}
+						        	{{modelForm.level?modelForm.level===1?'低':modelForm.level===2?'中':'高':'无'}}
 						         </i-col>
 						        <i-col span="12">&nbsp;</i-col>
 						    </Row>
@@ -290,17 +338,19 @@
                     	<div class="container q-table">
                     		<i-form :model="modelForm" :label-width="100">
                     			<Form-item label="经销商备注">
-                    				{{modelForm.agentRemark}}
+						            <i-input :value.sync="modelForm.agentRemark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
 						        </Form-item>
                     		
-                    			<Form-item label="总部备注">
-						            {{modelForm.remark}}
+                    			<Form-item label="总部备注" v-show="id">
+                    				{{modelForm.remark}}
 						        </Form-item>
 						        
 						    </i-form>
                     	</div>
                     </div>
                     <div class="q-btns">
+                    	<i-button type="primary" :loading="modelLoading" @click="ownerSaveAppoint(true)" size="large">保存</i-button>
+                    	<i-button type="primary" :loading="modelLoading" @click="ownerSaveAppoint(false)" size="large">提交</i-button>
                     	<i-button type="ghost" size="large">取消</i-button>
                     </div>
                 </div>
@@ -312,27 +362,75 @@
         
     </div>
   
-     
+    <Modal
+        :visible.sync="modalVisible"
+        title="选择现金券"
+        width=800
+		:mask-closable="false"
+        >
+        <Transfer
+        :data="couponList"
+        :target-keys="targetKeysCoupon"
+        :list-style="listStyle"
+        :render-format="renderCoupon"
+        :operations="['移给待选','移给已选']"
+        :titles="['待选优惠券','已选优惠券']"
+        filterable
+        :filter-method="filterMethod"
+        @on-change="handleTransfer">
+        
+    </Transfer>
+	    <div slot="footer">
+            <i-button type="ghost" size="large" @click="modalVisible=fasle">关闭</i-button>
+            <i-button type="primary" size="large" @click="selCoupon">确定</i-button>
+        </div>
+    </Modal>
 </template>
 <script>
 import server from '../../libs/server'
 import LeftMenu from '../../components/left-menu'
 import LHeader from '../../components/header'
 import LTitle from '../../components/title'
+import chinaAddress from '../../components/china-address-0408'
 	export default{
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
 			return{
-				breads:[{text:'首页',href:'/index'},{text:'订单管理',href:'/order/list'},{text:'订货单查看',href:''}],
+				breads:[{text:'首页',href:'/index'},{text:'订单管理',href:'/owner/order/list'},{text:'订货单编辑',href:''}],
 				couponList:[],
 				targetKeysCoupon:[],
-				tabIndex:2,
+				listStyle:{
+					width: '325px',
+                    height: '500px'
+                },
+				tabIndex:1,
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+                baseUrl:server.getBaseUrl(),
+                uploadData:{bucket:'dc-test'},
                 defaultList: [],
+                modalVisible:false,
+                modelLoading:false,
                 modelForm:{
                 	
+                },
+                ruleForm:{
+                	name: [
+                        { required: true, message: '姓名不能为空', trigger: 'blur' }
+                    ],
+                    mobilePhone: [
+                        { required: true, message: '电话不能为空', trigger: 'blur' }
+                    ],
+                    decorate: [
+                        { required: true, message: '装修项目不能为空', trigger: 'blur' }
+                    ],
+                    addressValue: [
+                        { required: true, message: '所在地区不能为空', trigger: 'blur' }
+                    ],
+                    address: [
+                        { required: true, message: '详细地址不能为空', trigger: 'blur' }
+                    ]
                 },
                 costVoList:[
                 	{costName:'产品费',costValue:0,desc:'',costType:1},
@@ -352,14 +450,18 @@ import LTitle from '../../components/title'
                 id:null,
                 optionList:[],
                 appointId:null,
-                agentAttach:[],
+                orgAttach:[],
+                addressData:chinaAddress,
+                addressValue:[],
+                decorateCkList:[],
+                decorateList:[],
 			}
 		},
 		ready(){
 			if(this.id){
 				this.getList();
 			}
-			
+			this.getDict();
 		},
 		route:{
             data:function(transition){
@@ -420,6 +522,56 @@ import LTitle from '../../components/title'
             }
         },
 		methods:{
+			filterMethod (data, query) {
+                return data.code.indexOf(query) > -1;
+            },
+			handleTransfer(newTargetKeys){
+				this.targetKeysCoupon=newTargetKeys;
+			},
+			renderCoupon(item){
+				return item.code+'-'+item.name;
+			},
+			selCoupon(){
+				this.modelForm.couponIds=this.targetKeysCoupon.join();
+				
+				this.modalVisible=false;
+			},
+			addrSelected(value,selectedData){
+                //console.log(selectedData);
+                console.log(this.addressValue)
+                if(selectedData.length>0){
+                    this.modelForm.provinceId=selectedData[0].value;
+                    this.modelForm.province=selectedData[0].label;
+                    this.modelForm.cityId=selectedData[1].value;
+                    this.modelForm.city=selectedData[1].label;
+                    this.modelForm.areaId=selectedData[2].value;
+                    this.modelForm.area=selectedData[2].label;
+                }else{
+                    this.modelForm.provinceId='';
+                    this.modelForm.province='';
+                    this.modelForm.cityId='';
+                    this.modelForm.city='';
+                    this.modelForm.areaId='';
+                    this.modelForm.area='';
+                }
+
+            },
+			getDict(){
+            	//ProductCategory_bigType
+            	let self=this;
+				server.getDict('ProductIntroduceCategory_Item').then((res)=>{
+					self.decorateList=[];
+                    if(res.data&&res.data.length>0){
+                        res.data.forEach((item)=>{
+                             self.decorateList.push({
+                             	id:item.id,
+                                dicName:item.dicName
+                            })
+                        })
+                        
+                    }
+                }) 
+            },
 			getIsShowDate(index,dateStr,t){
 				if(!dateStr){
 					return false;
@@ -427,7 +579,7 @@ import LTitle from '../../components/title'
 				let b=false;
 				if(index>1){
 					if(t){
-						if(this.defaultList[index-1].createTime.substr(0,10)===dateStr){
+						if(this.uploadList[index-1].createTime.substr(0,10)===dateStr){
 							b=false;
 						}else{
 							b=true;
@@ -454,11 +606,11 @@ import LTitle from '../../components/title'
 	                	self.$Loading.finish();
 	                    if(res.success){
 	                    	self.defaultList=[];
-	                    	self.agentAttach=[];
+	                    	self.orgAttach=[];
 	                        self.modelForm=res.data.orderVo;
 	                        if(res.data.agentAttach&&res.data.agentAttach[0]){
 	                        	res.data.agentAttach.forEach((item)=>{
-									self.agentAttach.push({
+									self.defaultList.push({
 										attachName:item.attachName,
 										attachAddress:item.attachAddress,
 										state:item.status,
@@ -470,7 +622,7 @@ import LTitle from '../../components/title'
 	                        //orgAttach
 	                        if(res.data.orgAttach&&res.data.orgAttach[0]){
 	                        	res.data.orgAttach.forEach((item)=>{
-									self.defaultList.push({
+									self.orgAttach.push({
 										attachName:item.attachName,
 										attachAddress:item.attachAddress,
 										state:item.status,
@@ -510,15 +662,20 @@ import LTitle from '../../components/title'
 		                        		});
 		                        	}
 	                        	})
-
 	                        	self.targetKeysCoupon=self.couponList
 	                        		.filter((v)=>v.orderId===self.modelForm.id && v.orderCode===self.modelForm.orderNo)
 	                        		.map(item=>item.key);
 
 	                        }
 	                        if(res.data.orderVo){
-	                        	self.modelForm.limitDays=res.data.orderVo.limitDays?res.data.orderVo.limitDays:'';
+	                        	self.modelForm.limitDays=res.data.orderVo.limitDays?res.data.orderVo.limitDays:35;
 	                        	self.modelForm.level=res.data.orderVo.level?res.data.orderVo.level:1;
+	                        }
+	                        if(self.modelForm.decorateProjectTypes){
+	                        	self.decorateCkList=[];
+	                        	self.modelForm.decorateProjectTypes.split(',').forEach((item)=>{
+	                        		self.decorateCkList.push(parseInt(item));
+	                        	})
 	                        }
 	                    }else{
 	                        self.modelForm={};
@@ -526,7 +683,79 @@ import LTitle from '../../components/title'
 	                })
             	}
 			},
+			ownerSaveAppoint(t){
+				let self=this;
+				self.modelLoading=true;
+				self.modelForm.isOnlySave=t;
+				self.modelForm.couponIds=self.targetKeysCoupon.join();
+
+				self.modelForm.attachmentVoList=self.uploadList;
+				self.modelForm.costVoList=self.costVoList;
+				if(self.decorateCkList){
+					self.modelForm.decorateProjectTypes=self.decorateCkList.join();
+					self.modelForm.decorateProject='';
+					self.decorateList.forEach((item)=>{
+						self.decorateCkList.forEach((ck)=>{
+							if(ck==item.id){
+								self.modelForm.decorateProject+=item.dicName;
+							}
+						})
+					})
+					self.modelForm.decorateProject=self.modelForm.decorateProject.substr(0,self.modelForm.decorateProject.lastIndexOf(','))
+				}
+				if(self.id){
+					server.ownerUpdateOrder(self.modelForm).then((res)=>{
+	                	self.modelLoading=false;
+	                    if(res.success){
+	                        self.$Notice.success({
+	                            title:t?'保存成功':'提交成功',
+	                            desc:res.message
+	                        });
+	                        //self.modalVisible=false;
+	                        self.getList();
+	                    }else{
+	                        self.$Notice.error({
+	                            title:t?'保存失败':'提交失败',
+	                            desc:res.message
+	                        });
+	                    }
+	                })
+				}else{
+					server.ownerAddOrder(self.modelForm).then((res)=>{
+	                	self.modelLoading=false;
+	                    if(res.success){
+	                        self.$Notice.success({
+	                            title:t?'保存成功':'提交成功',
+	                            desc:res.message
+	                        });
+	                        //self.modalVisible=false;
+	                        self.getList();
+	                    }else{
+	                        self.$Notice.error({
+	                            title:t?'保存失败':'提交失败',
+	                            desc:res.message
+	                        });
+	                    }
+	                })
+				}
+				
+			},
 			
+            handleRemove (file) {
+                // 从 upload 实例删除数据
+                const fileList = this.$refs.upload.fileList;
+                this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+            },
+            handleSuccess (res, file) {
+                // 因为上传过程为实例，这里模拟添加 url
+                file.attachAddress = res.data;
+                let nameList=res.data.split('@|@');
+                if(nameList&&nameList.length>1){
+                	file.attachName=nameList[1].substr(0,nameList[1].lastIndexOf('.'));
+		            file.avatar=this.getFileType(res.data);
+                }
+               	file.createTime=new Date();
+            },
             getFileType(v){
             	if(!v){
             		return null;
@@ -554,7 +783,28 @@ import LTitle from '../../components/title'
 
             	}
             },
-            
+            handleFormatError (file) {
+                this.$Notice.warning({
+                    title: '文件格式不正确',
+                    desc: '文件 ' + file.name + ' 格式不正确，请上传 jpg、png、doc、docx、xls、xlsx、pdf、dwg 格式'
+                });
+            },
+            handleMaxSize (file) {
+                this.$Notice.warning({
+                    title: '超出文件大小限制',
+                    desc: '文件 ' + file.name + ' 太大，不能超过 10M'
+                });
+            },
+            handleBeforeUpload () {
+                
+                const check = this.uploadList.length < 16;
+                if (!check) {
+                    this.$Notice.warning({
+                        title: '最多只能上传 15 张图片'
+                    });
+                }
+                return check;
+            },
 		}
 	}
 </script>

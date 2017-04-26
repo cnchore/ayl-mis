@@ -52,23 +52,24 @@
                 <i-col  :md="6" :lg="4">
                     <Menu mode="horizontal" theme="primary" class="q-menu"  style="float: right;"
                     @on-select="handleSelect">
-                        
-                        
-                        <Menu-item key="7" class="q-right q-inline" v-show="spanLeft>0">
+                        <Menu-item key="7" class="q-right q-inline" v-show="false && spanLeft>0">
                             <i class="iconfont icon-xiaoxi"></i>
                         </Menu-item>
                         <Submenu key="8" class="q-right">
                             <template slot="title">{{userInfo.userName}}</template>
-                            
                                 <Menu-item key="8-1">
-                                <Icon type="information"></Icon>
-                                账号信息</Menu-item>
+                                    <Icon type="information"></Icon>
+
+                                    <span>账号信息</span>
+                                </Menu-item>
                                 <Menu-item key="8-2">
-                                <Icon type="edit"></Icon>
-                                修改密码</Menu-item>
+                                    <Icon type="edit"></Icon>
+                                    <span>修改密码</span>
+                                </Menu-item>
                                 <Menu-item key="8-3">
-                                <Icon type="android-exit"></Icon>
-                                退出</Menu-item>
+                                    <Icon type="android-exit"></Icon>
+                                    <span>退出</span>
+                                </Menu-item>
                            
                         </Submenu>
                     </Menu>
@@ -141,7 +142,7 @@ import server,{ storage } from '../libs/server'
                         this.$router.go('/order/list')
                         break;
                     case '11':
-                         this.$router.go('/order/ownerInfo')
+                         this.$router.go('/owner/order/list')
                         break;
                     case '6':
                     case '7':

@@ -2,15 +2,15 @@
     
 </style>
 <template>
-    <l-header active-key="4"></l-header>
+    <l-header active-key="11"></l-header>
     <div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="4" active-key="4-1"></left-menu>
+                <left-menu active-Menu="11" active-key="11-1"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" :is-Show="false" :breads="breads" ></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="actionAdd" :breads="breads" ></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm"  inline>
@@ -217,6 +217,8 @@ import LTitle from '../../components/title'
                         <i-button type="primary" v-show="${row.appointId}!=0" icon="eye" @click="modelShow(${row.appointId})" size="small">查看</i-button>
                         <i-button type="primary" @click="actionShow(${row.id})" size="small">查看订货单</i-button>
                         <i-button type="primary" @click="actionShow(${row.id},true)" size="small">编辑订货单</i-button>
+                        <i-button type="primary" @click="actionNext(${row.id})" size="small">提交</i-button>
+
                     `;
                     }   
                 }]
@@ -224,7 +226,7 @@ import LTitle from '../../components/title'
         },
         ready(){
             let userInfo=storage.session.get('userInfo');
-            if(userInfo&&userInfo.type!=1){
+            if(userInfo&&userInfo.type!=2){
                 this.$router.go('/index');
                 return;
             }
@@ -291,14 +293,38 @@ import LTitle from '../../components/title'
             },
             actionShow(id=null,t){
                 if(t){
-                    this.$router.go('/order/edit?id='+id)
+                    this.$router.go('/owner/order/edit?id='+id)
                 }else{
-                    this.$router.go('/order/look?id='+id)
+                    this.$router.go('/owner/order/look?id='+id)
                 }
             },
-            
-           
-            
+            actionAdd(){
+                this.$router.go('/owner/order/edit')
+            },
+            //ownerOrderNext
+            actionNext(id){
+                let self=this;
+                self.$Modal.confirm({
+                    onOk:function(){
+                       server.ownerOrderNext(id).then((res)=>{
+                            if(res.success){
+                                self.$Notice.success({
+                                    title:'提交成功',
+                                    desc:res.message
+                                });
+                                self.getList(self.pageIndex,10);
+                            }else{
+                                self.$Notice.error({
+                                    title:'提交失败',
+                                    desc:res.message
+                                });
+                            }
+                        }) 
+                    },
+                    content:'您确认提交给总部吗？'
+                })
+                
+            },
         }
     }
 </script>

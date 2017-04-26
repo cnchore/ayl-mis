@@ -145,11 +145,11 @@
 	}
 </style>
 <template>
-    <l-header active-key="4"></l-header>
+    <l-header active-key="11"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="4" active-key="4-1"></left-menu>
+                <left-menu active-Menu="11" active-key="11-1"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
@@ -157,35 +157,50 @@
                 </div>
                 <br/>
                 <div class="layout-content" >
-                	<div class="q-imgs" v-show="optionList[0]">
-                		<div class="q-title">
-                        	<i class="iconfont icon-tianjia"></i>客户意见区
+                	<div class="q-imgs">
+                    	<div class="q-title">
+                        	<i class="iconfont icon-tianjia"></i>客户信息
                     	</div>
-                		<div class="container q-table">
-                			<Collapse active-key="1">
-						        <Panel :key="item.id" v-for="item in optionList">
-						            {{item.createTime}}
-						            <p slot="content">{{item.remark}}</p>
-						        </Panel>
-						    </Collapse>
-                		</div>
-                	</div>
+                    	<div class="container q-table">
+                    		<i-form :model="modelForm" :label-width="100">
+                    			
+            					<Form-item label="联系人姓名">
+						       	 {{modelForm.name}}
+						        </Form-item>
+                    			
+            					<Form-item label="联系人手机" >
+						        {{modelForm.mobilePhone}}
+						        </Form-item>
+                    			
+						        <Form-item label="装修项目">
+						        {{modelForm.decorateProject}}
+						        </Form-item>
+            					<Form-item label="所在地区">
+						        {{modelForm.province}}{{modelForm.city}}{{modelForm.area}}
+						        </Form-item>
+            					<Form-item label="详细地址" prop="address">
+						        {{modelForm.address}}
+						        </Form-item>
+						    </i-form>
+                    	</div>
+                    </div>
                     <div class="q-imgs">
                         <div class="q-title">
                         	<i class="iconfont icon-tianjia"></i>公共附件区
                     	</div>
                     	<div class="container center">
                     		<div class="q-tab" :class="{'q-active':tabIndex===1}" @click="tabIndex=1">经销商附件区</div>
-                    		<div class="q-tab" :class="{'q-active':tabIndex===2}" @click="tabIndex=2">总部附件区</div>
+                    		<div class="q-tab" v-show="id" :class="{'q-active':tabIndex===2}" @click="tabIndex=2">总部附件区</div>
                     	</div>
                     	<div class="container">
                     		<div class="q-left">
                     		
                             </div>
                             <div class="q-right" v-show="tabIndex===1">
-                            	<template v-for="(index,item) in agentAttach">
+                            	<template v-for="(index,item) in defaultList">
                             		
                             	<div v-show="item.status === 'finished' && getIsShowDate(index,item.createTime.substr(0,10),false)">{{item.createTime.substr(0,10)}}</div>
+	                           
 	                            <div class="q-img-list" v-show="item.state===1">
 		                    		<div class="l-upload-list" >
 	                                    <img :src="item.avatar">
@@ -204,23 +219,23 @@
 	                            	<a href="#">下载报价单模版</a>
 	                            </div>
                             </div>
-                            <div class="q-right" v-show="tabIndex===2">
-                            	<template v-for="(index,item) in defaultList">
+                            <div class="q-right" v-show="tabIndex===2 && id">
+                            	<template v-for="(index,item) in orgAttach">
                             		
                             	<div v-show="item.status === 'finished' && getIsShowDate(index,item.createTime.substr(0,10),true)">{{item.createTime.substr(0,10)}}</div>
-	                            <div class="q-img-list" >
-		                    		<div  v-show="item.state===1" class="l-upload-list" >
-		                                    <img :src="item.avatar">
-		                                    <div class="l-upload-list-cover">
-		                                        <a :href="item.attachAddress" target="_blank">
-				                           			<Icon type="ios-download-outline" title="下载"></Icon>
-				                            	</a>
-		                                    </div>
-		                                
+	                    		 <div class="q-img-list" v-show="item.state===1">
+		                    		<div class="l-upload-list" >
+	                                    <img :src="item.avatar">
+	                                    <div class="l-upload-list-cover">
+	                                        <a :href="item.attachAddress" target="_blank">
+			                           			<Icon type="ios-download-outline" title="下载"></Icon>
+			                            	</a>
+	                                    </div>
 		                            </div>
-		                            <span  v-show="item.state===1">{{item.attachName}}</span>
+		                            <span v-show="item.state===1">{{item.attachName}}</span>
 
 	                            </div>
+	                            
                             	</template>
 
 	                            <div class="q-top-b">
@@ -243,40 +258,40 @@
 						        <i-col span="24">经销商报价区</i-col>
 						    </Row>
 						    <template v-for="item in costVoList">
-						     <Row class="q-row title" v-show="item.costType===7">
+						     <Row class="q-row title" v-show="item.costType===7 && id">
 						        <i-col span="24">总部报价区</i-col>
 						    </Row>
-						    <Row class="q-row" >
+						    <Row class="q-row">
 						        <i-col span="5">{{item.costName}}</i-col>
 						        <i-col span="7">
-		            				<span v-show="item.costType===1 || item.costType===2 || item.costType===3 || item.costType===5 || item.costType===6 ||item.costType===7 || item.costType===8">{{item.costValue}}</span>
+		            				<span v-show="id && (item.costType!=4 || item.costType!=11 || item.costType!=12 )">{{item.costValue}}</span>
 
 		            				<span v-show="item.costType===4">{{getCouponToal}}</span>
 		            				<span v-show="item.costType===11">{{getSaleToal}}</span>
 		            				<span v-show="item.costType===12">{{getDealToal}}</span>
+
 						        </i-col>
 						        <i-col span="12">
-						        	{{item.desc}}
-
+									{{item.desc}}
 						        </i-col>
 						    </Row>
 						    </template>	
-						    <Row class="q-row">
+						    <Row class="q-row" v-show="id">
 						        <i-col span="5">折后金额</i-col>
 						        <i-col span="7">{{getDiscout}}</i-col>
 						        <i-col span="12">&nbsp;</i-col>
 						    </Row>
-						    <Row class="q-row">
+						    <Row class="q-row" v-show="id">
 						        <i-col span="5">交货日期</i-col>
 						        <i-col span="7">
 						        	{{modelForm.limitDays}}
 						        </i-col>
 						        <i-col span="12">&nbsp;</i-col>
 						    </Row>
-						    <Row class="q-row">
+						    <Row class="q-row" v-show="id">
 						        <i-col span="5">优先级</i-col>
 						        <i-col span="7">
-									{{modelForm.level?modelForm.level===1?'低':modelForm.level===2?'中':'高':'无'}}
+						        	{{modelForm.level?modelForm.level===1?'低':modelForm.level===2?'中':'高':'无'}}
 						         </i-col>
 						        <i-col span="12">&nbsp;</i-col>
 						    </Row>
@@ -290,11 +305,11 @@
                     	<div class="container q-table">
                     		<i-form :model="modelForm" :label-width="100">
                     			<Form-item label="经销商备注">
-                    				{{modelForm.agentRemark}}
+						        	{{modelForm.agentRemark}}
 						        </Form-item>
                     		
-                    			<Form-item label="总部备注">
-						            {{modelForm.remark}}
+                    			<Form-item label="总部备注" v-show="id">
+                    				{{modelForm.remark}}
 						        </Form-item>
 						        
 						    </i-form>
@@ -312,7 +327,7 @@
         
     </div>
   
-     
+   
 </template>
 <script>
 import server from '../../libs/server'
@@ -323,17 +338,21 @@ import LTitle from '../../components/title'
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
 			return{
-				breads:[{text:'首页',href:'/index'},{text:'订单管理',href:'/order/list'},{text:'订货单查看',href:''}],
+				breads:[{text:'首页',href:'/index'},{text:'订单管理',href:'/owner/order/list'},{text:'订货单查看',href:''}],
 				couponList:[],
 				targetKeysCoupon:[],
-				tabIndex:2,
+				
+				tabIndex:1,
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+                baseUrl:server.getBaseUrl(),
+                uploadData:{bucket:'dc-test'},
                 defaultList: [],
                 modelForm:{
                 	
                 },
+                
                 costVoList:[
                 	{costName:'产品费',costValue:0,desc:'',costType:1},
                 	{costName:'运输费',costValue:0,desc:'',costType:2},
@@ -352,14 +371,14 @@ import LTitle from '../../components/title'
                 id:null,
                 optionList:[],
                 appointId:null,
-                agentAttach:[],
+                orgAttach:[],
 			}
 		},
 		ready(){
 			if(this.id){
 				this.getList();
 			}
-			
+			this.getDict();
 		},
 		route:{
             data:function(transition){
@@ -420,6 +439,23 @@ import LTitle from '../../components/title'
             }
         },
 		methods:{
+			
+			getDict(){
+            	//ProductCategory_bigType
+            	let self=this;
+				server.getDict('ProductIntroduceCategory_Item').then((res)=>{
+					self.decorateList=[];
+                    if(res.data&&res.data.length>0){
+                        res.data.forEach((item)=>{
+                             self.decorateList.push({
+                             	id:item.id,
+                                dicName:item.dicName
+                            })
+                        })
+                        
+                    }
+                }) 
+            },
 			getIsShowDate(index,dateStr,t){
 				if(!dateStr){
 					return false;
@@ -427,7 +463,7 @@ import LTitle from '../../components/title'
 				let b=false;
 				if(index>1){
 					if(t){
-						if(this.defaultList[index-1].createTime.substr(0,10)===dateStr){
+						if(this.uploadList[index-1].createTime.substr(0,10)===dateStr){
 							b=false;
 						}else{
 							b=true;
@@ -454,11 +490,11 @@ import LTitle from '../../components/title'
 	                	self.$Loading.finish();
 	                    if(res.success){
 	                    	self.defaultList=[];
-	                    	self.agentAttach=[];
+	                    	self.orgAttach=[];
 	                        self.modelForm=res.data.orderVo;
 	                        if(res.data.agentAttach&&res.data.agentAttach[0]){
 	                        	res.data.agentAttach.forEach((item)=>{
-									self.agentAttach.push({
+									self.defaultList.push({
 										attachName:item.attachName,
 										attachAddress:item.attachAddress,
 										state:item.status,
@@ -470,7 +506,7 @@ import LTitle from '../../components/title'
 	                        //orgAttach
 	                        if(res.data.orgAttach&&res.data.orgAttach[0]){
 	                        	res.data.orgAttach.forEach((item)=>{
-									self.defaultList.push({
+									self.orgAttach.push({
 										attachName:item.attachName,
 										attachAddress:item.attachAddress,
 										state:item.status,
@@ -510,15 +546,20 @@ import LTitle from '../../components/title'
 		                        		});
 		                        	}
 	                        	})
-
 	                        	self.targetKeysCoupon=self.couponList
 	                        		.filter((v)=>v.orderId===self.modelForm.id && v.orderCode===self.modelForm.orderNo)
 	                        		.map(item=>item.key);
 
 	                        }
 	                        if(res.data.orderVo){
-	                        	self.modelForm.limitDays=res.data.orderVo.limitDays?res.data.orderVo.limitDays:'';
+	                        	self.modelForm.limitDays=res.data.orderVo.limitDays?res.data.orderVo.limitDays:35;
 	                        	self.modelForm.level=res.data.orderVo.level?res.data.orderVo.level:1;
+	                        }
+	                        if(self.modelForm.decorateProjectTypes){
+	                        	self.decorateCkList=[];
+	                        	self.modelForm.decorateProjectTypes.split(',').forEach((item)=>{
+	                        		self.decorateCkList.push(parseInt(item));
+	                        	})
 	                        }
 	                    }else{
 	                        self.modelForm={};
