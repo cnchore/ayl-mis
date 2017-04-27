@@ -142,7 +142,7 @@
                 <div class="layout-content" >
                 	<div class="q-imgs" v-show="optionList[0]">
                 		<div class="q-title">
-                        	<i class="iconfont icon-tianjia"></i>客户意见区
+                        	<i class="iconfont icon-kehuyijian"></i>客户意见区
                     	</div>
                 		<div class="container q-table">
                 			<Collapse active-key="1">
@@ -155,7 +155,7 @@
                 	</div>
                     <div class="q-imgs">
                         <div class="q-title">
-                        	<i class="iconfont icon-tianjia"></i>公共附件区
+                        	<i class="iconfont icon-fujian"></i>公共附件区
                     	</div>
                     	<div class="container">
                     		<div class="q-left">
@@ -211,7 +211,7 @@
                     </div>
                     <div class="q-imgs">
                     	<div class="q-title">
-                        	<i class="iconfont icon-tianjia"></i>艾臣家居门窗订货单
+                        	<i class="iconfont icon-dinghuodan"></i>艾臣家居门窗订货单
                     	</div>
                     	<div class="container q-table">
                     		<Row class="q-row thead">
@@ -277,7 +277,7 @@
                     </div>
                     <div class="q-imgs">
                     	<div class="q-title">
-                        	<i class="iconfont icon-tianjia"></i>备注
+                        	<i class="iconfont icon-beizhu"></i>备注
                     	</div>
                     	<div class="container q-table">
                     		<i-form :model="modelForm" :label-width="100">
@@ -285,7 +285,7 @@
 						            <i-input :value.sync="modelForm.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
 						        </Form-item>
                     		
-                    			<Form-item label="总部备注">
+                    			<Form-item label="总部备注" v-show="false">
 						            <i-input :value.sync="modelForm.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
 						        </Form-item>
 						        
@@ -461,16 +461,18 @@ import LTitle from '../../components/title'
 			},
 			getList(){
 				let self=this;
+            	self.defaultList=[];
+				
 				if(self.id){
 					self.$Loading.start();
 	                server.getAppointByid(self.id).then((res)=>{
 	                	self.$Loading.finish();
 	                    if(res.success){
-	                    	self.defaultList=[];
 	                        self.modelForm=res.data.appointmentVo;
 	                        if(res.data.agentAttach&&res.data.agentAttach[0]){
 	                        	res.data.agentAttach.forEach((item)=>{
 								self.defaultList.push({
+									id:item.id,
 									attachName:item.attachName,
 									attachAddress:item.attachAddress,
 									state:item.status,

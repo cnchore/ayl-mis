@@ -6,13 +6,16 @@ const serverPath={
 	getDict:'/sys/dictionary/getList',
 	getOrgList:'/sys/org/getList',
 
+	//首页
+	getIndex:'/web/getIndex',
+	//
 	getStoreAllList:'/sys/store/getList',
 	getStoreList:'/sys/store/getPage',
 	addStore:'/sys/store/add',
 	getStoreListByid:'/sys/store/getById',
 	updateStore:'/sys/store/update',
 	deleteStoreByid:'/sys/store/deleteById',
-
+	//
 	getAgentUserList:'/sys/agentUser/getList',
 	getGpsByAddress:'/common/getGpsByAddress',
 	login:'/sys/user/login',
@@ -20,7 +23,7 @@ const serverPath={
 	getLoginerInfo:'/sys/user/getLoginerInfo',
 	updateLoginerInfo:'/sys/user/updateLoginerInfo',
 	updateMyPwd:'/sys/user/updateMyPwd',
-
+	//
 	getPublish:'/mem/publish/getPage',
 	getAllPublish:'/mem/publish/getList',
 	getPublishByid:'/mem/publish/getById',
@@ -146,6 +149,9 @@ const serverPath={
 	confirmOrder:'/owner/order/confirmOrder',
 	ownerOrderNext:'/owner/order/next',
 
+	//
+	getVcode:'/web/captchaImage',
+
 
 }
 
@@ -263,6 +269,25 @@ export default {
 		          }
 		        }, (error)=>{
 		          resolve(ret)
+		          console.error(requestName,error);
+		        })
+	    })
+    	return promise
+	},
+	getPromiseByNoParams(url='',requestName=''){
+		
+	    let promise = new Promise( (resolve) => {
+	      
+	        util.ajax.get(
+	        	url).then((body)=>{
+	        		
+		          if(body){
+		            resolve(body)
+		          }else{
+		            resolve(null)
+		          }
+		        }, (error)=>{
+		          resolve(null)
 		          console.error(requestName,error);
 		        })
 	    })
@@ -402,8 +427,13 @@ export default {
     	return this.postPromise(serverPath.getGpsByAddress,{address},'getGpsByAddress');
 	},
 	//登录
-	login(userName,pwd){
-    	return this.postPromise(serverPath.login,{userName,pwd},'login');
+	login(formData){
+		let _list={
+			userName:formData.userName,
+			pwd:formData.pwd,
+			validateCode:formData.validateCode
+		}
+    	return this.postPromise(serverPath.login,_list,'login');
 	},
 	//登出
 	loginOut(){
@@ -1350,6 +1380,15 @@ export default {
 	ownerOrderNext(id){
 		return this.postPromise(serverPath.ownerOrderNext,{id},'ownerOrderNext');
 	},
-
+	//
+	getIndex(){
+		return this.getPromise(serverPath.getIndex,{},'getIndex');
+	},
+	getQrcode(path){
+		return this.getPromise(path,{},'getQrcode');
+	},
+	getVcode(){
+		return this.getPromiseByNoParams(serverPath.getVcode,'getVcode');
+	},
 
 }

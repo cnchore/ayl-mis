@@ -58,17 +58,17 @@
                         <Submenu key="8" class="q-right">
                             <template slot="title">{{userInfo.userName}}</template>
                                 <Menu-item key="8-1">
-                                    <Icon type="information"></Icon>
+                                   <i class="iconfont icon-zhanghaoxinxi"></i>
 
                                     <span>账号信息</span>
                                 </Menu-item>
                                 <Menu-item key="8-2">
-                                    <Icon type="edit"></Icon>
+                                    <i class="iconfont icon-xiugaimima"></i>
                                     <span>修改密码</span>
                                 </Menu-item>
                                 <Menu-item key="8-3">
-                                    <Icon type="android-exit"></Icon>
-                                    <span>退出</span>
+                                    <i class="iconfont icon-tuichu"></i>
+                                    <span>退&nbsp;&nbsp;&nbsp;&nbsp;出</span>
                                 </Menu-item>
                            
                         </Submenu>
