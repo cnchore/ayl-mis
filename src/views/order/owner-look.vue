@@ -126,7 +126,7 @@
                 <div class="layout-content" >
                		<div class="q-imgs">
                     	<div class="q-title">
-                        	<i class="iconfont icon-tianjia"></i>客户信息
+                        	<i class="iconfont icon-kehuxinxi"></i>客户信息
                     	</div>
                     	<div class="container q-table">
                     		<i-form :model="modelForm" :label-width="100" >
@@ -169,7 +169,7 @@
                     </div>
                     <div class="q-imgs" v-show="orderList&&orderList[0]">
                         <div class="q-title">
-                        	<i class="iconfont icon-tianjia"></i>客户订单
+                        	<i class="iconfont icon-dinghuodan"></i>客户订单
                     	</div>
                     	<div class="container">
                     		<div>

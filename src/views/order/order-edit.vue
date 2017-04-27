@@ -159,7 +159,7 @@
                 <div class="layout-content" >
                 	<div class="q-imgs" v-show="optionList[0]">
                 		<div class="q-title">
-                        	<i class="iconfont icon-tianjia"></i>客户意见区
+                        	<i class="iconfont icon-kehuyijian"></i>客户意见区
                     	</div>
                 		<div class="container q-table">
                 			<Collapse active-key="1">
@@ -172,7 +172,7 @@
                 	</div>
                     <div class="q-imgs">
                         <div class="q-title">
-                        	<i class="iconfont icon-tianjia"></i>公共附件区
+                        	<i class="iconfont icon-fujian"></i>公共附件区
                     	</div>
                     	<div class="container center">
                     		<div class="q-tab" :class="{'q-active':tabIndex===1}" @click="tabIndex=1">经销商附件区</div>
@@ -254,7 +254,7 @@
                     </div>
                     <div class="q-imgs">
                     	<div class="q-title">
-                        	<i class="iconfont icon-tianjia"></i>艾臣家居门窗订货单
+                        	<i class="iconfont icon-dinghuodan"></i>艾臣家居门窗订货单
                     	</div>
                     	<div class="container q-table">
                     		<Row class="q-row thead">
@@ -313,7 +313,7 @@
                     </div>
                     <div class="q-imgs">
                     	<div class="q-title">
-                        	<i class="iconfont icon-tianjia"></i>备注
+                        	<i class="iconfont icon-beizhu"></i>备注
                     	</div>
                     	<div class="container q-table">
                     		<i-form :model="modelForm" :label-width="100">
@@ -491,6 +491,7 @@ import LTitle from '../../components/title'
 	                        if(res.data.agentAttach&&res.data.agentAttach[0]){
 	                        	res.data.agentAttach.forEach((item)=>{
 									self.agentAttach.push({
+										id:item.id,
 										attachName:item.attachName,
 										attachAddress:item.attachAddress,
 										state:item.status,
@@ -503,6 +504,7 @@ import LTitle from '../../components/title'
 	                        if(res.data.orgAttach&&res.data.orgAttach[0]){
 	                        	res.data.orgAttach.forEach((item)=>{
 									self.defaultList.push({
+										id:item.id,
 										attachName:item.attachName,
 										attachAddress:item.attachAddress,
 										state:item.status,

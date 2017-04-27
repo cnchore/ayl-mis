@@ -126,7 +126,7 @@
                 <div class="layout-content" >
                		<div class="q-imgs">
                     	<div class="q-title">
-                        	<i class="iconfont icon-tianjia"></i>客户信息
+                        	<i class="iconfont icon-kehuxinxi"></i>客户信息
                     	</div>
                     	<div class="container q-table">
                     		<i-form :model="modelForm" :label-width="100" :rules="ruleForm">
@@ -167,7 +167,7 @@
                     </div>
                     <div class="q-imgs">
                         <div class="q-title">
-                        	<i class="iconfont icon-tianjia"></i>客户附件
+                        	<i class="iconfont icon-fujian"></i>客户附件
                     	</div>
                     	<div class="container">
                     		<div class="q-left">

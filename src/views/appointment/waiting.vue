@@ -355,7 +355,7 @@ import chinaAddress from '../../components/china-address-0408'
 				let self=this;
 				self.agentListCk='';
             	self.decorateCkList=[];
-
+            	self.addressValue=[];
 				if(id){
 					self.$Loading.start();
 	                server.getAppointByid(id).then((res)=>{

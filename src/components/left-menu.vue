@@ -7,15 +7,15 @@
     v-show="activeMenu==='0'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="0-1">
-                <Icon type="document-text"></Icon>
+                <i class="iconfont icon-zhanghaoxinxi"></i>
                 <span>基本信息</span>
             </Menu-item>
             <Menu-item key="0-2">
-                <Icon type="document"></Icon>
+                <i class="iconfont icon-xiugaimima"></i>
                 修改密码
             </Menu-item>
             <Menu-item key="0-3">
-                <Icon type="document"></Icon>
+                <i class="iconfont icon-beiwanglu"></i>
                 备忘录
             </Menu-item>
        
@@ -24,36 +24,36 @@
     v-show="activeMenu==='1'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="1-1">
-                <Icon type="document-text"></Icon>
+                <i class="iconfont icon-mendianzhanshiguanli"></i>
                 <span>门店展示管理</span>
             </Menu-item>
             <Menu-item key="1-2">
-                <Icon type="document"></Icon>
+                <i class="iconfont icon-zixunguanli-tishi"></i>
                 艾臣资讯管理
             </Menu-item>
             <Menu-item key="1-3">
-                <Icon type="document"></Icon>
+                <i class="iconfont icon-chanpinjieshao"></i>
                 产品介绍
             </Menu-item>
             <Menu-item key="1-4">
-                <Icon type="document"></Icon>
+                <i class="iconfont icon-yijianfankuiguanli"></i>
                 意见反馈管理
             </Menu-item>
        
             <Menu-item key="1-5">
-                <Icon type="heart"></Icon>
+                <i class="iconfont icon-changjianwentiguanli"></i>
                 常见问题管理
             </Menu-item>
             <Menu-item key="1-6">
-                <Icon type="heart-broken"></Icon>
+                <i class="iconfont icon-youhuihuodongfabu"></i>
                 优惠活动发布
             </Menu-item>
             <Menu-item key="1-7">
-                <Icon type="heart-broken"></Icon>
+                <i class="iconfont icon-youhuiquanmingxipeizhi"></i>
                 优惠券明细配置
             </Menu-item>
             <Menu-item key="1-8">
-                <Icon type="heart-broken"></Icon>
+                <i class="iconfont icon-lingqulipinguanli"></i>
                 领取礼品管理
             </Menu-item>
        
@@ -62,32 +62,32 @@
     v-show="activeMenu==='2'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="2-1">
-                <Icon type="document-text"></Icon>
+                <i class="iconfont icon-hehuorenzhanghaoguanli"></i>
                 合伙人账号管理
             </Menu-item>
             <Menu-item key="2-2">
-                <Icon type="document"></Icon>
+                <i class="iconfont icon-xianjinquanpeizhiguanli"></i>
                 现金券配置管理
             </Menu-item>
             <Menu-item key="2-3">
-                <Icon type="document"></Icon>
+                <i class="iconfont icon-xianjinquanshenqingguanli"></i>
                 现金券申请管理
             </Menu-item>
             <Menu-item key="2-4">
-                <Icon type="document"></Icon>
+                <i class="iconfont icon-xianjinquanshiyongqingkuangguanlir"></i>
                 现金券使用情况管理
             </Menu-item>
        
             <Menu-item key="2-5">
-                <Icon type="heart"></Icon>
+                <i class="iconfont icon-gonggaofabuguanli"></i>
                 公告发布管理
             </Menu-item>
             <Menu-item key="2-6">
-                <Icon type="heart-broken"></Icon>
+                <i class="iconfont icon-shensuguanli"></i>
                 申诉管理
             </Menu-item>
             <Menu-item key="2-7">
-                <Icon type="heart-broken"></Icon>
+                <i class="iconfont icon-fenhongguanli"></i>
                 分红管理
             </Menu-item>
             
@@ -97,15 +97,15 @@
     v-show="activeMenu==='3'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="3-1">
-                <Icon type="document-text"></Icon>
+                <i class="iconfont icon-daiban"></i>
                 <span>待办事项</span>
             </Menu-item>
             <Menu-item key="3-2">
-                <Icon type="document"></Icon>
+                <i class="iconfont icon-mendian"></i>
                 已办事项
             </Menu-item>
             <Menu-item key="3-3">
-                <Icon type="document"></Icon>
+                <i class="iconfont icon-shanchu"></i>
                 预约废弃箱
             </Menu-item>
        
@@ -114,11 +114,11 @@
     v-show="activeMenu==='10'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="10-1">
-                <Icon type="document-text"></Icon>
+                <i class="iconfont icon-daiban"></i>
                 <span>待办事项</span>
             </Menu-item>
             <Menu-item key="10-2">
-                <Icon type="document"></Icon>
+                <i class="iconfont icon-mendian"></i>
                 已办事项
             </Menu-item>
             
@@ -127,11 +127,11 @@
     v-show="activeMenu==='4'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="4-1">
-                <Icon type="document-text"></Icon>
+                <i class="iconfont icon-dingdanguanli"></i>
                 <span>订单管理</span>
             </Menu-item>
             <Menu-item key="4-2">
-                <Icon type="document"></Icon>
+                <i class="iconfont icon-kehuguanli"></i>
                 客户管理
             </Menu-item>
             
@@ -140,11 +140,11 @@
     v-show="activeMenu==='11'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="11-1">
-                <Icon type="document-text"></Icon>
+                <i class="iconfont icon-dingdanguanli"></i>
                 <span>订单管理</span>
             </Menu-item>
             <Menu-item key="11-2">
-                <Icon type="document"></Icon>
+                <i class="iconfont icon-kehuguanli"></i>
                 客户管理
             </Menu-item>
             
@@ -153,7 +153,7 @@
     v-show="activeMenu==='5'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="5-1">
-                <Icon type="document-text"></Icon>
+                <i class="iconfont icon-mendian"></i>
                 <span>经销商管理</span>
             </Menu-item>
             
@@ -162,7 +162,7 @@
     v-show="activeMenu==='9'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="9-1">
-                <Icon type="document-text"></Icon>
+                <i class="iconfont icon-kehu"></i>
                 <span>人员管理</span>
             </Menu-item>
             
@@ -267,7 +267,7 @@
                         break;
                     case '11-1':
                         this.$router.go('/owner/order/list');
-                        
+
                         break;
                     case '11-2':
                         this.$router.go('/order/ownerInfo');
