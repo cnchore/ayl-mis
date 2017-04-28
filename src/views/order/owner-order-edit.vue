@@ -294,8 +294,9 @@
 						        <i-col span="5">{{item.costName}}</i-col>
 						        <i-col span="7">
 		            				<span v-show="id && (item.costType===7 || item.costType===8 )">{{item.costValue}}</span>
-		            				<i-input v-show="item.costType===1 || item.costType===2 || item.costType===3 || item.costType===5 || item.costType===6" :value.sync="item.costValue" ></i-input>
-
+		            				<i-input v-show="item.costType===1 || item.costType===2 || item.costType===3 || item.costType===5 " :value.sync="item.costValue" ></i-input>
+		            				<span v-show="item.costType===6" >{{item.costValue}}</span>
+		
 		            				<span v-show="item.costType===4">{{getCouponToal}}</span>
 		            				<span v-show="item.costType===11">{{getSaleToal}}</span>
 		            				<span v-show="item.costType===12">{{getDealToal}}</span>
@@ -600,13 +601,15 @@ import chinaAddress from '../../components/china-address-0408'
 			
 			getList(){
 				let self=this;
+				self.defaultList=[];
+            	self.orgAttach=[];
+            	self.addressValue=[];
 				if(self.id){
 					self.$Loading.start();
 	                server.getOrderInfo(self.id).then((res)=>{
 	                	self.$Loading.finish();
 	                    if(res.success){
-	                    	self.defaultList=[];
-	                    	self.orgAttach=[];
+
 	                        self.modelForm=res.data.orderVo;
 	                        if(res.data.agentAttach&&res.data.agentAttach[0]){
 	                        	res.data.agentAttach.forEach((item)=>{
@@ -679,6 +682,15 @@ import chinaAddress from '../../components/china-address-0408'
 	                        		self.decorateCkList.push(parseInt(item));
 	                        	})
 	                        }
+	                        if(self.modelForm.provinceId){
+	                        	self.addressValue.push(self.modelForm.provinceId);
+	                        }
+	                        if(self.modelForm.cityId){
+	                        	self.addressValue.push(self.modelForm.cityId);
+	                        }
+	                        if(self.modelForm.areaId){
+	                        	self.addressValue.push(self.modelForm.areaId);
+	                        }
 	                    }else{
 	                        self.modelForm={};
 	                    }
@@ -699,11 +711,13 @@ import chinaAddress from '../../components/china-address-0408'
 					self.decorateList.forEach((item)=>{
 						self.decorateCkList.forEach((ck)=>{
 							if(ck==item.id){
-								self.modelForm.decorateProject+=item.dicName;
+								self.modelForm.decorateProject+=item.dicName+',';
 							}
 						})
 					})
-					self.modelForm.decorateProject=self.modelForm.decorateProject.substr(0,self.modelForm.decorateProject.lastIndexOf(','))
+					if(self.decorateCkList.length>0){
+						self.modelForm.decorateProject=self.modelForm.decorateProject.substr(0,self.modelForm.decorateProject.lastIndexOf(','))
+					}
 				}
 				if(self.id){
 					server.ownerUpdateOrder(self.modelForm).then((res)=>{

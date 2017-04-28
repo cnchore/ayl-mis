@@ -223,6 +223,12 @@ const routers = {
         },
         meta: { requiresAuth: true,title:'艾臣营销管理平台－订单查看' }
     },
+    '/order/state/change':{
+        component(resolve) {
+            require(['./views/order/state-change.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－订单状态修改' }
+    },
     //经销商-订单管理
     '/owner/order/list': {
         component(resolve) {

@@ -145,7 +145,7 @@
                         	<i class="iconfont icon-kehuyijian"></i>客户意见区
                     	</div>
                 		<div class="container q-table">
-                			<Collapse active-key="1">
+                			<Collapse :active-key="optionList[0]?optionList[0].id:0">
 						        <Panel :key="item.id" v-for="item in optionList">
 						            {{item.createTime}}
 						            <p slot="content">{{item.remark}}</p>
@@ -252,7 +252,7 @@
                     	<div class="container q-table">
                     		<i-form :model="modelForm" :label-width="100">
                     			<Form-item label="经销商备注">
-                    				{{modelForm.remark}}
+                    				{{modelForm.agentRemark}}
 						        </Form-item>
                     		
                     			<Form-item label="总部备注">

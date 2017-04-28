@@ -13,7 +13,7 @@ import { storage } from './libs/server'
 
 Vue.use(VueLazyload,{	
 	preLoad:1.3,
-	loading:'src/imgs/bg.png',
+	loading:require('./imgs/bg.png'),
 	attempt:1
 })
 Vue.use(VueRouter);

@@ -2,15 +2,15 @@
     
 </style>
 <template>
-    <l-header active-key="11"></l-header>
+    <l-header active-key="4"></l-header>
     <div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="11" active-key="11-1"></left-menu>
+                <left-menu active-Menu="4" active-key="4-3"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="actionAdd" :breads="breads" ></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" :is-Show="false" :breads="breads" ></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm"  inline>
@@ -29,13 +29,13 @@
                         <Form-item prop="storeName">
                             <div class="l-sel-inline">
                                 <span slot="prepend">下单时间</span>
-                                
                                 <Date-picker type="date" :value="seachForm.createTimeStr" format="yyyy-MM-dd" @on-change="createTimeChange"  placeholder="选择日期"></Date-picker>
                             </div>
                         </Form-item>
                         <Form-item>
                             <i-button type="ghost" icon="search" @click="search('formInline')">搜索</i-button>
                         </Form-item>
+                        
                         
                     </i-form>
                 </div>
@@ -54,65 +54,21 @@
         </Row>
         <Modal
             :visible.sync="modalVisible"
-            title="新增／修改"
+            title="订单状态修改"
             @on-ok="modelSubmit"
-            width=800
-            
+           
             :mask-closable="false"
             >
-            <i-form v-ref:form-validate :model="modelForm" :rules="modeRule" :label-width="130">
-                <Row>
-                <i-col span="24">
-                     <Form-item label="流水单号">
-                    {{modelForm.billCode}}
-                </Form-item>
-                </i-col>
-                <i-col span="12">
-               
-                <Form-item label="预约人姓名" prop="">
-                    {{modelForm.name}}
-                </Form-item>
-                <Form-item label="上门量尺时间" prop="">
-                    {{modelForm.homeTime}}
-                </Form-item>
-                <Form-item label="上门设计师" prop="">
-                    {{modelForm.designer}}
-                </Form-item>
-                <Form-item label="装修项目" prop="">
-                    {{modelForm.decorateProject}}
-                </Form-item>
-                <Form-item label="所属代理商" prop="">
-                    {{modelForm.byAgent}}
-                </Form-item>
-                </i-col>
-                <i-col span="12">
-                
-                <Form-item label="预约人手机" prop="">
-                    {{modelForm.mobilePhone}}
-                </Form-item>
-                <Form-item label="预计装修时间" prop="">
-                  {{modelForm.decoratingTime}}
-                </Form-item>
-                <Form-item label="上门设计师电话">
-                   {{modelForm.designerPhone}}
-                </Form-item>
-                <Form-item label="工程预算" >
-                    {{modelForm.budgetRange}}
-                </Form-item>
-                <Form-item label="所在城市" prop="">
-                   {{modelForm.province}}{{modelForm.city}}{{modelForm.area}}
-                </Form-item>
-                </i-col>
-                </Row>
-                <Form-item label="装修地址" prop="address">
-                    {{modelForm.address}}
-                </Form-item>
-                <Form-item label="说明">
-                    {{modelForm.remark}}
+            <i-form v-ref:form-validate :model="modelForm"  :label-width="130">
+                <Form-item label="订单状态">
+                   <i-select :model.sync="modelForm.state">
+                        <i-option v-for="item in canCkStateList" :disabled="item.disabled" :value="item.value">{{ item.label }}</i-option>
+                    </i-select>
                 </Form-item>
             </i-form>
             <div slot="footer">
-                <i-button type="ghost" size="large" @click="modalVisible=fasle">关闭</i-button>
+                <i-button type="ghost" size="large" @click="modalVisible=fasle">取消</i-button>
+                <i-button type="primary" size="large" :loading="modelLoading" @click="changeState">确定</i-button>
             </div>
         </Modal>
     </div>
@@ -126,21 +82,32 @@ import LTitle from '../../components/title'
         components:{LHeader,LeftMenu,LTitle},
         data(){
             return{
-                breads:[{text:'首页',href:'/index'},{text:'订单管理',href:''}],
+                breads:[{text:'首页',href:'/index'},{text:'订单管理',href:'/order/list'},{text:'订单状态修改',href:''}],
                 rowsTotal:10,
                 pageIndex:1,
                 self:this,
                 tableData:[],
                 modalVisible:false,
+                modelLoading:false,
                 seachForm:{
-                    
+                    flowState:2
                 },
                 leftMenu:true,
                 spanLeft: 4,
                 spanRight: 20,
+                selectedData:[],
                 modelForm:{
-         
+                    state:null,
+                    oldState:0,
+                    id:null
                 },
+                stateList:[
+                    {value:1,label:'确认订单'},
+                    {value:2,label:'生产中'},
+                    {value:3,label:'产品入库'},
+                    {value:4,label:'已发货'},
+                    {value:5,label:'已收货'}
+                ],
                 tableCol: [
                 
                 {
@@ -168,39 +135,15 @@ import LTitle from '../../components/title'
                         return l;
                     }
                 },
-                {
-                    title:'订单总金额',width:200,
-                    render(row){
-                        return row.salesAmount?row.salesAmount:'无';
-                    }
-                },
-                {
-                    title:'成交金额',width:200,
-                    render(row){
-                        return row.turnoverAmount?row.turnoverAmount:'无'
-                    }
-                },
-                {
-                    title:'订单来源',width:200,
-                    render(row){
-                        let s=''
-                        let _s=row.sourceType?row.sourceType:null
-                        s=_s?_s===1?'客户预约':'后台添加':'无'
-                        return s;
-                    }
-                },
+                
+                
                 {
                     title:'下单时间',width:200,
                     render(row){
                         return row.createTime?row.createTime:'无'
                     }
                 },
-                {
-                    title:'下单人',className:'l-m-min-width l-ellipsis',
-                    render(row){
-                        return row.byAgent?row.byAgent:'无'
-                    }
-                },
+                
                 {
                    title:'接收时间',width:200,
                    render(row){
@@ -215,11 +158,7 @@ import LTitle from '../../components/title'
                     align: 'center',
                     render (row, column, index) {
                     return `
-                        <i-button type="primary" v-show="${row.appointId}!=0" icon="eye" @click="modelShow(${row.appointId})" size="small">查看</i-button>
-                        <i-button type="primary" @click="actionShow(${row.id})" size="small">查看订货单</i-button>
-                        <i-button type="primary" @click="actionShow(${row.id},true)" size="small">编辑订货单</i-button>
-                        <i-button type="primary" @click="actionNext(${row.id})" size="small">提交</i-button>
-
+                        <i-button v-show="${row.flowState}===2" type="primary" @click="changeClick(${row.id},${row.state})" size="small">修改订单状态</i-button>
                     `;
                     }   
                 }]
@@ -227,15 +166,85 @@ import LTitle from '../../components/title'
         },
         ready(){
             let userInfo=storage.session.get('userInfo');
-            if(userInfo&&userInfo.type!=2){
+            if(userInfo&&userInfo.type!=1){
                 this.$router.go('/index');
                 return;
             }
             this.getList();
             
         },
+        computed:{
+            canChangeData(){
+                let _list=[];
+                if(this.tableData&& this.tableData[0]){
+                    this.tableData.forEach((item)=>{
+                        let _item=item;
+                        if(item.flowState!=2){
+                            _item._disabled=true;
+                        }
+                        _list.push(_item);
+                    })
+                }
+                return _list;
+            },
+            canCkStateList(){
+                let _list=[];
+                this.stateList.forEach((item)=>{
+                    let _item=item;
+                    if(item.value<=this.modelForm.oldState){
+                        _item.disabled=true;
+                    }else{
+                        _item.disabled=false;
+                    }
+                    _list.push(_item);
+                });
+                return _list;
+            }
+        },
         methods:{
-            
+            selChange(selection){
+                console.log(selection);
+                this.selectedData=selection;
+            },
+            changeClick(id,s){
+                this.modelForm.id=id;
+                this.modelForm.oldState=s;
+                
+                this.modalVisible=true;
+            },
+            changeState(){
+                let self=this;
+                self.modelLoading=true;
+                if(self.modelForm.state<=self.modelForm.oldState){
+                    self.modelLoading=false;
+                    self.$Notice.warning({
+                            title:'警告',
+                            desc:'状态不能往前修改'
+                    });
+                    return;
+                }
+                self.$Loading.start();
+                
+                server.changeOrder(self.modelForm.id,self.modelForm.state).then((res)=>{
+                    self.$Loading.finish();
+                    if(res.success){
+                        self.$Notice.success({
+                            title:'状态修改成功',
+                            desc:res.message
+                        });
+                        self.modelLoading=false;
+                        self.modalVisible=false;
+                        self.getList(self.pageIndex,10);
+                    }else{
+                        self.$Notice.error({
+                            title:'状态修改失败',
+                            desc:res.message
+                        });
+                    }
+                })
+                
+                
+            },
             getStatusName(v){
                 
                 switch(v){
@@ -276,59 +285,13 @@ import LTitle from '../../components/title'
                 this.pageIndex=1;
                 this.getList(1,10);
             },
-            modelShow(id=null){
-                let self=this;
-                if(id){
-                    self.$Loading.start();
-                    server.getAppointByid(id).then((res)=>{
-                        self.$Loading.finish();
-                        if(res.success){
-                            self.modelForm=res.data.appointmentVo;
-                            
-                            self.modalVisible=true;
-                        }else{
-                            self.modelForm={};
-                        }
-                    })
-                }
-            },
-            actionShow(id=null,t){
-                if(t){
-                    this.$router.go('/owner/order/edit?id='+id)
-                }else{
-                    this.$router.go('/owner/order/look?id='+id)
-                }
-            },
-            actionAdd(){
-                this.$router.go('/owner/order/edit')
-            },
-            //ownerOrderNext
-            actionNext(id){
-                let self=this;
-                self.$Modal.confirm({
-                    onOk:function(){
-                       server.ownerOrderNext(id).then((res)=>{
-                            if(res.success){
-                                self.$Notice.success({
-                                    title:'提交成功',
-                                    desc:res.message
-                                });
-                                self.getList(self.pageIndex,10);
-                            }else{
-                                self.$Notice.error({
-                                    title:'提交失败',
-                                    desc:res.message
-                                });
-                            }
-                        }) 
-                    },
-                    content:'您确认提交给总部吗？'
-                })
-                
-            },
+            
+            
             createTimeChange(e){
                 this.seachForm.createTimeStr=e;
             },
+           
+            
         }
     }
 </script>

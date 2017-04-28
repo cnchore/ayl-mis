@@ -225,8 +225,9 @@
 						    <Row class="q-row" v-for="item in costVoList">
 						        <i-col span="5">{{item.costName}}</i-col>
 						        <i-col span="7" :class="{'q-col':item.costType===4}">
-		            				<i-input v-show="item.costType!=4 && item.costType!=11 && item.costType!=12" :value.sync="item.costValue" ></i-input>
+		            				<i-input v-show="item.costType!=4 && item.costType!=6 &&  item.costType!=11 && item.costType!=12" :value.sync="item.costValue" ></i-input>
 		            				<span v-show="item.costType===4">{{getCouponToal}}</span>
+		            				<span v-show="item.costType===6" >{{item.costValue}}</span>
 		            				<span v-show="item.costType===11">{{getSaleToal}}</span>
 		            				<span v-show="item.costType===12">{{getDealToal}}</span>
 		            				<a  v-show="item.costType===4 && getSaleToal>5000 && couponList && couponList[0]" @click="modalVisible=true">选择现金券</a>
@@ -282,11 +283,11 @@
                     	<div class="container q-table">
                     		<i-form :model="modelForm" :label-width="100">
                     			<Form-item label="经销商备注">
-						            <i-input :value.sync="modelForm.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
+						            <i-input :value.sync="modelForm.agentRemark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
 						        </Form-item>
                     		
                     			<Form-item label="总部备注" v-show="false">
-						            <i-input :value.sync="modelForm.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
+                    				{{modelForm.remark}}
 						        </Form-item>
 						        
 						    </i-form>

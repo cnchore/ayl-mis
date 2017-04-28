@@ -220,7 +220,7 @@ import chinaAddress from '../../components/china-address-0408'
 					render (row, column, index) {
 					return `
 						<i-button type="primary" icon="edit" @click="modelShow(${row.id})" size="small">修改</i-button>
-						<i-button type="primary"  size="small">提交</i-button>
+						<i-button type="primary" @click="nextAppoint(${row.id})" size="small">提交</i-button>
 						<i-button type="primary"
 							@click="del(${row.id})"
 							 icon="ios-trash" size="small">删除</i-button>
@@ -539,7 +539,28 @@ import chinaAddress from '../../components/china-address-0408'
 	                })
 				}
 			},
-			
+			nextAppoint(id){
+				let self=this;
+				self.$Modal.confirm({
+                    onOk:function(){
+                       server.nextAppoint(id).then((res)=>{
+		                    if(res.success){
+		                        self.$Notice.success({
+		                            title:'提交成功',
+		                            desc:res.message
+		                        });
+		                        self.getList(self.pageIndex,10);
+		                    }else{
+		                        self.$Notice.error({
+		                            title:'提交失败',
+		                            desc:res.message
+		                        });
+		                    }
+		                }) 
+                    },
+                    content:'您确认提交给下一步吗？'
+                })
+			},
             decoratingDateChange(e){
             	this.modelForm.decoratingTime=e;
             },
