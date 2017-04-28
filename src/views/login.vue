@@ -55,15 +55,15 @@
             <h3 style="padding-bottom: 15px; border-bottom: 1px solid #d7dde4;">欢迎登录</h3>
             <Form-item ></Form-item>  
             <Form-item prop="userName">
-            <i-input :value.sync="formValidate.userName" size="large" placeholder="请输入用户名"></i-input>
+            <i-input :value.sync="formValidate.userName" @keyup.enter="handleSubmit('formValidate')" size="large" placeholder="请输入用户名"></i-input>
             </Form-item>
             <Form-item  prop="pwd">
-            <i-input :value.sync="formValidate.pwd" size="large" type="password" placeholder="请输入密码"></i-input>
+            <i-input :value.sync="formValidate.pwd" @keyup.enter="handleSubmit('formValidate')" size="large" type="password" placeholder="请输入密码"></i-input>
             </Form-item>
             <Form-item prop="validateCode">
                 <Row>
                     <i-col span="16">
-                        <i-input :value.sync="formValidate.validateCode" size="large" placeholder="请输入验证码"></i-input>
+                        <i-input :value.sync="formValidate.validateCode" @keyup.enter="handleSubmit('formValidate')" size="large" placeholder="请输入验证码"></i-input>
                     </i-col>
                     
                     <i-col span="8" class="v-code">
@@ -73,7 +73,7 @@
             </Form-item>
 
             <Form-item>
-                <i-button type="primary" @click="handleSubmit('formValidate')" @keyup.enter="handleSubmit('formValidate')" size="large" long>登录</i-button>
+                <i-button type="primary"  @click="handleSubmit('formValidate')" size="large" long>登录</i-button>
             </Form-item>
         </i-form>
         <div class="copyright" v-show="false">版权所有 &copy; 2017.艾臣智能门窗科技有限公司.</div>
@@ -109,8 +109,16 @@ import server,{ storage } from '../libs/server'
             //this.getVcode();
 
             //
+            /*
+            server.getStaffList({}).then((res)=>{
+
+            })
+            */
         },
         methods: {
+            onEnter(){
+                alert('enter');
+            },
             vCodeClick(){
                 this.vCode='http://test.aylsonclub.com/admin/web/captchaImage?'+Math.random();
             },

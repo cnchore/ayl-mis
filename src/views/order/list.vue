@@ -29,7 +29,7 @@
                         <Form-item prop="storeName">
                             <div class="l-sel-inline">
                                 <span slot="prepend">下单时间</span>
-                                <i-input :value.sync="seachForm.createTimeStr"  placeholder="请输入下单时间" ></i-input>
+                                <Date-picker type="date" :value="seachForm.createTimeStr" format="yyyy-MM-dd" @on-change="createTimeChange"  placeholder="选择日期"></Date-picker>
                             </div>
                         </Form-item>
                         <Form-item>
@@ -159,7 +159,7 @@ import LTitle from '../../components/title'
                     }
                 },
                 {
-                    title:'订单级别',width:200,
+                    title:'订单级别',width:120,
                     render(row){
                         let l=''
                         let _l=row.level?row.level:null
@@ -168,19 +168,19 @@ import LTitle from '../../components/title'
                     }
                 },
                 {
-                    title:'订单总金额',width:200,
+                    title:'订单总金额',width:120,
                     render(row){
                         return row.salesAmount?row.salesAmount:'无';
                     }
                 },
                 {
-                    title:'成交金额',width:200,
+                    title:'成交金额',width:120,
                     render(row){
                         return row.turnoverAmount?row.turnoverAmount:'无'
                     }
                 },
                 {
-                    title:'订单来源',width:200,
+                    title:'订单来源',width:120,
                     render(row){
                         let s=''
                         let _s=row.sourceType?row.sourceType:null
@@ -216,7 +216,7 @@ import LTitle from '../../components/title'
                     return `
                         <i-button type="primary" v-show="${row.appointId}!=0" icon="eye" @click="modelShow(${row.appointId})" size="small">查看</i-button>
                         <i-button type="primary" @click="actionShow(${row.id})" size="small">查看订货单</i-button>
-                        <i-button type="primary" @click="actionShow(${row.id},true)" size="small">编辑订货单</i-button>
+                        <i-button type="primary" v-show="${row.flowState}!=2" @click="actionShow(${row.id},true)" size="small">编辑订货单</i-button>
                     `;
                     }   
                 }]
@@ -296,7 +296,9 @@ import LTitle from '../../components/title'
                     this.$router.go('/order/look?id='+id)
                 }
             },
-            
+            createTimeChange(e){
+                this.seachForm.createTimeStr=e;
+            },
            
             
         }

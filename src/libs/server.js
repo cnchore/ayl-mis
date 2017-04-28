@@ -261,12 +261,41 @@ export default {
 	        	url,{
 	        		params:params
 	        	}).then((body)=>{
-	        		
-		          if(body.data){
-		            resolve(body.data)
-		          }else{
-		            resolve(ret)
-		          }
+	        		console.log(requestName,body);
+	        		if(body.data.success){
+	        			if(body.data.data){
+	        				resolve(body.data)
+	        			}else{
+	        				resolve(ret);
+	        			}
+	        		}else{
+	        			if(body.data.message&&body.data.message.indexOf('请先登录')>-1){
+
+	        				let _href=window.location.href.substr(0,window.location.href.lastIndexOf('#!'));
+	        				_href+='#!/login';
+	        				window.location=_href;
+	        			}else{
+	        				alert(requestName+'请求错误！\n\n'+body.data.message);
+	        			}
+	        			/**/
+	        			resolve(ret);
+	        			/*
+	        			if(body.data.message&&body.data.message.indexOf('请先登录')>-1){
+		        			Vue.$Modal.confirm({
+			                    onOk:function(){
+			                       Vue.$router.go('/login');
+			                    },
+			                    title:'未登录活登录超时，需重新登录',
+			                    content:'确定马上，重新登录吗？'
+			                })
+		        		}else{
+		        			Vue.$Notice.error({
+	                            title:'请求-'+requestName+'-失败',
+	                            desc:body.data.message
+	                        });
+		        		}
+		        		*/
+	        		}
 		        }, (error)=>{
 		          resolve(ret)
 		          console.error(requestName,error);
@@ -1177,7 +1206,8 @@ export default {
 			id:formData.id,//主键  
 			state:formData.state,//状态：
 			isOnlySave:formData.isOnlySave,//是否只是保存，true 只保存
-			billCode:formData.billCode
+			billCode:formData.billCode,
+			agentRemark:formData.agentRemark
 
 		}
 		if(formData.couponIds){

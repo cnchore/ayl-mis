@@ -134,6 +134,10 @@
                 <i class="iconfont icon-kehuguanli"></i>
                 客户管理
             </Menu-item>
+            <Menu-item key="4-3">
+                <i class="iconfont icon-dingdan1"></i>
+                订单状态修改
+            </Menu-item>
             
     </Menu>
     <Menu :active-key="activeKey" class="q-menu q-lg-icon"
@@ -264,6 +268,9 @@
                         break;
                     case '4-2':
                         this.$router.go('/order/hq/ownerInfo');
+                        break;
+                    case '4-3':
+                        this.$router.go('/order/state/change');
                         break;
                     case '11-1':
                         this.$router.go('/owner/order/list');
