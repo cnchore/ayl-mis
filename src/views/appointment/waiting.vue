@@ -16,20 +16,15 @@
                     <i-form v-ref:form-inline :model="seachForm"  inline>
                         <Form-item prop="storeName">
                             <div class="l-sel-inline">
-                                <span slot="prepend">客户名称</span>
-                                <i-input :value.sync="seachForm.nameLike"  placeholder="请输入名称" ></i-input>
+                                <span slot="prepend">名称/电话</span>
+                                <i-input :value.sync="seachForm.nameOrPhoneLike"  placeholder="请输入名称或电话" ></i-input>
                             </div>
                         </Form-item>
-                        <Form-item prop="storeName">
-                            <div class="l-sel-inline">
-                                <span slot="prepend">客户电话</span>
-                                <i-input :value.sync="seachForm.mobilePhoneLike"  placeholder="请输入电话" ></i-input>
-                            </div>
-                        </Form-item>
+                        
                         <Form-item prop="storeName">
                             <div class="l-sel-inline">
                                 <span slot="prepend">区域</span>
-                                <i-input :value.sync="seachForm.areaLike"  placeholder="请输入区域" ></i-input>
+                                <i-input :value.sync="seachForm.addressLike"  placeholder="请输入区域" ></i-input>
                             </div>
                         </Form-item>
                         <Form-item>
@@ -47,7 +42,7 @@
                     </div>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -180,54 +175,52 @@ import chinaAddress from '../../components/china-address-0408'
                 modelLoading:false,
 				tableCol: [
 				{
-					key:'billCode',title:'预约单号',width:250
+					key:'billCode',title:'预约单号'
 				},
 				{
-					key:'name',title:'客户名称',width:120
+					key:'name',title:'客户名称'
 				},
 				{
-					key:'mobilePhone',title:'客户电话',width:130
+					key:'mobilePhone',title:'客户电话',width:125
 				},
 				{
-					title:'客户地址',className:'l-m-min-width l-ellipsis',
+					title:'客户地址',
 					render(row){
 						return `${row.province}${row.city}${row.area}${row.address?row.address:''}`;
 					}
 				},
 				{
-					width:100,key:'state',title:'当前阶段',
+					width:95,key:'state',title:'当前阶段',
 
 					render(row,column,index){
 						return `{{getStatusName(${row.state})}}`;
 					}
 				},
 				{
-					key:'dealer',title:'发送人',width:120
+					key:'dealer',title:'发送人'
 				},
 				
 				{
-					key:'appointDate',title:'预约时间',width:200
+					key:'appointDate',title:'预约时间',width:170
 				},
 				{
-					key:'updateTime',title:'接收时间',width:200
+					key:'updateTime',title:'接收时间',width:170
 				},
 				{
 					title: '操作',
 					key: 'action',
 					fixed:'right',
-					width:200,
+					width:135,
 					align: 'center',
 					render (row, column, index) {
 					return `
-						<i-button type="primary" icon="edit" @click="modelShow(${row.id})" size="small">修改</i-button>
-						<i-button type="primary" @click="nextAppoint(${row.id})" size="small">提交</i-button>
-						<i-button type="primary"
-							@click="del(${row.id})"
-							 icon="ios-trash" size="small">删除</i-button>
-
+                        <i class="iconfont icon-bianji btn" title="编辑" @click="modelShow(${row.id})"></i>
+                        <i class="iconfont icon-fasong btn" title="提交" @click="nextAppoint(${row.id})"></i>
+                        <i class="iconfont icon-shanchu btn" title="删除" @click="del(${row.id})"></i>
 					`;
 					}   
-				}]
+				}],
+				id:null
 			}
 		},
 		ready(){
@@ -239,8 +232,17 @@ import chinaAddress from '../../components/china-address-0408'
 			this.getList();
 			this.getDict();
 			this.getAgentList();
-
+			if(this.id){
+				this.modelShow(this.id);
+			}
 		},
+		route:{
+            data:function(transition){
+                if(transition.to.query &&transition.to.query.id){
+                    this.id=transition.to.query.id;
+                }
+            }
+        },
 		methods:{
 			addrSelected(value,selectedData){
                 //console.log(selectedData);
@@ -426,7 +428,7 @@ import chinaAddress from '../../components/china-address-0408'
 	                            title:'保存成功',
 	                            desc:res.message
 	                        });
-	                        //self.modalVisible=false;
+	                        self.modalVisible=false;
 	                        self.getList(self.pageIndex,10);
 	                    }else{
 	                        self.$Notice.error({
@@ -443,7 +445,7 @@ import chinaAddress from '../../components/china-address-0408'
 	                            title:'保存成功',
 	                            desc:res.message
 	                        });
-	                        //self.modalVisible=false;
+	                        self.modalVisible=false;
 	                        self.getList(self.pageIndex,10);
 	                    }else{
 	                        self.$Notice.error({
@@ -474,7 +476,7 @@ import chinaAddress from '../../components/china-address-0408'
 		                    }
 		                }) 
                     },
-                    content:'您确认删除这条预约吗？'
+                    content:'删除操作，将把该预约单移至废弃箱，可从废弃箱中恢复,是否确定废弃？'
                 })
                 
 			},

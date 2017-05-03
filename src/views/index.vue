@@ -18,8 +18,9 @@
                     padding-left: 5px;
                 }
                 h3{
+                    cursor: pointer;
                     text-align: right;
-                    font-size: 55px;
+                    font-size: 30px;
                     font-weight: normal;
                 }
                 
@@ -92,7 +93,7 @@
                     <div>
                         <i class="iconfont icon-daiban"></i>
                         <div class="q-title">代办件</div>
-                        <h3>{{formData.waidDoNum?formData.waidDoNum:0}}</h3>
+                        <h3 @click="actionGoAppoint">{{formData.waidDoNum?formData.waidDoNum:0}}</h3>
                     </div>
                 </Card>
             </i-col>
@@ -102,7 +103,7 @@
                         <i class="iconfont icon-dingdan1"></i>
                         <div class="q-title">订单总数</div>
                         
-                        <h3>{{formData.orderNum?formData.orderNum:0}}</h3>
+                        <h3 @click="actionGoOrder">{{formData.orderNum?formData.orderNum:0}}</h3>
                     </div>
                 </Card>
             </i-col>
@@ -112,7 +113,7 @@
                         <i class="iconfont icon-kehu"></i>
                         <div class="q-title">客户数</div>
                         
-                        <h3>{{formData.clientNum?formData.clientNum:0}}</h3>
+                        <h3 @click="actionGoCustomer">{{formData.clientNum?formData.clientNum:0}}</h3>
                     </div>
                 </Card>
             </i-col>
@@ -128,7 +129,7 @@
             </i-col>
         </Row>
         <Row class="q-card q-table">
-            <i-col :span="userType===2?9:8">
+            <i-col :span="userType===2?18:12">
                 <div class="q-body">
                     <Row type="flex" justify="center" align="middle">
                         <i-col :md="3" :lg="2" class="q-title">
@@ -141,12 +142,12 @@
                             {{formData.appointPage?formData.appointPage.total:0}}
                         </i-col>
                     </Row>
-                    <i-table :content="self" :columns="tableCol" :data="formData.appointPage?formData.appointPage.rowsObject?formData.appointPage.rowsObject.slice(0,4):[]:[]"></i-table>
+                    <i-table :content="self" height="240" :columns="tableCol" :data="formData.appointPage?formData.appointPage.rowsObject?formData.appointPage.rowsObject.slice(0,4):[]:[]"></i-table>
                     <a v-if="userType===2" v-link="{path: '/owner/waiting'}" class="q-more">更多...</a>
                     <a v-else v-link="{path: '/waiting'}" class="q-more">更多...</a>
                </div>
             </i-col>
-            <i-col span="8" v-show="userType===1">
+            <i-col span="12" v-show="userType===1">
                 <div class="q-body">
                     <Row type="flex" justify="center" align="middle">
                         <i-col :md="3" :lg="2" class="q-title">
@@ -159,12 +160,19 @@
                             {{formData.orderPage?formData.orderPage.total:0}}
                         </i-col>
                     </Row>
-                    <i-table :content="self" :columns="orderCol" :data="formData.orderPage?formData.orderPage.rowsObject?formData.orderPage.rowsObject.slice(0,4):[]:[]"></i-table>
+                    <i-table :content="self" height="240" :columns="orderCol" :data="formData.orderPage?formData.orderPage.rowsObject?formData.orderPage.rowsObject.slice(0,4):[]:[]"></i-table>
                     
                     <a v-link="{path: '/order/list'}" class="q-more">更多...</a>
                </div>
             </i-col>
-            <i-col :span="userType===2?9:8">
+            
+            <i-col span="6" v-show="userType===2">
+                <div class="q-body qrcode">
+                    <img v-lazy="qrcode">
+                    <div>安居艾臣推广二维码</div>
+                </div>
+            </i-col>
+            <i-col :span="userType===2?18:18">
                <div class="q-body">
                     <Row type="flex" justify="center" align="middle">
                         <i-col :md="3" :lg="2" class="q-title">
@@ -177,19 +185,12 @@
                             <i class="iconfont icon-tianjia btn" @click="$router.go('/memo')"></i>
                         </i-col>
                     </Row>
-                    <i-table :content="self" :columns="memoCol" :show-header="false" :data="formData.memoPage?formData.memoPage.rowsObject?formData.memoPage.rowsObject.slice(0,5):[]:[]"></i-table>
+                    <i-table :content="self" height="240" :columns="memoCol" :show-header="false" :data="formData.memoPage?formData.memoPage.rowsObject?formData.memoPage.rowsObject.slice(0,5):[]:[]"></i-table>
                     <a v-link="{path: '/memo'}" class="q-more">更多...</a>
                </div>
             </i-col>
-            <i-col span="6" v-show="userType===2">
-                <div class="q-body qrcode">
-                    <img v-lazy="qrcode">
-                    <div>安居艾臣推广二维码</div>
-                </div>
-            </i-col>
-            
         </Row>
-        <div class="copyright">版权所有 &copy; 2017.艾臣智能门窗科技有限公司.</div>
+        <div class="copyright">版权所有 &copy; 2017.艾臣家居科技有限公司.</div>
     </div>
     
 
@@ -205,19 +206,19 @@ import LHeader from '../components/header'
                 self:this,
                 formData:{},
                 qrcode:require('../imgs/noimg.png'),
-                memoData:[{"name":'我的备忘录...','time':'2017-04-10','state':'!!!'},{"name":'我的备忘录...','time':'2017-04-10','state':'!!'},{"name":'我的备忘录...','time':'2017-04-10','state':'!'},{"name":'我的备忘录...','time':'2017-04-10','state':''},{"name":'我的备忘录...','time':'2017-04-10','state':''}],
+                memoData:[],
                 memoCol:[
                 {
-                    key:'memoLevel',width:30,
+                    key:'memoLevel',
                     render(row){
                         return `<span class="l-s-Error">${row.memoLevel?row.memoLevel===1?'!':row.memoLevel===2?'!!':'!!!':''}</span>`
                     }
                 },
-                {key:'content',width:200,className:'l-ellipsis'},
-                {key:'createTime',width:200},
+                {key:'content'},
+                {key:'memoTime'},
                 {
                     key: 'action',fixed:'right',
-                    align: 'center',width:120,
+                    align: 'center',width:105,
                     render (row, column, index) {
                     return `
                         <i class="iconfont icon-bianji btn" title="编辑" @click="actionEdit"></i>
@@ -225,55 +226,49 @@ import LHeader from '../components/header'
                     `;
                     }   
                 }],
-                tableData:[
-                {"name":'赵得住',"tel":'13800001111',"state":'预约处理',"createTime":'2017-04-10'},
-                {"name":'赵得住',"tel":'13800001111',"state":'预约处理',"createTime":'2017-04-10'},
-                {"name":'赵得住',"tel":'13800001111',"state":'预约处理',"createTime":'2017-04-10'},
-                {"name":'赵得住',"tel":'13800001111',"state":'预约处理',"createTime":'2017-04-10'}],
+                tableData:[],
                 tableCol: [
                 {
-                    key:'name',title:'客户名称',width:130
+                    key:'name',title:'客户名称'
                 },
-                
                 {
-                    key:'mobilePhone',title:'客户电话',width:130
-                },
-                
-                {
-                    key:'state',title:'当前阶段',width:130,
+                    key:'state',title:'当前阶段',
                     render(row){
                         return `{{getStatusName(${row.state})}}`
                     }
                 },
                 {
-                    key:'updateTime',title:'接受时间',width:200
+                    key:'mobilePhone',title:'客户电话'
+                },
+                {
+                    key:'updateTime',title:'接收时间'
                 },
                 {
                     title: '操作',
                     key: 'action',fixed:'right',
-                    align: 'center',width:130,
+                    align: 'center',width:65,
                     render (row, column, index) {
                     return `
                         <i-button type="primary" 
-                             size="small" @click="actionGoAppoint">办理</i-button>
+                             size="small" @click="actionGoAppoint(${row.id})">办理</i-button>
                     `;
                     }   
                 }],
                 orderCol:[
                 {
-                    key:'name',title:'客户姓名',width:130
+                    key:'name',title:'客户姓名'
                 },
                 
                 {
-                    key:'orderNo',title:'订单编号',width:130
+                    key:'orderNo',title:'订单编号'
                 },
                 
                 {
-                    key:'updateTime',title:'下单时间',width:200
+                    key:'updateTime',title:'下单时间'
                     
                 },
                 {
-                    key:'warnDays',title:'剩余天数',width:100,
+                    key:'warnDays',title:'剩余天数',
                     render(row){
                         return `<span class="l-s-Error">${row.warnDays}</span>`
                     }
@@ -281,11 +276,11 @@ import LHeader from '../components/header'
                 {
                     title: '操作',
                     key: 'action',fixed:'right',
-                    align: 'center',width:130,
+                    align: 'center',width:65,
                     render (row, column, index) {
                     return `
                         <i-button type="primary" 
-                             size="small" @click="actionGoOrder">办理</i-button>
+                             size="small" @click="actionGoOrder(${row.id})">办理</i-button>
                     `;
                     }   
                 }
@@ -330,15 +325,43 @@ import LHeader from '../components/header'
             actionEdit(){
                 this.$router.go('/memo');
             },
-            actionGoAppoint(){
+            actionGoAppoint(id){
                 if(this.userType===2){
-                    this.$router.go('/owner/waiting');
+                    if(id){
+                        this.$router.go('/appointment/edit?id='+id);
+                    }else{
+
+                        this.$router.go('/owner/waiting');
+                    }
                 }else{
-                    this.$router.go('/waiting');
+                    if(id){
+
+                        this.$router.go('/waiting?id='+id);
+                    }else{
+
+                        this.$router.go('/waiting');
+                    }
                 }
             },
-            actionGoOrder(){
-                this.$router.go('/order/list');
+            actionGoOrder(id){
+                if(this.userType===2){
+                    this.$router.go('/owner/order/list');
+                }else{
+                    if(id){
+                        this.$router.go('/order/edit?id='+id);
+                    }else{
+                        this.$router.go('/order/list');
+                    }
+                }
+            },
+            actionGoCustomer(){
+                if(this.userType===2){
+                    this.$router.go('/order/ownerInfo');
+
+                }else{
+                    this.$router.go('/order/hq/ownerInfo');
+
+                }
             },
             getStatusName(v){
                 

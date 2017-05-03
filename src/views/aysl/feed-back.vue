@@ -83,7 +83,7 @@
                     </div>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -151,6 +151,7 @@ import LTitle from '../../components/title'
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
 			return{
+                breads:[{text:'首页',href:'/index'},{text:'意见反馈',href:''}],
 				addModal:false,
                 activeMenu:'1',
                 activeT:'1',
@@ -172,8 +173,7 @@ import LTitle from '../../components/title'
                     
                     {
                         title: '反馈标题',
-                        className:'l-min-width',
-                        width: 150,
+                        
                         key: 'title',
                         render (row, column, index) {
                             return `<strong>${row.title}</strong>`;
@@ -181,12 +181,12 @@ import LTitle from '../../components/title'
                     },
                     {
                         title: '反馈内容',
-                        className:'l-min-width',
+                        width:125,className:'l-ellipsis',
                         key: 'content'
                     },
                     {
                         title: '反馈状态',
-                        className:'l-min-width',
+                        width:95,
                         key: 'state',
                         render(row,column,index){
                             return `{{getStatusName(${row.state})}}`;
@@ -194,19 +194,19 @@ import LTitle from '../../components/title'
                     },
                     {
                         title: '反馈时间',
-                        className:'l-m-min-width',
+                       width:170,
                         key: 'feedbackTime'
                     },
                     {
                         title: '操作',
                         key: 'action',
                         fixed:'right',
-                        className:'l-min-width',
+                        width:125,
                         align: 'center',
                         render (row, column, index) {
                             return `
-                            <i-button type="primary" size="small" icon="reply" @click="reply(${row.id})">回复</i-button>
-                            <i-button type="primary" size="small" icon="eye" @click="look(${row.id})">查看</i-button>
+                            <i-button type="primary" size="small" title="回复" icon="reply" @click="reply(${row.id})"></i-button>
+                            <i-button type="primary" size="small" title="查看" icon="eye" @click="look(${row.id})"></i-button>
                             `;
                         }   
                     }

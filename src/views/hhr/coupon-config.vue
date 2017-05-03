@@ -10,7 +10,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="modelShow" ></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="modelShow" :breads="breads"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm"  inline>
@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -101,6 +101,7 @@ import LTitle from '../../components/title'
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
 			return{
+                breads:[{text:'首页',href:'/index'},{text:'现金券配置管理',href:''}],
 				rowsTotal:10,
 				pageIndex:1,
 				self:this,
@@ -130,39 +131,39 @@ import LTitle from '../../components/title'
                 modelLoading:false,
 				tableCol: [
 				{
-					key:'couponName',title:'券名',width:120
+					key:'couponName',title:'券名'
 				},
 				{
-					key:'couponValue',title:'券面值',width:120
+					key:'couponValue',title:'券面值'
 				},
 				{
-					width:100,key:'state',title:'状态',
+					key:'state',title:'状态',
 
 					render(row,column,index){
 						return `{{getStatusName(${row.state})}}`;
 					}
 				},
 				{
-					key:'achieveMoney',title:'使用条件',width:250,
+					key:'achieveMoney',title:'使用条件',
 					render(row){
 						return `订单满足 ${row.achieveMoney} 元可以使用`;
 					}
 				},
 				
 				{
-					key:'effectDays',title:'有效天数',width:200,
+					key:'effectDays',title:'有效天数',
 					render(row){
 						return `申请通过后 ${row.effectDays} 天内可以使用`;
 					}
 				},
 				{
-					key:'remark',title:'备注',className:'l-m-min-width l-ellipsis'
+					key:'remark',title:'备注'
 				},
 				{
 					title: '操作',
 					key: 'action',
 					fixed:'right',
-					className:'l-m-min-width',
+					width:170,
 					align: 'center',
 					render (row, column, index) {
 					return `
@@ -175,12 +176,12 @@ import LTitle from '../../components/title'
 						 @click="updateState(${row.id},'您确认下架吗？')" size="small">下架</i-button>
 
 						
-						<i-button type="primary" v-show="${row.state}==0"  icon="edit" @click="modelShow(${row.id})" size="small">修改</i-button>
+						<i-button type="primary" v-show="${row.state}==0" title="修改" icon="edit" @click="modelShow(${row.id})" size="small"></i-button>
 						
 						<i-button type="primary"
 							v-show="${row.state}==0" 
-							@click="del(${row.id})"
-						 icon="ios-trash" size="small">删除</i-button>
+							@click="del(${row.id})" title="删除"
+						 icon="ios-trash" size="small"></i-button>
 
 					`;
 					}   

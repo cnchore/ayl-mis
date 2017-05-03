@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -105,30 +105,30 @@ import chinaAddress from '../../components/china-address-0408'
                     ]
                 },
 				tableCol: [
-				{title:'姓名',key:'staffName',width:120},
-                {title:'是否禁用',key:'isDisable',width:100,
+				{title:'姓名',key:'staffName'},
+                {title:'是否禁用',key:'isDisable',
                     render(row){
                         return `${row.isDisable?'是':'否'}`
                     }
                 },
 
-				{title:'电话',key:'staffPhone',width:200},
-				{title:'所属组织',key:'source',width:100},
+				{title:'电话',key:'staffPhone'},
+				{title:'所属组织',key:'source'},
 				
 				{
-					key:'createTime',title:'创建时间',width:200
+					key:'createTime',title:'创建时间'
 				},
-                {title:'备注',key:'remark',className:'l-min-width l-ellipsis'},
+                {title:'备注',key:'remark'},
 				
 				{
 					title: '操作',
 					key: 'action',
 					fixed:'right',
-					className:'l-m-min-width',
+					width:135,
 					align: 'center',
 					render (row, column, index) {
 					return `
-						<i-button type="primary" icon="edit" @click="addOrUpdate(${row.id})" size="small">修改</i-button>
+						<i-button type="primary" title="修改" icon="edit" @click="addOrUpdate(${row.id})" size="small"></i-button>
 						<i-button type="primary"
 							v-show="${row.status}==1" 
 							@click="updateState(${row.userId},'您确定禁用么？')"

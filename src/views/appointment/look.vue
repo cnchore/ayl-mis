@@ -255,7 +255,7 @@
                     				{{modelForm.agentRemark}}
 						        </Form-item>
                     		
-                    			<Form-item label="总部备注">
+                    			<Form-item label="总部备注" v-show="false">
                     				{{modelForm.remark}}
 						        </Form-item>
 						        
@@ -265,7 +265,7 @@
                     
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>

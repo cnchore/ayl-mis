@@ -152,7 +152,7 @@
 	                    	<i-form v-ref:form-validate v-show="formVisable" :model="modelForm" :rules="modeRule" :label-width="100">
 						        <Form-item label="备忘时间" prop="memoTime">
 						          
-						            <Date-picker type="datetime" :value="modelForm.memoTime" format="yyyy-MM-dd HH:mm:ss" @on-change="createDateChange"  placeholder="选择时间"></Date-picker>
+						            <Time-picker type="datetime" :value="new Date(modelForm.memoTime)" format="HH:mm" @on-change="createDateChange"  placeholder="选择时间"></Time-picker>
 						        </Form-item>
 						        <Form-item label="内容" prop="content">
 						            <i-input :value.sync="modelForm.content" type="textarea" :rows="3" placeholder="请输入备忘内容"></i-input>
@@ -177,7 +177,7 @@
                     
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -680,7 +680,20 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
                 
 			},
 			createDateChange(e){
-            	this.modelForm.memoTimeStr=e;
+				this.modelForm.memoTimeStr=this.value.getFullYear()+'-';
+				let m=this.value.getMonth();
+				if(m<9){
+					this.modelForm.memoTimeStr+='0'+(m+1)+'-';
+
+				}else{
+					this.modelForm.memoTimeStr+=(m+1)+'-';
+
+				}
+				let d=this.value.getDate();
+				
+				this.modelForm.memoTimeStr+=d+' ';
+
+            	this.modelForm.memoTimeStr+=e+':00';
             },
 			getCellCls (cell) {
                 return [

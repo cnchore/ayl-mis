@@ -1,13 +1,14 @@
 <style scoped lang="less">
     .l-page{
         height: 100vh;
+
     }
     
     .login{
         height: calc(100vh-8.5rem);
-        
-        background-position: left top;
+        background-position:left center;
         background-size: cover;
+        
         display: -webkit-box;
         -webkit-box-align:end;
         -webkit-box-pack: center;
@@ -15,17 +16,18 @@
 
         form{
             margin-right: 10%;
-            padding: 15px 30px;
-            width: 500px;
+            padding: 30px;
+            width: 380px;
             border: 1px solid #d1dbe5;
             border-radius: 4px;
             background-color: #fff;
             overflow: hidden;
             box-shadow: 0 2px 4px 0 rgba(0,0,0,.12), 0 0 6px 0 rgba(0,0,0,.04);
             .v-code{
-                padding-left: 20px;
+                padding-left: 14px;
                 img{
                     width:100%;
+                    height:50px;
                     cursor: pointer;
                 }
             }
@@ -41,7 +43,7 @@
 
 </style>
 <template>
-    <div class="l-page">
+    <div class="l-page l-login-page">
         <header>
             <Row>
                 <i-col span="5">
@@ -76,12 +78,13 @@
                 <i-button type="primary"  @click="handleSubmit('formValidate')" size="large" long>登录</i-button>
             </Form-item>
         </i-form>
-        <div class="copyright" v-show="false">版权所有 &copy; 2017.艾臣智能门窗科技有限公司.</div>
+        <div class="copyright" v-show="false">版权所有 &copy; 2017.艾臣家居科技有限公司.</div>
     </div>
 </div>
 </template>
 <script>
 import server,{ storage } from '../libs/server'
+import util from '../libs/util'
     export default {
         data () {
             return {
@@ -101,7 +104,7 @@ import server,{ storage } from '../libs/server'
                     { required: true, message: '验证码不能为空', trigger: 'blur' }
                     ]
                 },
-                vCode:'http://test.aylsonclub.com/admin/web/captchaImage',
+                vCode:util.serverPath+'/web/captchaImage',
             }
         },
         ready(){
@@ -120,7 +123,7 @@ import server,{ storage } from '../libs/server'
                 alert('enter');
             },
             vCodeClick(){
-                this.vCode='http://test.aylsonclub.com/admin/web/captchaImage?'+Math.random();
+                this.vCode=util.serverPath+'/web/captchaImage?'+Math.random();
             },
             handleSubmit (name) {
                 let self=this;

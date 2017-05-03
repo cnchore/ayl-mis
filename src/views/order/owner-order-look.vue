@@ -316,11 +316,11 @@
                     	</div>
                     </div>
                     <div class="q-btns">
-                    	<i-button type="ghost" size="large">取消</i-button>
+                    	<i-button type="ghost" size="large" @click="cancel">取消</i-button>
                     </div>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -481,7 +481,9 @@ import LTitle from '../../components/title'
 				}
 				return b;
 			},
-			
+			cancel(){
+				this.$router.go('/owner/order/list');
+			},
 			getList(){
 				let self=this;
 				if(self.id){

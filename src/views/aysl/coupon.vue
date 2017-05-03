@@ -11,7 +11,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add"></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add" :breads="breads"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm" inline>
@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -165,6 +165,7 @@ import chinaAddress from '../../components/china-address-0408'
 		components:{LHeader,'v-editor':Editor,LeftMenu,LTitle},
 		data(){
 			return{
+                breads:[{text:'首页',href:'/index'},{text:'优惠活动发布',href:''}],
                 baseUrl:server.getBaseUrl(),
                 uploadData:{bucket:'dc-test'},
 				addModal:false,
@@ -188,7 +189,6 @@ import chinaAddress from '../../components/china-address-0408'
                     
                     {
                         title: '发布状态',
-                        className:'l-min-width',
                         key: 'state',
                         render(row,column,index){
                             return `{{getStatusName(${row.state},'s')}}`;
@@ -196,7 +196,6 @@ import chinaAddress from '../../components/china-address-0408'
                     },
                     {
                         title: '审核状态',
-                        className:'l-min-width',
                         key: 'auditState',
                         render(row,column,index){
                             return `{{getStatusName(${row.auditState},'v')}}`;
@@ -204,7 +203,6 @@ import chinaAddress from '../../components/china-address-0408'
                     },
                     {
                         title: '活动类型',
-                        className:'l-min-width',
                         key: 'activityType',
                         render(row,column,index){
                             return `{{getStatusName(${row.activityType},'a')}}`;
@@ -212,47 +210,44 @@ import chinaAddress from '../../components/china-address-0408'
                     },
                     {
                         title: '活动标题',
-                        className:'l-min-width',
                         key: 'title'
                     },
                     {
-                        title: '活动摘要',
-                        className:'l-m-min-width l-ellipsis',
+                        title: '活动摘要',width:125,
+                        className:'l-ellipsis',
                         key: 'summary'
                     },
                     {
                         title: '活动开始时间',
-                        className:'l-min-width',
                         key: 'startTime'
                     },
                     {
                         title: '活动结束时间',
-                        className:'l-min-width',
                         key: 'endTime'
                     },
                     {
                         title: '操作',
                         key: 'action',
-                        className:'l-m-min-width',
+                        width:210,
                         fixed:'right',
                         align: 'center',
                         render (row, column, index) {
                             return `
-                                <i-button type="primary" v-show="btnShow(${row.userType},${row.state},${row.auditState},'e')" size="small" icon="edit" @click="modalShow(${row.id},'u')">修改</i-button>
+                                <i-button type="primary" v-show="btnShow(${row.userType},${row.state},${row.auditState},'e')" size="small" icon="edit" @click="modalShow(${row.id},'u')" title="修改"></i-button>
                                 <i-button type="primary" v-show="btnShow(${row.userType},${row.state},${row.auditState},'a')" size="small"  @click="apply(${row.id})">申请</i-button>
                                 
                                 <i-button type="primary" 
                                     v-show="btnShow(${row.userType},${row.state},${row.auditState},'ul')"
                                     @click="changeState(${row.id},'您确认上线吗？')"
-                                    size="small" icon="arrow-graph-up-right">上线</i-button>
+                                    size="small" icon="arrow-graph-up-right" title="上线"></i-button>
 
                                 <i-button type="primary"  
                                     v-show="btnShow(${row.userType},${row.state},${row.auditState},'dl')"
                                     @click="changeState(${row.id},'您确认下线吗？')"
-                                    size="small" icon="arrow-graph-down-right" >下线</i-button>
+                                    size="small" icon="arrow-graph-down-right" title="下线"></i-button>
                                 
-                                <i-button type="primary" v-show="btnShow(${row.userType},${row.state},${row.auditState},'vf')" size="small" icon="hammer" @click="modalShow(${row.id},'v')">审核</i-button>
-                                <i-button type="primary" size="small" icon="eye" @click="modalShow(${row.id},'l')">查看</i-button>
+                                <i-button type="primary" v-show="btnShow(${row.userType},${row.state},${row.auditState},'vf')" size="small" icon="hammer" @click="modalShow(${row.id},'v')" title="审核"></i-button>
+                                <i-button type="primary" size="small" icon="eye" @click="modalShow(${row.id},'l')" title="查看"></i-button>
                             `;
                         }   
                     }

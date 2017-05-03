@@ -11,7 +11,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add"></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add" :breads="breads"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm" inline>
@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -134,6 +134,7 @@ import LTitle from '../../components/title'
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
 			return{
+                breads:[{text:'首页',href:'/index'},{text:'优惠券明细配置',href:''}],
                 baseUrl:server.getBaseUrl(),
                 uploadData:{bucket:'dc-test'},
 				addModal:false,
@@ -154,7 +155,6 @@ import LTitle from '../../components/title'
                     
                     {
                         title: '是否启用',
-                        className:'l-min-width',
                         key: 'isEnabled',
                         render(row,column,index){
                             return `{{getStatusName(${row.isEnabled},'s')}}`;
@@ -162,12 +162,10 @@ import LTitle from '../../components/title'
                     },
                     {
                         title: '优惠券名称',
-                        className:'l-min-width',
                         key: 'couponName'
                     },
                     {
                         title: '优惠券类型',
-                        className:'l-min-width',
                         key: 'couponType',
                         render(row,column,index){
                             return `{{getStatusName(${row.couponType},'t')}}`;
@@ -175,33 +173,28 @@ import LTitle from '../../components/title'
                     },
                     {
                         title: '券面值',
-                        className:'l-min-width',
                         key: 'couponValue'
                     },
                     {
                         title: '有效开始时间',
-                        className:'l-min-width',
                         key: 'startTime'
                     },
                     {
                         title: '有效终止时间',
-                        className:'l-min-width',
                         key: 'endTime'
                     },
                     {
                         title: '客服电话',
-                        className:'l-min-width',
                         key: 'serviceTel'
                     },
                     {
                         title: '操作',
-                        key: 'action',
-                        className:'l-m-min-width',
+                        key: 'action',width:135,
                         fixed:'right',
                         align: 'center',
                         render (row, column, index) {
                             return `
-                                <i-button type="primary" size="small" icon="edit" @click="modalShow(${row.id})">修改</i-button>
+                                <i-button type="primary" size="small" icon="edit" @click="modalShow(${row.id})" title="修改"></i-button>
                                 
                                 <i-button type="primary"
                                     v-show="${row.isEnabled}==0"

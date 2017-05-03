@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -62,7 +62,7 @@
             <i-form v-ref:form-validate :model="modelForm"  :label-width="130">
                 <Form-item label="订单状态">
                    <i-select :model.sync="modelForm.state">
-                        <i-option v-for="item in canCkStateList" :disabled="item.disabled" :value="item.value">{{ item.label }}</i-option>
+                        <i-option v-for="item in stateList" :disabled="item.disabled" :value="item.value">{{ item.label }}</i-option>
                     </i-select>
                 </Form-item>
             </i-form>
@@ -101,33 +101,27 @@ import LTitle from '../../components/title'
                     oldState:0,
                     id:null
                 },
-                stateList:[
-                    {value:1,label:'确认订单'},
-                    {value:2,label:'生产中'},
-                    {value:3,label:'产品入库'},
-                    {value:4,label:'已发货'},
-                    {value:5,label:'已收货'}
-                ],
+                stateList:[],
                 tableCol: [
                 
                 {
-                    key:'name',title:'客户名称',width:120
+                    key:'name',title:'客户名称'
                 },
                 {
-                    key:'mobilePhone',title:'客户电话',width:130
+                    key:'mobilePhone',title:'客户电话'
                 },
                 {
-                    key:'orderNo',title:'订单号',width:250
+                    key:'orderNo',title:'订单号'
                 },
                 {
-                    width:100,key:'state',title:'当前阶段',
+                    key:'state',title:'当前阶段',
 
                     render(row,column,index){
                         return `{{getStatusName(${row.state})}}`;
                     }
                 },
                 {
-                    title:'订单级别',width:200,
+                    title:'订单级别',
                     render(row){
                         let l=''
                         let _l=row.level?row.level:null
@@ -138,14 +132,14 @@ import LTitle from '../../components/title'
                 
                 
                 {
-                    title:'下单时间',width:200,
+                    title:'下单时间',
                     render(row){
                         return row.createTime?row.createTime:'无'
                     }
                 },
                 
                 {
-                   title:'接收时间',width:200,
+                   title:'接收时间',
                    render(row){
                         return row.updateTime?row.updateTime:'无'
                     }
@@ -154,11 +148,11 @@ import LTitle from '../../components/title'
                     title: '操作',
                     key: 'action',
                     fixed:'right',
-                    className:'l-m-min-width',
+                    width:65,
                     align: 'center',
                     render (row, column, index) {
                     return `
-                        <i-button v-show="${row.flowState}===2" type="primary" @click="changeClick(${row.id},${row.state})" size="small">修改订单状态</i-button>
+                        <i class="iconfont icon-bianji btn" v-show="${row.flowState}===2" title="修改订单状态" @click="changeClick(${row.id},${row.state})"></i>
                     `;
                     }   
                 }]
@@ -189,16 +183,31 @@ import LTitle from '../../components/title'
             },
             canCkStateList(){
                 let _list=[];
-                this.stateList.forEach((item)=>{
+                let stateList=[
+                    {value:1,label:'确认订单'},
+                    {value:2,label:'生产中'},
+                    {value:3,label:'产品入库'},
+                    {value:4,label:'已发货'},
+                    {value:5,label:'已收货'}
+                ];
+                stateList.forEach((item)=>{
                     let _item=item;
                     if(item.value<=this.modelForm.oldState){
-                        _item.disabled=true;
+                        //_item.disabled=true;
                     }else{
-                        _item.disabled=false;
+                        //_item.disabled=false;
+                        _list.push(_item);
                     }
-                    _list.push(_item);
                 });
                 return _list;
+            }
+        },
+        watch:{
+            canCkStateList: {
+                handler (canCkStateList) {
+                    this.stateList=canCkStateList;
+                },
+                immediate: true
             }
         },
         methods:{

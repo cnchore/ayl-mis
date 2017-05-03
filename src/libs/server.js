@@ -269,7 +269,7 @@ export default {
 	        				resolve(ret);
 	        			}
 	        		}else{
-	        			if(body.data.message&&body.data.message.indexOf('请先登录')>-1){
+	        			if(util.env!='development'&&body.data.message&&body.data.message.indexOf('请先登录')>-1){
 
 	        				let _href=window.location.href.substr(0,window.location.href.lastIndexOf('#!'));
 	        				_href+='#!/login';
@@ -940,7 +940,7 @@ export default {
 		let _list={
 		userName:formData.userName,
 		agentName:formData.agentName,//代理商名称
-		agentCode:formData.agentCode,//代理商编号
+		//agentCode:formData.agentCode,//代理商编号
 		province:formData.province,//省会
 		provinceId:formData.provinceId,//省会id
 		city:formData.city,//城市
@@ -949,9 +949,9 @@ export default {
 		areaId:formData.areaId,//区域id
 		contacter:formData.contacter,//联系人
 		contactPhone:formData.contactPhone,//联系电话
-		sex:formData.sex,//性别
+		//sex:formData.sex,//性别
 		birthday:formData.birthday,//出生日期
-		certificateNo:formData.certificateNo,//证件号
+		//certificateNo:formData.certificateNo,//证件号
 		address:formData.address,//地址
 		products:formData.products,//代理产品，用“,”隔开
 		productIds:formData.productIds,//代理产品ids，用“,”隔开

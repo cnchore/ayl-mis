@@ -139,12 +139,12 @@
 		            					<Form-item label="联系人手机">
 								            {{modelForm.mobilePhone}}
 								        </Form-item>
-		                    			<Form-item label="客户归属">
+		                    			<Form-item label="客户归属"  v-show="modelForm.sourceType===2">
 								            {{modelForm.belongNames}}
 								        </Form-item>
                     				</i-col>
                     				<i-col span="12">
-										<Form-item label="装修项目">
+										<Form-item label="装修项目" v-show="modelForm.sourceType===2">
 								           {{modelForm.decorateProject}}
 								        </Form-item>
 		            					<Form-item label="所在地区">
@@ -172,7 +172,7 @@
                         	<i class="iconfont icon-dinghuodan"></i>客户订单
                     	</div>
                     	<div class="container">
-                    		<div>
+                    		<div style="width:100%;">
                     		<i-table :content="self" :columns="tableCol" :data="tableData"></i-table>
 		                    <div style="margin: 10px;overflow: hidden">
 		                        <div style="float: right;">
@@ -214,7 +214,7 @@
                     
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>

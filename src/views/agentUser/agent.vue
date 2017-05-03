@@ -29,7 +29,7 @@
                         <Form-item prop="storeName">
                             <div class="l-sel-inline">
                                 <span slot="prepend">区域</span>
-                                <Cascader :data="addressData" @on-change="addrSelected" :value.sync="addressValue" trigger="hover"></Cascader>
+                                <i-input :value.sync="seachForm.addressLike"  placeholder="请输入区域" ></i-input>
                             </div>
                         </Form-item>
                         <Form-item prop="storeName">
@@ -55,7 +55,7 @@
                     </div>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -101,16 +101,16 @@ import chinaAddress from '../../components/china-address-0408'
                 spanRight: 20,
                
 				tableCol: [
-				{title:'账号',key:'userName',width:120},
-				{title:'门店名称',key:'agentName',width:200},
-				{title:'门店编号',key:'agentCode',width:100},
-				{title:'门店地址',key:'address',className:'l-min-width l-ellipsis'},
-				{title:'联系人',key:'contacter',width:100},
-				{title:'联系电话',key:'contactPhone',width:130},
-				{title:'代理产品',key:'products',className:'l-min-width l-ellipsis'},
+				{title:'账号',key:'userName'},
+				{title:'门店名称',key:'agentName'},
+				{title:'门店编号',key:'agentCode'},
+				{title:'门店地址',key:'address'},
+				{title:'联系人',key:'contacter'},
+				{title:'联系电话',key:'contactPhone'},
+				{title:'代理产品',key:'products'},
 				
 				{
-					key:'createTime',title:'创建时间',width:200
+					key:'createTime',title:'创建时间'
 				},
 				
 				
@@ -118,11 +118,11 @@ import chinaAddress from '../../components/china-address-0408'
 					title: '操作',
 					key: 'action',
 					fixed:'right',
-					className:'l-m-min-width',
+					width:170,
 					align: 'center',
 					render (row, column, index) {
 					return `
-						<i-button type="primary" icon="edit" @click="addOrUpdate(${row.id})" size="small">修改</i-button>
+						<i-button type="primary" title="修改" icon="edit" @click="addOrUpdate(${row.id})" size="small"></i-button>
 						<i-button type="primary"
 							v-show="${row.status}==1" 
 							@click="updateState(${row.userId},0,'您确定禁用么？')"
@@ -131,7 +131,7 @@ import chinaAddress from '../../components/china-address-0408'
 							v-show="${row.status}==0" 
 							@click="updateState(${row.userId},1,'您确定启用么？')"
 							  size="small">启用</i-button>
-						<i-button type="primary" icon="edit"  size="small">二维码</i-button>	
+						<i-button type="primary" size="small">二维码</i-button>	
 					`;
 					}   
 				}]

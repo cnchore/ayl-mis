@@ -16,7 +16,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" :is-Show="false"></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" :is-Show="false" :breads="breads"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm"  inline>
@@ -60,7 +60,7 @@
                     </div>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -114,6 +114,7 @@ import LTitle from '../../components/title'
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
 			return{
+                breads:[{text:'首页',href:'/index'},{text:'领取礼品管理',href:''}],
 				addModal:false,
 				rowsTotal:10,
 				pageIndex:1,
@@ -129,27 +130,27 @@ import LTitle from '../../components/title'
 				spanLeft: 4,
                 spanRight: 20,
                 tableCol: [
-                {width:150,key:'state',title:'状态',
+                {width:95,key:'state',title:'状态',
                     
                     render(row,column,index){
                         return `{{getStatusName(${row.state})}}`;
                     }
                 },
-                {width:300,key:'billCode',title:'单号'},
-                {className:'l-min-width',key:'giftName',title:'礼品名称'},
-                {className:'l-min-width',key:'consignee',title:'收货人'},
-                {className:'l-min-width',key:'consigneePhone',title:'收货人手机号码'},
-                {className:'l-min-width',key:'province',title:'省会名称'},
-                {className:'l-min-width',key:'city',title:'城市名称'},
-                {className:'l-min-width',key:'area',title:'区域名称'},
+                {width:125,key:'billCode',title:'单号'},
+                {width:125,key:'giftName',title:'礼品名称'},
+                {width:95,key:'consignee',title:'收货人'},
+                {width:125,key:'consigneePhone',title:'收货人手机号码'},
+                {width:95,key:'province',title:'省会名称'},
+                {width:95,key:'city',title:'城市名称'},
+                {width:95,key:'area',title:'区域名称'},
                 {width:400,key:'address',title:'详细地址'},
-                {className:'l-min-width',key:'createTime',title:'创建时间'},
-                {className:'l-min-width',key:'updateTime',title:'更新时间'
+                {width:170,key:'createTime',title:'创建时间'},
+                {width:170,key:'updateTime',title:'更新时间'
                 },{
                     title: '操作',
                     key: 'action',
                     fixed:'right',
-                    className:'l-m-min-width',
+                    width:135,
                     align: 'center',
                     render (row, column, index) {
                         return `
@@ -164,7 +165,7 @@ import LTitle from '../../components/title'
                             @click="updateState(${row.id},'您确认处理为［已发货］吗？')"
                              size="small">已发货</i-button>
 
-                        <i-button type="primary" size="small" icon="eye" @click="look(${row.id})">活动参与情况</i-button>
+                        <i-button type="primary" size="small" title="活动参与情况" icon="eye" @click="look(${row.id})"></i-button>
                         `;
                     }   
                 }],
