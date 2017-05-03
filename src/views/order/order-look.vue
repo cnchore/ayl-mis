@@ -34,12 +34,12 @@
 				width: 100%;
 				padding-left: 10px;
 				.q-img-list{
-					width:158px;
+					width:198px;
 					height:158px;
 					display: inline-block;
 					margin:0px 10px 20px 10px;
 					.l-upload-list{
-						width:158px;
+						width:198px;
 						height:128px;
 						margin: 0px;
 					}
@@ -56,6 +56,9 @@
 						i{
 							&:first-child{
 								margin-right: 10px;
+							}
+							&:last-child{
+								margin-left: 10px;
 							}
 							display: none;
 							font-size: 32px;
@@ -183,46 +186,38 @@
                     		
                             </div>
                             <div class="q-right" v-show="tabIndex===1">
-                            	<template v-for="(index,item) in agentAttach">
-                            		
-                            	<div v-show="item.status === 'finished' && getIsShowDate(index,item.createTime.substr(0,10),false)">{{item.createTime.substr(0,10)}}</div>
-	                            <div class="q-img-list" v-show="item.state===1">
+                            	
+                            	<div class="q-img-list" v-show="item.state===1" v-for="item in agentAttach">
 		                    		<div class="l-upload-list" >
 	                                    <img :src="item.avatar">
 	                                    <div class="l-upload-list-cover">
+	                                    	<Icon type="eye" title="查看" v-show="item.avatar.indexOf('imageMogr2/format')>-1" @click="handleView(item.attachAddress)"></Icon>
 	                                        <a :href="item.attachAddress" target="_blank">
 			                           			<Icon type="ios-download-outline" title="下载"></Icon>
 			                            	</a>
 	                                    </div>
 		                            </div>
-		                            <span v-show="item.state===1">{{item.attachName}}</span>
-
+		                            <span>{{item.attachName}}</span>
 	                            </div>
-                            	</template>
 
 	                            <div class="q-top-b">
 	                            	<a href="#">下载报价单模版</a>
 	                            </div>
                             </div>
                             <div class="q-right" v-show="tabIndex===2">
-                            	<template v-for="(index,item) in defaultList">
-                            		
-                            	<div v-show="item.status === 'finished' && getIsShowDate(index,item.createTime.substr(0,10),true)">{{item.createTime.substr(0,10)}}</div>
-	                            <div class="q-img-list" >
-		                    		<div  v-show="item.state===1" class="l-upload-list" >
-		                                    <img :src="item.avatar">
-		                                    <div class="l-upload-list-cover">
-		                                        <a :href="item.attachAddress" target="_blank">
-				                           			<Icon type="ios-download-outline" title="下载"></Icon>
-				                            	</a>
-		                                    </div>
-		                                
+                            	
+								<div class="q-img-list" v-show="item.state===1" v-for="item in defaultList">
+		                    		<div class="l-upload-list" >
+	                                    <img :src="item.avatar">
+	                                    <div class="l-upload-list-cover">
+	                                    	<Icon type="eye" title="查看" v-show="item.avatar.indexOf('imageMogr2/format')>-1" @click="handleView(item.attachAddress)"></Icon>
+	                                        <a :href="item.attachAddress" target="_blank">
+			                           			<Icon type="ios-download-outline" title="下载"></Icon>
+			                            	</a>
+	                                    </div>
 		                            </div>
-		                            <span  v-show="item.state===1">{{item.attachName}}</span>
-
+		                            <span>{{item.attachName}}</span>
 	                            </div>
-                            	</template>
-
 	                            <div class="q-top-b">
 	                            	<a href="#">下载报价单模版</a>
 	                            </div>
@@ -311,7 +306,9 @@
         </Row>
         
     </div>
-  
+  <Modal title="查看图片" :visible.sync="visible">
+		<img :src="imgName" v-if="visible" style="width: 100%">
+	</Modal>
      
 </template>
 <script>
@@ -353,6 +350,8 @@ import LTitle from '../../components/title'
                 optionList:[],
                 appointId:null,
                 agentAttach:[],
+                imgName: '',
+                visible: false,
 			}
 		},
 		ready(){
@@ -512,10 +511,18 @@ import LTitle from '../../components/title'
 		                        		});
 		                        	}
 	                        	})
-
-	                        	self.targetKeysCoupon=self.couponList
+	                        	if(self.modelForm.sourceType===2){
+	                        		self.targetKeysCoupon=self.couponList
 	                        		.filter((v)=>v.orderId===self.modelForm.id && v.orderCode===self.modelForm.orderNo)
 	                        		.map(item=>item.key);
+
+	                        	}else{
+	                        		self.targetKeysCoupon=self.couponList
+	                        		.filter((v)=>v.orderId===res.data.appointmentVo.id && v.orderCode===res.data.appointmentVo.billCode)
+	                        		.map(item=>item.key);
+
+	                        	}
+	                        	
 
 	                        }
 	                        if(res.data.orderVo){
@@ -528,7 +535,10 @@ import LTitle from '../../components/title'
 	                })
             	}
 			},
-			
+			handleView (name) {
+                this.imgName = name;
+                this.visible = true;
+            },
             getFileType(v){
             	if(!v){
             		return null;
@@ -543,14 +553,18 @@ import LTitle from '../../components/title'
 					case '.pdf':
             			return require('../../imgs/pdf.png');
         			case '.ppt':
+        			case '.pptx':
             			return require('../../imgs/noimg.png');
         			case '.xls':
+        			case '.xlsx':
             			return require('../../imgs/xls.png');
             		case '.zip':
             			return require('../../imgs/zip.png');
             		case '.jpg':
             		case '.png':
             			return server.image.thumb(v,60,60);
+            		case '.txt':
+            			return require('../../imgs/txt.png');
             		default :
             			return require('../../imgs/noimg.png');
 

@@ -65,8 +65,8 @@ import LTitle from '../../components/title'
                 spanRight: 20,
                
 				tableCol: [
-				{title:'客户名称',key:'name'},
-				{title:'成交总金额',
+				{title:'客户名称',key:'name',width:125},
+				{title:'成交总金额',width:125,
                     render(row){
                         let c='';
                         if(row.orderList&&row.orderList[0])
@@ -80,20 +80,20 @@ import LTitle from '../../components/title'
                         return c;
                     }
                 },
-				{title:'电话',key:'mobilePhone'},
-				{title:'客户地址',
+				{title:'电话',key:'mobilePhone',width:125},
+				{title:'客户地址',width:400,
                     render(row){
                         return `${row.province?row.province:''}${row.city?row.city:''}${row.area?row.area:''}${row.address?row.address:''}`;
                     }
                 },
-                {title:'客户归属',key:'belongNames'},
+                {title:'客户归属',key:'belongNames',width:125},
 
-				{title:'客户来源',key:'sourceType',
+				{title:'客户来源',key:'sourceType',width:125,
                     render(row){
                         return `${row.sourceType==1?'预约订单':'后台新增'}`;
                     }
                 },
-				{title:'备注',key:'remark'},
+				{title:'备注',key:'remark',width:125},
 				{
 					title: '操作',
 					key: 'action',

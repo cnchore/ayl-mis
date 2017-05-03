@@ -152,7 +152,7 @@
 	                    	<i-form v-ref:form-validate v-show="formVisable" :model="modelForm" :rules="modeRule" :label-width="100">
 						        <Form-item label="备忘时间" prop="memoTime">
 						          
-						            <Time-picker type="datetime" :value="new Date(modelForm.memoTime)" format="HH:mm" @on-change="createDateChange"  placeholder="选择时间"></Time-picker>
+						            <Time-picker :value="modelForm.memoTime?new Date(modelForm.memoTime):value" format="HH:mm" @on-change="createDateChange"  placeholder="选择时间"></Time-picker>
 						        </Form-item>
 						        <Form-item label="内容" prop="content">
 						            <i-input :value.sync="modelForm.content" type="textarea" :rows="3" placeholder="请输入备忘内容"></i-input>

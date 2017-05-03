@@ -130,11 +130,11 @@ import chinaAddress from '../../components/china-address-0408'
 					return `
 						<i-button type="primary" title="修改" icon="edit" @click="addOrUpdate(${row.id})" size="small"></i-button>
 						<i-button type="primary"
-							v-show="${row.status}==1" 
+							v-show="${row.isDisable}===false" 
 							@click="updateState(${row.userId},'您确定禁用么？')"
 							  size="small">禁用</i-button>
 						<i-button type="primary"
-							v-show="${row.status}==0" 
+							v-show="${row.isDisable}===true" 
 							@click="updateState(${row.userId},'您确定启用么？')"
 							  size="small">启用</i-button>
 					`;

@@ -92,8 +92,17 @@
                 <Card>
                     <div>
                         <i class="iconfont icon-daiban"></i>
-                        <div class="q-title">代办件</div>
-                        <h3 @click="actionGoAppoint">{{formData.waidDoNum?formData.waidDoNum:0}}</h3>
+                        <div class="q-title">预约代办</div>
+                        <h3 @click="actionGoAppoint()">{{formData.waitDoNum?formData.waitDoNum:0}}</h3>
+                    </div>
+                </Card>
+            </i-col>
+            <i-col span="6" v-show="userType===1">
+                <Card>
+                    <div>
+                        <i class="iconfont icon-daiban"></i>
+                        <div class="q-title">订单代办</div>
+                        <h3 @click="actionGoOrder()">{{formData.orderWaitDoPage?formData.orderWaitDoPage.total:0}}</h3>
                     </div>
                 </Card>
             </i-col>
@@ -103,7 +112,7 @@
                         <i class="iconfont icon-dingdan1"></i>
                         <div class="q-title">订单总数</div>
                         
-                        <h3 @click="actionGoOrder">{{formData.orderNum?formData.orderNum:0}}</h3>
+                        <h3 @click="actionGoOrder()">{{formData.orderNum?formData.orderNum:0}}</h3>
                     </div>
                 </Card>
             </i-col>
@@ -113,11 +122,11 @@
                         <i class="iconfont icon-kehu"></i>
                         <div class="q-title">客户数</div>
                         
-                        <h3 @click="actionGoCustomer">{{formData.clientNum?formData.clientNum:0}}</h3>
+                        <h3 @click="actionGoCustomer()">{{formData.clientNum?formData.clientNum:0}}</h3>
                     </div>
                 </Card>
             </i-col>
-            <i-col span="6">
+            <i-col span="6" v-show="userType===2">
                 <Card>
                     <div>
                         <i class="iconfont icon-zhanghuzongjine"></i>
@@ -136,7 +145,7 @@
                             <i class="iconfont icon-wodedaiban"></i>
                         </i-col>
                         <i-col :md="18" :lg="20">
-                            我的待办业务
+                            我的预约待办
                         </i-col>
                         <i-col :md="3" :lg="2" class="q-right">
                             {{formData.appointPage?formData.appointPage.total:0}}
@@ -145,6 +154,24 @@
                     <i-table :content="self" height="240" :columns="tableCol" :data="formData.appointPage?formData.appointPage.rowsObject?formData.appointPage.rowsObject.slice(0,4):[]:[]"></i-table>
                     <a v-if="userType===2" v-link="{path: '/owner/waiting'}" class="q-more">更多...</a>
                     <a v-else v-link="{path: '/waiting'}" class="q-more">更多...</a>
+               </div>
+            </i-col>
+            <i-col span="12" v-show="userType===1">
+                <div class="q-body">
+                    <Row type="flex" justify="center" align="middle">
+                        <i-col :md="3" :lg="2" class="q-title">
+                            <i class="iconfont icon-wodedaiban"></i>
+                        </i-col>
+                        <i-col :md="18" :lg="20">
+                            我的订单待办
+                        </i-col>
+                        <i-col :md="3" :lg="2" class="q-right">
+                            {{formData.orderWaitDoPage?formData.orderWaitDoPage.total:0}}
+                        </i-col>
+                    </Row>
+                    <i-table :content="self" height="240" :columns="orderWaitCol" :data="formData.orderWaitDoPage?formData.orderWaitDoPage.rowsObject?formData.orderWaitDoPage.rowsObject.slice(0,4):[]:[]"></i-table>
+                   
+                    <a v-link="{path: '/order/list'}" class="q-more">更多...</a>
                </div>
             </i-col>
             <i-col span="12" v-show="userType===1">
@@ -172,7 +199,7 @@
                     <div>安居艾臣推广二维码</div>
                 </div>
             </i-col>
-            <i-col :span="userType===2?18:18">
+            <i-col :span="userType===2?18:12">
                <div class="q-body">
                     <Row type="flex" justify="center" align="middle">
                         <i-col :md="3" :lg="2" class="q-title">
@@ -229,19 +256,19 @@ import LHeader from '../components/header'
                 tableData:[],
                 tableCol: [
                 {
-                    key:'name',title:'客户名称'
+                    key:'name',title:'客户名称',width:95
                 },
                 {
-                    key:'state',title:'当前阶段',
+                    key:'state',title:'当前阶段',width:140,
                     render(row){
                         return `{{getStatusName(${row.state})}}`
                     }
                 },
                 {
-                    key:'mobilePhone',title:'客户电话'
+                    key:'mobilePhone',title:'客户电话',width:125
                 },
                 {
-                    key:'updateTime',title:'接收时间'
+                    key:'updateTime',title:'接收时间',width:170
                 },
                 {
                     title: '操作',
@@ -254,21 +281,51 @@ import LHeader from '../components/header'
                     `;
                     }   
                 }],
+                orderWaitCol:[
+                {
+                    key:'name',title:'客户名称',width:95
+                },
+                {
+                    title:'订单级别',width:95,
+                    render(row){
+                        let l=''
+                        let _l=row.level?row.level:null
+                        l=_l?_l===1?'低':_l===2?'中':'高':'无'
+                        return l;
+                    }
+                },
+                {
+                    key:'mobilePhone',title:'客户电话',width:125
+                },
+                {
+                    key:'updateTime',title:'接收时间',width:170
+                },
+                {
+                    title: '操作',
+                    key: 'action',fixed:'right',
+                    align: 'center',width:65,
+                    render (row, column, index) {
+                    return `
+                        <i-button type="primary" 
+                             size="small" @click="actionGoOrder(${row.id})">办理</i-button>
+                    `;
+                    }   
+                }],
                 orderCol:[
                 {
-                    key:'name',title:'客户姓名'
+                    key:'name',title:'客户姓名',width:95
                 },
                 
                 {
-                    key:'orderNo',title:'订单编号'
+                    key:'orderNo',title:'订单编号',width:170
                 },
                 
                 {
-                    key:'updateTime',title:'下单时间'
+                    key:'updateTime',title:'下单时间',width:170
                     
                 },
                 {
-                    key:'warnDays',title:'剩余天数',
+                    key:'warnDays',title:'剩余天数',width:95,
                     render(row){
                         return `<span class="l-s-Error">${row.warnDays}</span>`
                     }

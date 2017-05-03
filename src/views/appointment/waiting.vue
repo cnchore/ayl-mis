@@ -174,30 +174,30 @@ import chinaAddress from '../../components/china-address-0408'
                 },
                 modelLoading:false,
 				tableCol: [
-				{
-					key:'billCode',title:'预约单号'
+				{	
+					key:'billCode',title:'预约单号',width:200
 				},
 				{
-					key:'name',title:'客户名称'
+					key:'name',title:'客户名称',width:95
 				},
 				{
 					key:'mobilePhone',title:'客户电话',width:125
 				},
 				{
-					title:'客户地址',
+					title:'客户地址',width:400,
 					render(row){
 						return `${row.province}${row.city}${row.area}${row.address?row.address:''}`;
 					}
 				},
 				{
-					width:95,key:'state',title:'当前阶段',
+					width:140,key:'state',title:'当前阶段',
 
 					render(row,column,index){
 						return `{{getStatusName(${row.state})}}`;
 					}
 				},
 				{
-					key:'dealer',title:'发送人'
+					key:'dealer',title:'发送人',width:95
 				},
 				
 				{

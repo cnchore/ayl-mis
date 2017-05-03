@@ -59,7 +59,7 @@
                     {
                         title: '姓名',
                         key: 'name',
-                        width:95
+                        width:140
                     },
                     {
                         title: '年龄',
@@ -91,7 +91,7 @@
                 data1: [
                     {
                         id:1,
-                        name: '王小明鸣',
+                        name: '待重新设计报价',
                         age: 18,
                         address: '北京市朝阳区芍药居',
                         tel:'18922151556'

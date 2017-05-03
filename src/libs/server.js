@@ -148,7 +148,8 @@ const serverPath={
 	ownerUpdateOrder:'/owner/order/editOrder',
 	confirmOrder:'/owner/order/confirmOrder',
 	ownerOrderNext:'/owner/order/next',
-
+	orgNext:'/owner/order/orgNext',
+	
 	//
 	getVcode:'/web/captchaImage',
 
@@ -393,7 +394,7 @@ export default {
 	      if(!src){ 
 	        return ''
 	      }
-	      src += `?imageMogr2/format/jpg/interlace/1/quality/60/gravity/Center/thumbnail/${width}x`
+	      src += `?imageMogr2/format/jpg/interlace/1/quality/75/gravity/Center/thumbnail/${width}x`
 	      if(height){
 	        src += `/crop/x${height}`
 	      }
@@ -1409,6 +1410,10 @@ export default {
 	},
 	ownerOrderNext(id){
 		return this.postPromise(serverPath.ownerOrderNext,{id},'ownerOrderNext');
+	},
+	orgNext(id){
+		return this.postPromise(serverPath.orgNext,{id},'orgNext');
+
 	},
 	//
 	getIndex(){

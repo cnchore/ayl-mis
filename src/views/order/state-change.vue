@@ -105,23 +105,23 @@ import LTitle from '../../components/title'
                 tableCol: [
                 
                 {
-                    key:'name',title:'客户名称'
+                    key:'name',title:'客户名称',width:95
                 },
                 {
-                    key:'mobilePhone',title:'客户电话'
+                    key:'mobilePhone',title:'客户电话',width:125
                 },
                 {
-                    key:'orderNo',title:'订单号'
+                    key:'orderNo',title:'订单号',width:200
                 },
                 {
-                    key:'state',title:'当前阶段',
+                    width:140,key:'state',title:'当前阶段',
 
                     render(row,column,index){
                         return `{{getStatusName(${row.state})}}`;
                     }
                 },
                 {
-                    title:'订单级别',
+                    title:'订单级别',width:95,
                     render(row){
                         let l=''
                         let _l=row.level?row.level:null
@@ -132,14 +132,14 @@ import LTitle from '../../components/title'
                 
                 
                 {
-                    title:'下单时间',
+                    title:'下单时间',width:170,
                     render(row){
                         return row.createTime?row.createTime:'无'
                     }
                 },
                 
                 {
-                   title:'接收时间',
+                   title:'接收时间',width:170,
                    render(row){
                         return row.updateTime?row.updateTime:'无'
                     }

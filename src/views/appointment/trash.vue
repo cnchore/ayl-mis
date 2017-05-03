@@ -77,16 +77,16 @@ import LTitle from '../../components/title'
                 modelLoading:false,
 				tableCol: [
 				{
-					key:'billCode',title:'预约单号'
+					key:'billCode',title:'预约单号',width:200
 				},
 				{
-					key:'name',title:'客户名称',
+					key:'name',title:'客户名称',width:95
 				},
 				{
 					key:'mobilePhone',title:'客户电话',width:125
 				},
 				{
-					title:'客户地址',
+					title:'客户地址',width:400,
 					render(row){
 						return `${row.province}${row.city}${row.area}${row.address?row.address:''}`;
 					}

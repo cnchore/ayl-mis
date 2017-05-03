@@ -144,16 +144,16 @@ import LTitle from '../../components/title'
                 tableCol: [
                 
                 {
-                    key:'name',title:'客户名称'
+                    key:'name',title:'客户名称',width:125
                 },
                 {
-                    key:'mobilePhone',title:'客户电话'
+                    key:'mobilePhone',title:'客户电话',width:125
                 },
                 {
-                    key:'orderNo',title:'订单号'
+                    key:'orderNo',title:'订单号',width:200
                 },
                 {
-                    key:'state',title:'当前阶段',
+                    key:'state',title:'当前阶段',width:140,
 
                     render(row,column,index){
                         return `{{getStatusName(${row.state})}}`;
@@ -196,7 +196,7 @@ import LTitle from '../../components/title'
                     }
                 },
                 {
-                    title:'下单人',width:95,className:'l-ellipsis',
+                    title:'下单人',width:95,
                     render(row){
                         return row.byAgent?row.byAgent:'无'
                     }
@@ -217,8 +217,8 @@ import LTitle from '../../components/title'
                     return `
                         <i class="iconfont icon-chakanyuyue btn" v-show="${row.appointId}!=0"  title="查看预约" @click="changeClick(${row.id},${row.state})"></i>
                         <i class="iconfont icon-chakandingdan btn" title="查看订货单" @click="actionShow(${row.id})"></i>
-                        <i class="iconfont icon-bianji btn" title="编辑订货单" @click="actionShow(${row.id},true)"></i>
-                        <i class="iconfont icon-fasong btn" title="提交" @click="actionNext(${row.id})"></i>
+                        <i class="iconfont icon-bianji btn" title="编辑订货单" v-show="${row.flowState}!=1" @click="actionShow(${row.id},true)"></i>
+                        <i class="iconfont icon-fasong btn" title="提交" v-show="${row.flowState}!=1" @click="actionNext(${row.id})"></i>
                     `;
                     }   
                 }]
