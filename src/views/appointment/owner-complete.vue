@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -145,47 +145,48 @@ import chinaAddress from '../../components/china-address-0408'
                 addressValue:[],
 				tableCol: [
 				{
-					key:'billCode',title:'预约单号',width:250
+					key:'billCode',title:'预约单号'
 				},
 				{
-					key:'name',title:'客户名称',width:120
+					key:'name',title:'客户名称'
 				},
 				{
-					key:'mobilePhone',title:'客户电话',width:130
+					key:'mobilePhone',title:'客户电话',width:125
 				},
 				{
-					title:'客户地址',className:'l-m-min-width l-ellipsis',
+					title:'客户地址',
 					render(row){
 						return `${row.province}${row.city}${row.area}${row.address?row.address:''}`;
 					}
 				},
 				{
-					width:100,key:'state',title:'当前阶段',
+					width:95,key:'state',title:'当前阶段',className:'l-ellipsis',
 
 					render(row,column,index){
 						return `{{getStatusName(${row.state})}}`;
 					}
 				},
 				{
-					key:'dealer',title:'发送人',width:120
+					key:'dealer',title:'发送人'
 				},
 				
 				{
-					key:'appointDate',title:'预约时间',width:200
+					key:'appointDate',title:'预约时间',width:170
 				},
 				{
-					key:'updateTime',title:'接收时间',width:200
+					key:'updateTime',title:'接收时间',width:170
 				},
 				{
 					title: '操作',
 					key: 'action',
 					fixed:'right',
-					width:200,
+					width:105,
 					align: 'center',
 					render (row, column, index) {
 					return `
-						<i-button type="primary" icon="eye" @click="modelShow(${row.id})" size="small">查看</i-button>
-						<i-button type="primary" @click="actionShow(${row.id})" size="small">查看订货单</i-button>
+						<i class="iconfont icon-chakanyuyue btn" title="查看预约" @click="modelShow(${row.id})"></i>
+                        <i class="iconfont icon-chakandingdan btn" title="查看订货单" @click="actionShow(${row.id})"></i>
+						
 					`;
 					}   
 				}]

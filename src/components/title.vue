@@ -41,8 +41,8 @@
         ready(){
             let w=window.document.body.clientWidth;
             if(w&&w<=1024){
-                this.spanLeft=5;
-                this.spanRight = 19;
+                this.spanLeft=3;
+                this.spanRight = 21;
             }
             else if(w&&w>=1440){
                 this.spanLeft=3;
@@ -51,8 +51,8 @@
                 this.spanLeft=2;
                 this.spanRight = 22;
             }else{
-                this.spanLeft=4;
-                this.spanRight = 20;
+                this.spanLeft=3;
+                this.spanRight = 21;
             }
         },
         methods:{

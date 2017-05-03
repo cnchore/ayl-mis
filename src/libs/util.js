@@ -9,7 +9,7 @@ let ajaxUrl = 'http://ktz.aylsonclub.com/admin';
 // 测试环境
 if(_HOST.indexOf('http://ktz.aylsonclub.com') === -1){
 	ajaxUrl='http://test.aylsonclub.com/admin'
-	//ajaxUrl='http://192.168.0.119:8080/admin'
+	//ajaxUrl='http://localhost:8080/admin'
 }
 util.env=env;
 util.serverPath=ajaxUrl;

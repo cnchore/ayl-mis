@@ -29,9 +29,7 @@
 	 							<Form-item label="门店名称：">
                           			<i-input :value.sync="modelForm.agentName" placeholder="请输入门店名称"></i-input>
 						        </Form-item>
-						        <Form-item label="账号：">
-						        	<i-input :value.sync="modelForm.userName" placeholder="请输入账号"></i-input>
-						        </Form-item>
+						        
 						        <Form-item label="门店类型：">
 						            	
 						            	<Radio-group :model.sync="modelForm.isAgent">
@@ -68,47 +66,39 @@
 						        </Form-item>
 						     </i-col>
 	                		<i-col span="12">
-	                		
-	                			<Form-item label="门店编号：">
-                          			<i-input :value.sync="modelForm.agentCode" placeholder="请输入门店编号"></i-input>
+	                			<Form-item label="账号：">
+	                				<span v-if="modelForm.id">{{modelForm.userName}}</span>
+						        	<i-input v-else :value.sync="modelForm.userName" placeholder="请输入账号"></i-input>
 						        </Form-item>
+	                			
 		                    	<Form-item label="联系人：">
                           			<i-input :value.sync="modelForm.contacter" placeholder="请输入联系人"></i-input>
 						        </Form-item>
 						        <Form-item label="手机号码：">
                           			<i-input :value.sync="modelForm.contactPhone" placeholder="请输入手机号码"></i-input>
 						        </Form-item>
-						        <Form-item label="性别：">
-						            <Radio-group :model.sync="modelForm.sex">
-						                <Radio value="true">
-						                	<span>男</span>
-						                </Radio>
-						                <Radio value="false">
-						                	<span>女</span>
-						                </Radio>
-						            </Radio-group>
-						        </Form-item>
-			                   <Form-item label="证件号：">
-                          			<i-input :value.sync="modelForm.certificateNo" placeholder="请输入证件号"></i-input>
-						        </Form-item>
+						        
+			                  
 						        <Form-item label="密码：">
-                          			<i-input :value.sync="modelForm.pwd" type="password" placeholder="请输入密码"></i-input>
+                          			<i-input :value.sync="modelForm.pwd" type="password" placeholder="请输入密码，如不修改，请留空" v-if="modelForm.id"></i-input>
+                          			<i-input :value.sync="modelForm.pwd" type="password" placeholder="请输入密码" v-else></i-input>
 						        </Form-item>
 						        <Form-item label="确认密码：">
-                          			<i-input :value.sync="modelForm.confirmPwd" type="password" placeholder="请再次输入密码"></i-input>
+                          			<i-input :value.sync="modelForm.confirmPwd" type="password" placeholder="请再次输入密码，如不修改，请留空" v-if="modelForm.id"></i-input>
+                          			<i-input :value.sync="modelForm.confirmPwd" type="password" placeholder="请再次输入密码" v-else></i-input>
 						        </Form-item>
 	                		</i-col>
 	                	</Row>
 	                	<Form-item>
 				        	<div class="q-form-btn">
 				            <i-button type="primary" :loading="subLoading" size="large" @click="submit">保存</i-button>
-				            <i-button type="ghost" size="large" >取消</i-button>
+				            <i-button type="ghost" size="large" @click="cancel">取消</i-button>
 				            </div>
 				        </Form-item>
                      </i-form>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -184,7 +174,7 @@ import chinaAddress from '../../components/china-address-0408'
             getDict(){
             	//ProductCategory_bigType
             	let self=this;
-				server.getDict('ProductCategory_bigType').then((res)=>{
+				server.getDict('ProductIntroduceCategory_Item').then((res)=>{
 					self.modelForm.productTypesList=[];
                     if(res.data.length>0){
                         res.data.forEach((item)=>{
@@ -241,7 +231,10 @@ import chinaAddress from '../../components/china-address-0408'
                 	
 				})
 			},
-			
+			cancel(){
+                this.$router.go('/agent/index');
+
+			},
             submit(){
             	let self=this;
 				self.subLoading=true;
@@ -268,6 +261,7 @@ import chinaAddress from '../../components/china-address-0408'
 	                            title:'修改成功',
 	                            desc:res.message
 	                        });
+	                        self.$router.go('/agent/index');
 	                    }else{
 	                        self.$Notice.error({
 	                            title:'修改失败',
@@ -284,6 +278,7 @@ import chinaAddress from '../../components/china-address-0408'
 	                            title:'新增成功',
 	                            desc:res.message
 	                        });
+	                        self.$router.go('/agent/index');
 	                    }else{
 	                        self.$Notice.error({
 	                            title:'新增失败',

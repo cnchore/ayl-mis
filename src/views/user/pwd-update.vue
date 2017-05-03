@@ -51,7 +51,7 @@
                      </i-form>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -105,6 +105,7 @@ import LTitle from '../../components/title'
                             title:'密码修改成功',
                             desc:res.message
                         });
+                        self.$router.go('/login')
                     }else{
                         self.$Notice.error({
                             title:'密码修改失败',
@@ -114,9 +115,12 @@ import LTitle from '../../components/title'
 				})
 			},	
 			cancel(){
+				this.$router.go('/index');
+				/*
 				for (var item in this.modelForm) {
 					this.modelForm[item]=''
 				}
+				*/
 			}
 		}
 	}

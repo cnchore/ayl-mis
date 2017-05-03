@@ -56,9 +56,7 @@
 						        <Form-item label="出生日期：">
 							           {{loginerInfo.birthdayStr}} 
 						        </Form-item>
-						        <Form-item label="&nbsp;">
-							           
-						        </Form-item>
+						        
 						        <Form-item label="移动电话：">
 							           {{loginerInfo.mobilePhone}} 
 						        </Form-item>
@@ -109,7 +107,7 @@
                      </i-form>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>

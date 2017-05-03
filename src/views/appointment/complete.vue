@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -120,7 +120,7 @@ import LTitle from '../../components/title'
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
 			return{
-				breads:[{text:'首页',href:'/index'},{text:'预约管理',href:'/waiting'},{text:'已办事项',href:''}],
+				breads:[{text:'首页',href:'/index'},{text:'已办事项',href:'/owner/complete'}],
 				rowsTotal:10,
 				pageIndex:1,
 				self:this,
@@ -139,47 +139,47 @@ import LTitle from '../../components/title'
                 modelLoading:false,
 				tableCol: [
 				{
-					key:'billCode',title:'预约单号',width:250
+					key:'billCode',title:'预约单号'
 				},
 				{
-					key:'name',title:'客户名称',width:120
+					key:'name',title:'客户名称'
 				},
 				{
-					key:'mobilePhone',title:'客户电话',width:130
+					key:'mobilePhone',title:'客户电话',width:125
 				},
 				{
-					title:'客户地址',className:'l-m-min-width l-ellipsis',
+					title:'客户地址',
 					render(row){
 						return `${row.province}${row.city}${row.area}${row.address?row.address:''}`;
 					}
 				},
 				{
-					key:'decorateProject',title:'装修项目',className:'l-m-min-width'
+					key:'decorateProject',title:'装修项目',width:125,
 				},
 				{
-					width:100,key:'state',title:'当前阶段',
+					width:95,key:'state',title:'当前阶段',
 
 					render(row,column,index){
 						return `{{getStatusName(${row.state})}}`;
 					}
 				},
 				{
-					key:'dealer',title:'发送人',width:120
+					key:'dealer',title:'发送人'
 				},
 				
 				{
-					key:'appointDate',title:'预约时间',width:200
+					key:'appointDate',title:'预约时间',width:170
 				},
 				
 				{
 					title: '操作',
 					key: 'action',
 					fixed:'right',
-					width:200,
+					width:65,
 					align: 'center',
 					render (row, column, index) {
 					return `
-						<i-button type="primary" icon="eye"  size="small" @click="modelShow(${row.id})" >查看</i-button>
+                        <i class="iconfont icon-chakanyuyue btn" title="查看预约" @click="modelShow(${row.id})"></i>
 					`;
 					}   
 				}]

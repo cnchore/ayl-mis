@@ -67,15 +67,15 @@
             </Menu-item>
             <Menu-item key="2-2">
                 <i class="iconfont icon-xianjinquanpeizhiguanli"></i>
-                现金券配置管理
+                现金券配置
             </Menu-item>
             <Menu-item key="2-3">
                 <i class="iconfont icon-xianjinquanshenqingguanli"></i>
-                现金券申请管理
+                现金券申请
             </Menu-item>
             <Menu-item key="2-4">
                 <i class="iconfont icon-xianjinquanshiyongqingkuangguanlir"></i>
-                现金券使用情况管理
+                现金券使用情况
             </Menu-item>
        
             <Menu-item key="2-5">

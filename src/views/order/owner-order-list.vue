@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -144,23 +144,23 @@ import LTitle from '../../components/title'
                 tableCol: [
                 
                 {
-                    key:'name',title:'客户名称',width:120
+                    key:'name',title:'客户名称'
                 },
                 {
-                    key:'mobilePhone',title:'客户电话',width:130
+                    key:'mobilePhone',title:'客户电话'
                 },
                 {
-                    key:'orderNo',title:'订单号',width:250
+                    key:'orderNo',title:'订单号'
                 },
                 {
-                    width:100,key:'state',title:'当前阶段',
+                    key:'state',title:'当前阶段',
 
                     render(row,column,index){
                         return `{{getStatusName(${row.state})}}`;
                     }
                 },
                 {
-                    title:'订单级别',width:200,
+                    title:'订单级别',width:95,
                     render(row){
                         let l=''
                         let _l=row.level?row.level:null
@@ -169,19 +169,19 @@ import LTitle from '../../components/title'
                     }
                 },
                 {
-                    title:'订单总金额',width:200,
+                    title:'订单总金额',width:125,
                     render(row){
                         return row.salesAmount?row.salesAmount:'无';
                     }
                 },
                 {
-                    title:'成交金额',width:200,
+                    title:'成交金额',width:95,
                     render(row){
                         return row.turnoverAmount?row.turnoverAmount:'无'
                     }
                 },
                 {
-                    title:'订单来源',width:200,
+                    title:'订单来源',width:95,
                     render(row){
                         let s=''
                         let _s=row.sourceType?row.sourceType:null
@@ -190,19 +190,19 @@ import LTitle from '../../components/title'
                     }
                 },
                 {
-                    title:'下单时间',width:200,
+                    title:'下单时间',width:170,
                     render(row){
                         return row.createTime?row.createTime:'无'
                     }
                 },
                 {
-                    title:'下单人',className:'l-m-min-width l-ellipsis',
+                    title:'下单人',width:95,className:'l-ellipsis',
                     render(row){
                         return row.byAgent?row.byAgent:'无'
                     }
                 },
                 {
-                   title:'接收时间',width:200,
+                   title:'接收时间',width:170,
                    render(row){
                         return row.updateTime?row.updateTime:'无'
                     }
@@ -211,15 +211,14 @@ import LTitle from '../../components/title'
                     title: '操作',
                     key: 'action',
                     fixed:'right',
-                    className:'l-m-min-width',
+                    width:170,
                     align: 'center',
                     render (row, column, index) {
                     return `
-                        <i-button type="primary" v-show="${row.appointId}!=0" icon="eye" @click="modelShow(${row.appointId})" size="small">查看</i-button>
-                        <i-button type="primary" @click="actionShow(${row.id})" size="small">查看订货单</i-button>
-                        <i-button type="primary" @click="actionShow(${row.id},true)" size="small">编辑订货单</i-button>
-                        <i-button type="primary" @click="actionNext(${row.id})" size="small">提交</i-button>
-
+                        <i class="iconfont icon-chakanyuyue btn" v-show="${row.appointId}!=0"  title="查看预约" @click="changeClick(${row.id},${row.state})"></i>
+                        <i class="iconfont icon-chakandingdan btn" title="查看订货单" @click="actionShow(${row.id})"></i>
+                        <i class="iconfont icon-bianji btn" title="编辑订货单" @click="actionShow(${row.id},true)"></i>
+                        <i class="iconfont icon-fasong btn" title="提交" @click="actionNext(${row.id})"></i>
                     `;
                     }   
                 }]

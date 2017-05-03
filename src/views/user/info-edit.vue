@@ -133,13 +133,13 @@
 	                	<Form-item>
 				        	<div class="q-form-btn">
 				            <i-button type="primary" :loading="subLoading" size="large" @click="submit">保存</i-button>
-				            <i-button type="ghost" size="large" >取消</i-button>
+				            <i-button type="ghost" size="large" @click="cancel">取消</i-button>
 				            </div>
 				        </Form-item>
                      </i-form>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -256,6 +256,9 @@ import chinaAddress from '../../components/china-address-0408'
 			strDateChange(e){
                 this.modelForm.birthdayStr=e;
             },
+            cancel(){
+            	this.$router.go('/info');
+            },
             submit(){
             	let self=this;
 				self.subLoading=true;
@@ -287,6 +290,7 @@ import chinaAddress from '../../components/china-address-0408'
                             title:'修改成功',
                             desc:res.message
                         });
+                        self.$router.go('/info');
                     }else{
                         self.$Notice.error({
                             title:'修改失败',

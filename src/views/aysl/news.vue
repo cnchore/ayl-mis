@@ -11,7 +11,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add"></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add" :breads="breads"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm"  inline>
@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -107,6 +107,7 @@ import LTitle from '../../components/title'
 		components:{LHeader,LTitle,LeftMenu,'v-editor':Editor},
 		data(){
 			return{
+                breads:[{text:'首页',href:'/index'},{text:'艾臣资讯管理',href:''}],
                 baseUrl:server.getBaseUrl(),
                 uploadData:{bucket:'dc-test'},
 				addModal:false,
@@ -136,7 +137,6 @@ import LTitle from '../../components/title'
                     
                     {
                         title: '标题',
-                        className:'l-m-min-width',
                         key: 'title',
                         render (row, column, index) {
                             return `<strong>${row.title}</strong>`;
@@ -144,7 +144,6 @@ import LTitle from '../../components/title'
                     },
                     {
                         title: '状态',
-                        className:'l-min-width',
                         key: 'status',
                         render(row,column,index){
                             return `<Tag type="dot" :color="getStatus(${row.status})">{{getStatusName(${row.status})}}</Tag>`;
@@ -152,32 +151,31 @@ import LTitle from '../../components/title'
                     },
                     {
                         title: '摘要',
-                        className:'l-m-min-width l-ellipsis',
+                        width:125,className:'l-ellipsis',
                         key: 'summary'
                     },
                     {
                         title: '发布时间',
-                        className:'l-min-width',
                         key: 'publishTime'
                     },
                     {
                         title: '操作',
                         key: 'action',
-                        className:'l-m-min-width',
+                        width:170,
                         fixed:'right',
                         align: 'center',
                         render (row, column, index) {
                             return `
-                            <i-button type="primary" v-show="${row.status}==1" size="small" icon="edit" @click="update(${row.id})">修改</i-button>
-                            <i-button type="primary" v-show="${row.status}==1" size="small" icon="forward" @click="publish(${row.id})">发布</i-button>
-                            <i-button type="primary" v-show="${row.status}==2" size="small" icon="stop" @click="publish(${row.id})">结束发布</i-button>
+                            <i-button type="primary" v-show="${row.status}==1" size="small" icon="edit" @click="update(${row.id})" title="修改"></i-button>
+                            <i-button type="primary" v-show="${row.status}==1" size="small" icon="forward" @click="publish(${row.id})" title="发布"></i-button>
+                            <i-button type="primary" v-show="${row.status}==2" size="small" icon="stop" @click="publish(${row.id})" title="结束发布"></i-button>
                             
                             <i-button type="primary" 
                                 v-show="${row.status}==1"
                                 @click="remove(${row.id})"
-                                icon="ios-trash" size="small">删除</i-button>
+                                icon="ios-trash" size="small" title="删除"></i-button>
 
-                            <i-button type="primary" size="small" icon="eye" @click="look(${row.id})">查看</i-button>
+                            <i-button type="primary" size="small" icon="eye" title="查看" @click="look(${row.id})"></i-button>
                             `;
                         }   
                     }

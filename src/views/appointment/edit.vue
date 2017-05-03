@@ -296,11 +296,11 @@
                     <div class="q-btns">
                     	<i-button type="primary" :loading="modelLoading" @click="ownerSaveAppoint(true)" size="large">保存</i-button>
                     	<i-button type="primary" :loading="modelLoading" @click="ownerSaveAppoint(false)" size="large">提交</i-button>
-                    	<i-button type="ghost" size="large">取消</i-button>
+                    	<i-button type="ghost" size="large" @click="cancel">取消</i-button>
                     </div>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -516,6 +516,7 @@ import LTitle from '../../components/title'
 	                        	self.targetKeysCoupon=self.couponList
 	                        		.filter((v)=>v.orderId===self.modelForm.id && v.orderCode===self.modelForm.billCode)
 	                        		.map(item=>item.key);
+	                        	self.modelForm.couponIds=self.targetKeysCoupon.join();
 
 	                        }
 	                    }else{
@@ -538,7 +539,8 @@ import LTitle from '../../components/title'
 	                            desc:res.message
 	                        });
 	                        //self.modalVisible=false;
-	                        self.getList();
+	                        //self.getList();
+	                        self.$router.go('/owner/waiting');
 	                    }else{
 	                        self.$Notice.error({
 	                            title:t?'保存失败':'提交失败',
@@ -547,7 +549,9 @@ import LTitle from '../../components/title'
 	                    }
 	                })
 			},
-			
+			cancel(){
+                this.$router.go('/owner/waiting');
+			},
             handleRemove (file) {
                 // 从 upload 实例删除数据
                 const fileList = this.$refs.upload.fileList;

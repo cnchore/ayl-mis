@@ -11,7 +11,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add"></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add" :breads="breads"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm" inline>
@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -217,6 +217,7 @@ import LTitle from '../../components/title'
 		components:{LHeader,'v-editor':Editor,LeftMenu,LTitle},
 		data(){
 			return{
+                breads:[{text:'首页',href:'/index'},{text:'产品介绍',href:''}],
                 baseUrl:server.getBaseUrl(),
                 uploadData:{bucket:'dc-test'},
 				addModal:false,
@@ -236,34 +237,31 @@ import LTitle from '../../components/title'
                     
                     {
                         title: '产品类别',
-                        className:'l-min-width',
                         key: 'categoryName'
                     },
                     {
                         title: '产品名称',
-                        className:'l-min-width',
                         key: 'productName'
                     },
                     {
                         title: '适用范围',
-                        className:'l-min-width',
                         key: 'application'
                     },
                     {
                         title: '操作',
                         key: 'action',
-                        className:'l-m-min-width',
+                        width:135,
                         fixed:'right',
                         align: 'center',
                         render (row, column, index) {
                             return `
-                            <i-button type="primary" size="small" icon="edit" @click="update(${row.id})">修改</i-button>
+                            <i-button type="primary" size="small" title="修改" icon="edit" @click="update(${row.id})"></i-button>
                             
                             <i-button type="primary"
                                 @click="remove(${row.id})"
-                                 icon="ios-trash" size="small">删除</i-button>
+                                 icon="ios-trash" size="small" title="删除" ></i-button>
 
-                            <i-button type="primary" size="small" icon="eye" @click="look(${row.id})">查看</i-button>
+                            <i-button type="primary" size="small" icon="eye" title="查看" @click="look(${row.id})"></i-button>
                             `;
                         }   
                     }

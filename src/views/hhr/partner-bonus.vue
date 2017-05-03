@@ -10,7 +10,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" :is-Show="false" ></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" :is-Show="false" :breads="breads"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm"  inline>
@@ -41,7 +41,7 @@
                     </div>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -145,6 +145,7 @@ import LTitle from '../../components/title'
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
 			return{
+                breads:[{text:'首页',href:'/index'},{text:'分红管理',href:''}],
 				baseUrl:server.getBaseUrl(),
                 uploadData:{bucket:'dc-test'},
                 imgName: '',
@@ -179,25 +180,25 @@ import LTitle from '../../components/title'
 					key:'partnerName',title:'合伙人姓名',width:120
 				},
 				{
-					key:'mobilePhone',title:'合伙人手机号',width:150
+					key:'mobilePhone',title:'合伙人手机号',width:125
 				},
 				{
 					key:'cardID',title:'身份证号',width:200
 				},
 				{
-					key:'wallet',title:'总分红',width:150,
+					key:'wallet',title:'总分红',width:95,
 					render(row){
 						return `<strong>${row.wallet}</strong>`
 					}
 				},
 				{
-					title:'未转分红',width:150,
+					title:'未转分红',width:95,
 					render(row){
 						return `<span class="l-s-Error">{{${row.wallet}+${row.walletHad}}}</span>`;
 					}
 				},
 				{
-					key:'walletHad',title:'已转分红',width:150,
+					key:'walletHad',title:'已转分红',width:95,
 
 					render(row){
 						return `<span class="l-s-Info">${row.walletHad}</span>`;
@@ -210,22 +211,22 @@ import LTitle from '../../components/title'
 					key:'bankNo',title:'银行账号',className:'l-m-min-width'
 				},
 				{
-					key:'bankAccountName',title:'户名',width:150
+					key:'bankAccountName',title:'户名',width:95
 				},
 				{
 					title: '操作',
 					key: 'action',
 					fixed:'right',
-					className:'l-m-min-width',
+					width:105,
 					align: 'center',
 					render (row, column, index) {
 					return `
-						<i-button type="primary" icon="plus" @click="modelShow(${row.id})" size="small">添加转账</i-button>
+						<i-button type="primary" title="添加转账" icon="plus" @click="modelShow(${row.id})" size="small"></i-button>
 						
 						<i-button type="primary"
 							 @click="showBonus(${row.id})"
-
-							 icon="eye" size="small">转账记录</i-button>
+								title="查看转账记录"
+							 icon="eye" size="small"></i-button>
 
 					`;
 					}   

@@ -4,7 +4,7 @@
                 <i-col :xs="0" :sm="0" :md="0" :lg="5" v-show="spanLeft>0">
                     <div class="logo"></div>
                 </i-col>
-                <i-col  :md="18" :lg="15">
+                <i-col  :md="20" :lg="15">
                  <Menu mode="horizontal" theme="primary" class="q-menu" :active-key="activeKey" @on-select="handleSelect">
                     <Menu-item key="0">
                         <i class="iconfont icon-zhuye"></i>
@@ -49,7 +49,7 @@
                     
                     </Menu>
                 </i-col>
-                <i-col  :md="6" :lg="4">
+                <i-col  :md="4" :lg="4">
                     <Menu mode="horizontal" theme="primary" class="q-menu"  style="float: right;"
                     @on-select="handleSelect">
                         <Menu-item key="7" class="q-right q-inline" v-show="false && spanLeft>0">
@@ -79,6 +79,7 @@
 </template> 
 <script>
 import server,{ storage } from '../libs/server'
+import env from '../config/env';
     export default{
         props: {
             activeKey:{
@@ -96,14 +97,16 @@ import server,{ storage } from '../libs/server'
         },
         data(){
             return {
-                userInfo:storage.session.get('userInfo')
+                userInfo:env==='development'?{userName:'TestName',type:1}:storage.session.get('userInfo')
             }
         },
         ready(){
             let w=window.document.body.clientWidth;
+
+            
             if(w&&w<1136){
                 this.spanLeft=0;
-                this.spanRight = 24-4;
+                this.spanRight = 24;
             }
             else if(w&&w>=1440){
                 this.spanLeft=3;

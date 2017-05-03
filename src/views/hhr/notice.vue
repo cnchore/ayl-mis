@@ -10,7 +10,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="modelShow" ></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="modelShow" :breads="breads"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm"  inline>
@@ -41,7 +41,7 @@
                     </div>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -77,6 +77,7 @@ import LTitle from '../../components/title'
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
 			return{
+                breads:[{text:'首页',href:'/index'},{text:'公告发布管理',href:''}],
 				rowsTotal:10,
 				pageIndex:1,
 				self:this,
@@ -101,30 +102,30 @@ import LTitle from '../../components/title'
                 modelLoading:false,
 				tableCol: [
 				{
-					key:'title',title:'标题',className:'l-min-width l-ellipsis'
+					key:'title',title:'标题'
 				},
 				{
-					width:100,key:'state',title:'状态',
+					key:'state',title:'状态',
 
 					render(row,column,index){
 						return `{{getStatusName(${row.state})}}`;
 					}
 				},
 				{
-					key:'createTime',title:'创建时间',width:200
+					key:'createTime',title:'创建时间'
 				},
 				
 				{
-					key:'publishTime',title:'更新时间',width:200
+					key:'publishTime',title:'更新时间'
 				},
 				{
-					key:'content',title:'内容',className:'l-m-min-width l-ellipsis'
+					key:'content',title:'内容'
 				},
 				{
 					title: '操作',
 					key: 'action',
 					fixed:'right',
-					className:'l-m-min-width',
+					width:170,
 					align: 'center',
 					render (row, column, index) {
 					return `
@@ -139,12 +140,12 @@ import LTitle from '../../components/title'
 							@click="updateState(${row.id},'您确认结束发布吗？')"
 							 size="small">结束发布</i-button>
 
-						<i-button type="primary" v-show="${row.state}==0"  icon="edit" @click="modelShow(${row.id})" size="small">修改</i-button>
+						<i-button type="primary" v-show="${row.state}==0"  icon="edit" @click="modelShow(${row.id})" title="修改" size="small"></i-button>
 						
 						<i-button type="primary"
 							v-show="${row.state}==0" 
-							@click="del(${row.id})"
-							 icon="ios-trash" size="small">删除</i-button>
+							@click="del(${row.id})" title="删除"
+							 icon="ios-trash" size="small"></i-button>
 
 					`;
 					}   

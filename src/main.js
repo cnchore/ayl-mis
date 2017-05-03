@@ -9,6 +9,7 @@ import './global.less'
 
 import VueLazyload from 'vue-lazyload'
 import { storage } from './libs/server'
+import env from './config/env';
 //import VueResource from 'vue-resource'
 
 Vue.use(VueLazyload,{	
@@ -44,7 +45,7 @@ router.beforeEach((transition) => {
     // if not, redirect to login page.
     let userInfo=storage.session.get('userInfo');
     //console.log(userInfo)
-    if( !(userInfo && userInfo.userName) ){
+    if(env!='development' && !(userInfo && userInfo.userName) ){
         //let lc=window.document.location;
         //window.document.location.href=lc.origin+lc.pathname+'#!/login?redirect='+transition.to.path;
         //transition.abort();

@@ -10,7 +10,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add"></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add" :breads="breads"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="formInline"  inline>
@@ -34,7 +34,7 @@
                     </div>
                 </div>
                 <div class="layout-copy">
-                    版权所有 &copy; 2017.艾臣智能门窗科技有限公司.
+                    版权所有 &copy; 2017.艾臣家居科技有限公司.
                 </div>
             </i-col>
         </Row>
@@ -185,6 +185,7 @@ import LTitle from '../../components/title'
         components:{LeftMenu,LTitle,LHeader},
         data () {
             return {
+                breads:[{text:'首页',href:'/index'},{text:'门店展示管理',href:''}],
                 spanLeft: 4,
                 spanRight: 20,
                 leftMenu:true,
@@ -221,7 +222,6 @@ import LTitle from '../../components/title'
                     
                     {
                         title: '门店名称',
-                        className:'l-min-width',
                         key: 'storeName',
                         render (row, column, index) {
                             return `<strong>${row.storeName}</strong>`;
@@ -229,31 +229,25 @@ import LTitle from '../../components/title'
                     },
                     {
                         title: '营业时间',
-                        className:'l-min-width',
                         key: 'openTime'
                     },
                     {
                         title: '工作电话',
-                        className:'l-min-width',
                         key: 'workPhone'
                     },
                     {
                         title: '门店地址',
-                        className:'l-m-min-width',
                         key: 'address'
                     },
                     {
                         title: '操作',
-                        key: 'action',
-                        className:'l-m-min-width',
+                        key: 'action',width:105,
                         fixed:'right',
                         align: 'center',
                         render (row, column, index) {
                             return `
-                            <i-button type="primary" size="small" icon="edit" @click="update(${row.id})">修改</i-button>
-                            
-                            <i-button type="primary" icon="ios-trash" @click="remove(${row.id})" size="small">删除</i-button>
-
+                            <i class="iconfont icon-bianji btn" title="编辑" @click="update(${row.id})"></i>
+                            <i class="iconfont icon-shanchu btn" title="删除" @click="remove(${row.id})"></i>
                             `;
                         }   
                     }
