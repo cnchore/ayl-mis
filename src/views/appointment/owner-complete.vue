@@ -16,20 +16,15 @@
                     <i-form v-ref:form-inline :model="seachForm"  inline>
                         <Form-item prop="storeName">
                             <div class="l-sel-inline">
-                                <span slot="prepend">客户名称</span>
-                                <i-input :value.sync="seachForm.nameLike"  placeholder="请输入名称" ></i-input>
+                                <span slot="prepend">名称/电话</span>
+                                <i-input :value.sync="seachForm.nameOrPhoneLike"  placeholder="请输入名称或电话" ></i-input>
                             </div>
                         </Form-item>
-                        <Form-item prop="storeName">
-                            <div class="l-sel-inline">
-                                <span slot="prepend">客户电话</span>
-                                <i-input :value.sync="seachForm.mobilePhoneLike"  placeholder="请输入电话" ></i-input>
-                            </div>
-                        </Form-item>
+                        
                         <Form-item prop="storeName">
                             <div class="l-sel-inline">
                                 <span slot="prepend">区域</span>
-                                <i-input :value.sync="seachForm.areaLike"  placeholder="请输入区域" ></i-input>
+                                <i-input :value.sync="seachForm.addressLike"  placeholder="请输入区域" ></i-input>
                             </div>
                         </Form-item>
                         <Form-item>
@@ -145,29 +140,29 @@ import chinaAddress from '../../components/china-address-0408'
                 addressValue:[],
 				tableCol: [
 				{
-					key:'billCode',title:'预约单号'
+					key:'billCode',title:'预约单号',width:200
 				},
 				{
-					key:'name',title:'客户名称'
+					key:'name',title:'客户名称',width:125
 				},
 				{
 					key:'mobilePhone',title:'客户电话',width:125
 				},
 				{
-					title:'客户地址',
+					title:'客户地址',width:400,
 					render(row){
 						return `${row.province}${row.city}${row.area}${row.address?row.address:''}`;
 					}
 				},
 				{
-					width:95,key:'state',title:'当前阶段',className:'l-ellipsis',
+					width:140,key:'state',title:'当前阶段',className:'l-ellipsis',
 
 					render(row,column,index){
 						return `{{getStatusName(${row.state})}}`;
 					}
 				},
 				{
-					key:'dealer',title:'发送人'
+					key:'dealer',title:'发送人',width:125
 				},
 				
 				{
@@ -287,7 +282,7 @@ import chinaAddress from '../../components/china-address-0408'
 			},
 			actionShow(id=null){
 				
-				this.$router.go('/appointment/look?id='+id)
+				this.$router.go('/appointment/look?id='+id+'&t=2')
 			},
 			
 			

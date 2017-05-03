@@ -101,16 +101,16 @@ import chinaAddress from '../../components/china-address-0408'
                 spanRight: 20,
                
 				tableCol: [
-				{title:'账号',key:'userName'},
-				{title:'门店名称',key:'agentName'},
-				{title:'门店编号',key:'agentCode'},
-				{title:'门店地址',key:'address'},
-				{title:'联系人',key:'contacter'},
-				{title:'联系电话',key:'contactPhone'},
-				{title:'代理产品',key:'products'},
+				{title:'账号',key:'userName',width:125},
+				{title:'门店名称',key:'agentName',width:200},
+				
+				{title:'门店地址',key:'address',width:300},
+				{title:'联系人',key:'contacter',width:125},
+				{title:'联系电话',key:'contactPhone',width:125},
+				{title:'代理产品',key:'products',width:125},
 				
 				{
-					key:'createTime',title:'创建时间'
+					key:'createTime',title:'创建时间',width:170
 				},
 				
 				

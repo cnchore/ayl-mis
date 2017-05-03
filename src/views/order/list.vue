@@ -143,16 +143,16 @@ import LTitle from '../../components/title'
                 tableCol: [
                 
                 {
-                    key:'name',title:'客户名称'
+                    key:'name',title:'客户名称',width:95
                 },
                 {
-                    key:'mobilePhone',title:'客户电话'
+                    key:'mobilePhone',title:'客户电话',width:125
                 },
                 {
-                    key:'orderNo',title:'订单号'
+                    key:'orderNo',title:'订单号',width:200
                 },
                 {
-                    key:'state',title:'当前阶段',
+                    width:95,key:'state',title:'当前阶段',
 
                     render(row,column,index){
                         return `{{getStatusName(${row.state})}}`;
@@ -168,7 +168,7 @@ import LTitle from '../../components/title'
                     }
                 },
                 {
-                    title:'订单总金额',
+                    title:'订单总金额',width:105,
                     render(row){
                         return row.salesAmount?row.salesAmount:'无';
                     }
@@ -189,19 +189,19 @@ import LTitle from '../../components/title'
                     }
                 },
                 {
-                    title:'下单时间',
+                    title:'下单时间',width:170,
                     render(row){
                         return row.createTime?row.createTime:'无'
                     }
                 },
                 {
-                    title:'下单人',
+                    title:'下单人',width:95,
                     render(row){
                         return row.byAgent?row.byAgent:'无'
                     }
                 },
                 {
-                   title:'接收时间',
+                   title:'接收时间',width:170,
                    render(row){
                         return row.updateTime?row.updateTime:'无'
                     }
@@ -210,13 +210,15 @@ import LTitle from '../../components/title'
                     title: '操作',
                     key: 'action',
                     fixed:'right',
-                    width:140,
+                    width:170,
                     align: 'center',
                     render (row, column, index) {
                     return `
                         <i class="iconfont icon-chakanyuyue btn" v-show="${row.appointId}!=0" title="查看预约" @click="modelShow(${row.id})"></i>
                         <i class="iconfont icon-chakandingdan btn" title="查看订货单" @click="actionShow(${row.id})"></i>
-                        <i class="iconfont icon-bianji btn" title="编辑订货单" @click="actionShow(${row.id},true)"></i>
+                        <i class="iconfont icon-bianji btn" v-show="${row.flowState}!=2" title="编辑订货单" @click="actionShow(${row.id},true)"></i>
+                        <i class="iconfont icon-fasong btn" v-show="${row.flowState}!=2" title="提交" @click="orgNext(${row.id})"></i>
+
                     `;
                     }   
                 }]
@@ -288,6 +290,28 @@ import LTitle from '../../components/title'
                         }
                     })
                 }
+            },
+            orgNext(id){
+                let self=this;
+                self.$Modal.confirm({
+                    onOk:function(){
+                       server.orgNext(id).then((res)=>{
+                            if(res.success){
+                                self.$Notice.success({
+                                    title:'提交成功',
+                                    desc:res.message
+                                });
+                                self.getList(self.pageIndex,10);
+                            }else{
+                                self.$Notice.error({
+                                    title:'提交失败',
+                                    desc:res.message
+                                });
+                            }
+                        }) 
+                    },
+                    content:'您确认提交吗？'
+                })
             },
             actionShow(id=null,t){
                 if(t){

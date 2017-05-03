@@ -34,12 +34,12 @@
 				width: 100%;
 				padding-left: 10px;
 				.q-img-list{
-					width:158px;
+					width:198px;
 					height:158px;
 					display: inline-block;
 					margin:0px 10px 20px 10px;
 					.l-upload-list{
-						width:158px;
+						width:198px;
 						height:128px;
 						margin: 0px;
 					}
@@ -56,6 +56,9 @@
 						i{
 							&:first-child{
 								margin-right: 10px;
+							}
+							&:last-child{
+								margin-left: 10px;
 							}
 							display: none;
 							font-size: 32px;
@@ -132,7 +135,7 @@
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="10" active-key="10-1"></left-menu>
+                <left-menu active-Menu="10" :active-key="activeKey"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
@@ -160,22 +163,19 @@
                     	<div class="container">
                     		
                             <div class="q-right">
-                            	<template v-for="(index,item) in uploadList">
-                            	<div v-show="getIsShowDate(index,item.createTime.substr(0,10))">{{item.createTime.substr(0,10)}}</div>
-	                            <div class="q-img-list" >
+                            	
+	                            <div class="q-img-list" v-show="item.state===1" v-for="item in uploadList">
 		                    		<div class="l-upload-list" >
 	                                    <img :src="item.avatar">
 	                                    <div class="l-upload-list-cover">
+	                                    	<Icon type="eye" title="查看" v-show="item.avatar.indexOf('imageMogr2/format')>-1" @click="handleView(item.attachAddress)"></Icon>
 	                                        <a :href="item.attachAddress" target="_blank">
 			                           			<Icon type="ios-download-outline" title="下载"></Icon>
 			                            	</a>
 	                                    </div>
 		                            </div>
-		                            <div>{{item.attachName}}</div>
-
+		                            <span>{{item.attachName}}</span>
 	                            </div>
-	                            </template>
-	                            
                             </div>
                          </div>   
                     </div>
@@ -271,6 +271,9 @@
         </Row>
         
     </div>
+    <Modal title="查看图片" :visible.sync="visible">
+		<img :src="imgName" v-if="visible" style="width: 100%">
+	</Modal>
 </template>
 <script>
 import server from '../../libs/server'
@@ -285,8 +288,10 @@ import LTitle from '../../components/title'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+                activeKey:'10-1',
                 defaultList: [],
-                
+                imgName: '',
+                visible: false,
                 modelLoading:false,
                 modelForm:{
                 	
@@ -317,9 +322,10 @@ import LTitle from '../../components/title'
 		route:{
             data:function(transition){
                 if(transition.to.query &&transition.to.query.id){
-                    let t=transition.to.query.id;
-                    this.id=t;
-                    
+                    this.id=transition.to.query.id;
+                }
+                if(transition.to.query&&transition.to.query.t){
+                	this.activeKey='10-'+transition.to.query.t;
                 }
             }
         },
@@ -437,7 +443,10 @@ import LTitle from '../../components/title'
 	                })
             	}
 			},
-			
+			handleView (name) {
+                this.imgName = name;
+                this.visible = true;
+            },
             getFileType(v){
             	if(!v){
             		return null;
@@ -452,14 +461,18 @@ import LTitle from '../../components/title'
 					case '.pdf':
             			return require('../../imgs/pdf.png');
         			case '.ppt':
+        			case '.pptx':
             			return require('../../imgs/noimg.png');
         			case '.xls':
+        			case '.xlsx':
             			return require('../../imgs/xls.png');
             		case '.zip':
             			return require('../../imgs/zip.png');
             		case '.jpg':
             		case '.png':
             			return server.image.thumb(v,60,60);
+            		case '.txt':
+            			return require('../../imgs/txt.png');
             		default :
             			return require('../../imgs/noimg.png');
 
