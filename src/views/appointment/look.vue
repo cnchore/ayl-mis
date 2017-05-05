@@ -186,63 +186,27 @@
                     	<div class="container q-table">
                     		<Row class="q-row thead">
 						        <i-col span="5">项目</i-col>
-						        <i-col span="7">费用</i-col>
-						        <i-col span="12">说明</i-col>
+						        <i-col span="5">费用</i-col>
+						        <i-col span="14">说明</i-col>
 						    </Row>
                     		<Row class="q-row title">
 						        <i-col span="24">经销商报价区</i-col>
 						    </Row>
 						    <Row class="q-row" v-for="item in costVoList">
 						        <i-col span="5">{{item.costName}}</i-col>
-						        <i-col span="7">
-						        	<span v-show="item.costType!=4 && item.costType!=11 && item.costType!=12" >{{item.costValue}}</span>
+						        <i-col span="5" class="q-col-right">
+						        	<span v-if="item.costType!=4 && item.costType!=5 && item.costType!=11 && item.costType!=12" >{{item.costValue  | currency '¥' '2'}}</span>
+						        	<span v-if="item.costType==5" >{{item.costValue}}%</span>
 
-		            				<span v-show="item.costType===4">{{getCouponToal}}</span>
-		            				<span v-show="item.costType===11">{{getSaleToal}}</span>
-		            				<span v-show="item.costType===12">{{getDealToal}}</span>
+		            				<span v-if="item.costType===4">{{getCouponToal | currency '¥' '2'}}</span>
+		            				<span v-if="item.costType===11">{{getSaleToal | currency '¥' '2'}}</span>
+		            				<span v-if="item.costType===12">{{getDealToal | currency '¥' '2'}}</span>
 						        </i-col>
-						        <i-col span="12">
+						        <i-col span="14">
 						        	{{item.desc}}
 						        </i-col>
 						    </Row>
 						    
-						   
-						    
-						    <Row class="q-row title" v-show="false">
-						        <i-col span="24">总部报价区</i-col>
-						    </Row>
-						    <Row class="q-row" v-show="false">
-						        <i-col span="5">出厂金额</i-col>
-						        <i-col span="7">15000</i-col>
-						        <i-col span="12">&nbsp;</i-col>
-						    </Row>
-						    <Row class="q-row" v-show="false">
-						        <i-col span="5">折扣</i-col>
-						        <i-col span="7">5000</i-col>
-						        <i-col span="12">&nbsp;</i-col>
-						    </Row>
-						    <Row class="q-row" v-show="false">
-						        <i-col span="5">折后金额</i-col>
-						        <i-col span="7">5000</i-col>
-						        <i-col span="12">&nbsp;</i-col>
-						    </Row>
-						    <Row class="q-row" v-show="false">
-						        <i-col span="5">交货日期</i-col>
-						        <i-col span="7">5000</i-col>
-						        <i-col span="12">&nbsp;</i-col>
-						    </Row>
-						    <Row class="q-row" v-show="false">
-						        <i-col span="5">优先级</i-col>
-						        <i-col span="7">
-						        	<Radio-group :model.sync="modelForm.radio">
-						                <Radio value="0">高</Radio>
-						                <Radio value="1">中</Radio>
-						                <Radio value="2">低</Radio>
-						            </Radio-group>
-						         </i-col>
-						        <i-col span="12">&nbsp;</i-col>
-						    </Row>
-		
                     	</div>
                     </div>
                     <div class="q-imgs">
@@ -300,13 +264,13 @@ import LTitle from '../../components/title'
                 	{costName:'产品费',costValue:0,desc:'',costType:1},
                 	{costName:'运输费',costValue:0,desc:'',costType:2},
                 	{costName:'安装费',costValue:0,desc:'',costType:3},
-                	{costName:'销售总金额',costValue:0,desc:'',costType:11},
+                	{costName:'总金额',costValue:0,desc:'',costType:11},
 
-                	{costName:'折扣',costValue:1,desc:'',costType:5},
-                	{costName:'优惠券抵扣(公众号)',costValue:0,desc:'',costType:6},
-                	{costName:'现金券抵扣',costValue:0,desc:'',costType:4},
+                	{costName:'折  扣',costValue:100,desc:'',costType:5},
+                	{costName:'优惠券',costValue:0,desc:'',costType:6},
+                	{costName:'现金券',costValue:0,desc:'',costType:4},
                 	
-                	{costName:'成交金额',costValue:0,desc:'',costType:12},
+                	{costName:'成交额',costValue:0,desc:'',costType:12},
                 ],
                 id:null,
                 optionList:[],
@@ -352,7 +316,7 @@ import LTitle from '../../components/title'
             	return t;
             },
             getDealToal(){
-            	return this.getSaleToal*this.costVoList[4].costValue-this.costVoList[5].costValue-this.getCouponToal;
+            	return this.getSaleToal*this.costVoList[4].costValue/100-this.costVoList[5].costValue-this.getCouponToal;
             },
             getCouponToal(){
             	let t=0;
@@ -409,6 +373,7 @@ import LTitle from '../../components/title'
 	                        		self.costVoList.forEach((citem,index)=>{
 	                        			if(item.costType===citem.costType){
 	                        				self.costVoList[index].costValue=item.costValue;
+	                        				self.costVoList[index].desc=item.desc;
 	                        			}
 	                        		})
 	                        	})

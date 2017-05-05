@@ -66,20 +66,7 @@ import LTitle from '../../components/title'
                
 				tableCol: [
 				{title:'客户名称',key:'name',width:125},
-				{title:'成交总金额',width:125,
-                    render(row){
-                        let c='';
-                        if(row.orderList&&row.orderList[0])
-                        {
-                            row.orderList.forEach((item)=>{
-                                let t=row.orderList.turnoverAmount?row.orderList.turnoverAmount:0;
-                                c+=parseFloat(t);
-                            })
-                            
-                        }
-                        return c;
-                    }
-                },
+				{title:'成交总金额',width:125,key:'turnoverAmountTotal'},
 				{title:'电话',key:'mobilePhone',width:125},
 				{title:'客户地址',key:'address',width:125},
 				{title:'客户来源',key:'sourceType',width:125,
@@ -97,9 +84,9 @@ import LTitle from '../../components/title'
 					render (row, column, index) {
 					return `
                         <i-button type="primary" title="查看" icon="eye" @click="look(${row.id})" size="small"></i-button>
-						<i-button type="primary" title="修改" icon="edit" @click="addOrUpdate(${row.id})" size="small"></i-button>
+						<i-button type="primary" title="修改" v-if="${row.sourceType}===2" icon="edit" @click="addOrUpdate(${row.id})" size="small"></i-button>
 					
-						<i-button type="primary" title="删除" icon="ios-trash" @click="del(${row.id})"  size="small"></i-button>	
+						<i-button type="primary" title="删除" v-if="${row.sourceType}===2" icon="ios-trash" @click="del(${row.id})"  size="small"></i-button>	
 					`;
 					}   
 				}]

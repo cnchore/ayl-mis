@@ -55,7 +55,7 @@
                 <Form-item label="序号" prop="seq">
                     <i-input :value.sync="modelForm.seq" placeholder="请输入序号"></i-input>
                 </Form-item>
-                <Form-item label="问题类型" prop="type">
+                <Form-item label="问题类型" prop="type" v-if="false">
                     <i-select :model.sync="modelForm.type" placeholder="请选择">
                         <i-option v-for="item in typeList" :value="item.value">{{ item.label }}</i-option>
                     </i-select>
@@ -178,7 +178,7 @@ import LTitle from '../../components/title'
                     return;
                 }
                 self.modelForm.answer=self.outProp;
-                
+                self.modelForm.type=3;
                 
                 if(self.modelForm.id){
                     server.updateHelp(self.modelForm).then((res)=>{

@@ -10,6 +10,7 @@ let ajaxUrl = 'http://ktz.aylsonclub.com/admin';
 if(_HOST.indexOf('http://ktz.aylsonclub.com') === -1){
 	ajaxUrl='http://test.aylsonclub.com/admin'
 	//ajaxUrl='http://localhost:8080/admin'
+	//本地后台接口
 }
 util.env=env;
 util.serverPath=ajaxUrl;

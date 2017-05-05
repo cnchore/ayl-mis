@@ -127,10 +127,19 @@ import env from '../config/env';
                         this.$router.go('/index');
                         break;
                     case '1':
-                        this.$router.go('/store');
+                        if(this.userInfo.type===1){
+                            this.$router.go('/store');
+                        }else{
+                            this.$router.go('/coupon');
+                        }
+                        
                         break;
                     case '2':
-                        this.$router.go('/partner/account');
+                        if(this.userInfo.type===1){
+                            this.$router.go('/partner/account');
+                        }else{
+                            this.$router.go('/partner/bonus');
+                        }   
                         break;
                     case '3':
                         this.$router.go('/waiting');

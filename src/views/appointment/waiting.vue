@@ -50,11 +50,11 @@
 	        :visible.sync="modalVisible"
 	        title="新增／修改"
 	        @on-ok="modelSubmit"
-	        width=800
+	        width=850
 	        
 			:mask-closable="false"
 	        >
-	        <i-form v-ref:form-validate :model="modelForm" :rules="modeRule" :label-width="130">
+	        <i-form v-ref:form-validate :model="modelForm" :rules="modeRule" :label-width="140">
 		        <Row>
 		        <i-col span="24">
 		        	 <Form-item label="流水单号">
@@ -79,7 +79,7 @@
 				        </Checkbox>
 				    </Checkbox-group>
 		        </Form-item>
-		        <Form-item label="所属代理商" prop="byAgent">
+		        <Form-item label="所属代理商" prop="agent">
 		            <i-select :model.sync="agentListCk">
 				        <i-option v-for="item in agentList" :value="item.id">{{ item.agentName }}</i-option>
 				    </i-select>
@@ -87,8 +87,9 @@
 				</i-col>
 				<i-col span="12">
 				
-		        <Form-item label="预约人手机" prop="mobilePhone">
-		            <i-input :value.sync="modelForm.mobilePhone" placeholder="请输入手机号码"></i-input>
+		        <Form-item label="预约人手机" prop="Phone">
+		            <i-input v-if="!id" :value.sync="modelForm.mobilePhone" placeholder="请输入手机号码"></i-input>
+		            <span v-else>{{modelForm.mobilePhone}}</span>
 		        </Form-item>
 		        <Form-item label="预计装修时间" prop="">
 		           <Date-picker type="date" :value="modelForm.decoratingTime" format="yyyy-MM-dd" @on-change="decoratingDateChange"  placeholder="选择时间"></Date-picker>
@@ -101,7 +102,7 @@
 				        <i-option v-for="item in budgetRangeList" :value="item.dicName">{{ item.dicName }}</i-option>
 				    </i-select>
 		        </Form-item>
-		        <Form-item label="所在城市" prop="addressValue">
+		        <Form-item label="所在城市" prop="area">
 		            <Cascader :data="addressData" @on-change="addrSelected" :value.sync="addressValue" trigger="hover"></Cascader>
 		        </Form-item>
 				</i-col>
@@ -165,11 +166,20 @@ import chinaAddress from '../../components/china-address-0408'
                 agentList:[],
                 budgetRangeList:[],
                 modeRule:{
-                	title: [
-                        { required: true, message: '标题不能为空', trigger: 'blur' }
+                	name: [
+                        { required: true, message: '姓名不能为空', trigger: 'blur' }
                     ],
-                    content: [
-                        { required: true, message: '内容不能为空', trigger: 'blur' }
+                    phone: [
+                        { required: true, message: '预约人手机不能为空', trigger: 'blur' }
+                    ],
+                    area: [
+                        { required: true, message: '所在城市不能为空', trigger: 'blur' }
+                    ],
+                    address: [
+                        { required: true, message: '装修地址不能为空', trigger: 'blur' }
+                    ],
+                    agent: [
+                        { required: true, message: '代理商不能为空', trigger: 'blur' }
                     ]
                 },
                 modelLoading:false,
