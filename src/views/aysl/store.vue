@@ -42,11 +42,11 @@
             :visible.sync="addModal"
             title="新增/编辑"
             @on-ok="modalOk"
-            width="700"
+            width="750"
             :loading="true"
             :mask-closable="false" 
             :scrollable="true">
-            <i-form v-ref:form-validate :model="formValidate" :rules="ruleValidate" :label-width="100">
+            <i-form v-ref:form-validate :model="formValidate" :rules="ruleValidate" :label-width="125">
                 <Row>
                     <i-col span="12">
                         <Form-item label="序号" prop="seq">
@@ -63,23 +63,9 @@
                             <i-input :value.sync="formValidate.workPhone" placeholder="请输入工作电话"></i-input>
                         </Form-item>
                         <Form-item label="门店介绍" prop="introduce">
-                            <i-input type="textarea" :value.sync="formValidate.introduce" placeholder="请输入门店介绍"></i-input>
+                            <i-input type="textarea" :rows="5" :value.sync="formValidate.introduce" placeholder="请输入门店介绍"></i-input>
                         </Form-item>
-                        <Form-item label="经纬度">
-                            <Row>
-                                <i-col span="11">
-                                    <Form-item prop="longitude">
-                                        <i-input :value.sync="formValidate.longitude" placeholder="经度"></i-input>
-                                    </Form-item>
-                                </i-col>
-                                <i-col span="2" style="text-align: center">-</i-col>
-                                <i-col span="11">
-                                    <Form-item prop="latitude">
-                                        <i-input :value.sync="formValidate.latitude" placeholder="维度"></i-input>
-                                    </Form-item>
-                                </i-col>
-                            </Row>
-                        </Form-item>
+                         
                         
                         
                     </i-col>
@@ -154,19 +140,35 @@
                     </i-col>
                 </Row>
                 <Form-item label="门店地址" prop="address">
+                            <Row>
+                                <i-col span="14">
+                                    <i-input :value.sync="formValidate.address" placeholder="请输入门店地址"></i-input> 
+                                </i-col>
+                                <i-col span="6">
+                                    <i-button icon="ios-search" @click="getGpsByAddress">获取经纬度</i-button>
+                                </i-col>
+                                <i-col span="4">
+                                    <a  href="http://map.yanue.net/toLatLng/" target="_blank">网页查询</a>
+                                </i-col>
+                            </Row>
+                                    
+                        </Form-item>
+                <Form-item label="经纬度">
                     <Row>
-                        <i-col span="14">
-                            <i-input :value.sync="formValidate.address" placeholder="请输入门店地址"></i-input> 
+                        <i-col span="11">
+                            <Form-item prop="longitude">
+                                <i-input :value.sync="formValidate.longitude" placeholder="经度"></i-input>
+                            </Form-item>
                         </i-col>
-                        <i-col span="6">
-                            <i-button icon="ios-search" @click="getGpsByAddress">获取经纬度</i-button>
-                        </i-col>
-                        <i-col span="4">
-                            <a  href="http://map.yanue.net/toLatLng/" target="_blank">网页查询</a>
+                        <i-col span="2" style="text-align: center">-</i-col>
+                        <i-col span="11">
+                            <Form-item prop="latitude">
+                                <i-input :value.sync="formValidate.latitude" placeholder="维度"></i-input>
+                            </Form-item>
                         </i-col>
                     </Row>
-                            
                 </Form-item>
+               
                 <Form-item label="门店所属用户" prop="agentInfoId">
                     <i-select :model.sync="formValidate.agentInfoId">
                         <i-option v-for="item in agentList" :value="item.value">{{ item.label }}</i-option>
@@ -214,6 +216,12 @@ import LTitle from '../../components/title'
                     ],
                     openTime: [
                         { required: true, message: '营业时间不能为空', trigger: 'blur' }
+                    ],
+                    thumbnail:[
+                        { required: true, message: '缩略图不能为空', trigger: 'blur' }
+                    ],
+                    storeImgs:[
+                        { required: true, message: '门店图片不能为空', trigger: 'blur' }
                     ]
                 },
                 agentList:[],

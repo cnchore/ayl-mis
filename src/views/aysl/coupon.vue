@@ -57,7 +57,7 @@
             width="800"
             :mask-closable="false" 
             scrollable=>
-             <i-form v-ref:form-validate :model="modelForm" :rules="ruleValidate" :label-width="120">
+             <i-form v-ref:form-validate :model="modelForm" :rules="ruleValidate" :label-width="125">
                 <Row>
                     <i-col span="10">
                         <Form-item label="活动类型" prop="activityType">
@@ -95,7 +95,7 @@
                         
                     </i-col>
                     <i-col span="14">
-                        <Form-item label="活动图" prop="url">
+                        <Form-item label="活动图" prop="thumb">
                             <div class="l-upload-list" v-for="item in avatarUploadList">
                                 <template v-if="item.status === 'finished'">
                                     <img :src="item.avatar">
@@ -188,28 +188,28 @@ import chinaAddress from '../../components/china-address-0408'
 				tableCol: [
                     
                     {
-                        title: '发布状态',
+                        title: '发布状态',width:125,
                         key: 'state',
                         render(row,column,index){
                             return `{{getStatusName(${row.state},'s')}}`;
                         }
                     },
                     {
-                        title: '审核状态',
+                        title: '审核状态',width:125,
                         key: 'auditState',
                         render(row,column,index){
                             return `{{getStatusName(${row.auditState},'v')}}`;
                         }
                     },
                     {
-                        title: '活动类型',
+                        title: '活动类型',width:125,
                         key: 'activityType',
                         render(row,column,index){
                             return `{{getStatusName(${row.activityType},'a')}}`;
                         }
                     },
                     {
-                        title: '活动标题',
+                        title: '活动标题',width:125,
                         key: 'title'
                     },
                     {
@@ -218,17 +218,17 @@ import chinaAddress from '../../components/china-address-0408'
                         key: 'summary'
                     },
                     {
-                        title: '活动开始时间',
+                        title: '活动开始时间',width:170,
                         key: 'startTime'
                     },
                     {
-                        title: '活动结束时间',
+                        title: '活动结束时间',width:170,
                         key: 'endTime'
                     },
                     {
                         title: '操作',
                         key: 'action',
-                        width:210,
+                        width:230,
                         fixed:'right',
                         align: 'center',
                         render (row, column, index) {
@@ -294,6 +294,9 @@ import chinaAddress from '../../components/china-address-0408'
                     ],
                     location:[
                         { required: true, message: '活动地点不能为空', trigger: 'blur' }
+                    ],
+                    thumb:[
+                        { required: true, message: '缩略图不能为空', trigger: 'blur' }
                     ]
                 },
                 outProp:'',

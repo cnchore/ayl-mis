@@ -152,7 +152,14 @@ import LTitle from '../../components/title'
                     key:'orderNo',title:'订单号',width:200
                 },
                 {
-                    width:95,key:'state',title:'当前阶段',
+                    width:125,key:'flowState',title:'当前阶段',
+
+                    render(row,column,index){
+                        return row.flowState?row.flowState===0?'待经销商确认':row.flowState===1?'经销商已确认':'总部确认':'无';
+                    }
+                },
+                {
+                    width:125,key:'state',title:'订单状态',
 
                     render(row,column,index){
                         return `{{getStatusName(${row.state})}}`;
@@ -167,12 +174,7 @@ import LTitle from '../../components/title'
                         return l;
                     }
                 },
-                {
-                    title:'订单总金额',width:105,
-                    render(row){
-                        return row.salesAmount?row.salesAmount:'无';
-                    }
-                },
+                
                 {
                     title:'成交金额',width:95,
                     render(row){
@@ -194,8 +196,8 @@ import LTitle from '../../components/title'
                         return row.createTime?row.createTime:'无'
                     }
                 },
-                {
-                    title:'下单人',width:95,
+                {   
+                    title:'下单人',width:200,
                     render(row){
                         return row.byAgent?row.byAgent:'无'
                     }

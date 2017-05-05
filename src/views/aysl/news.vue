@@ -20,6 +20,14 @@
                                 <span slot="prepend">标题</span>
                             </i-input>
                         </Form-item>
+                        <Form-item prop="category">
+                            <div class="l-sel-inline">
+                                <span slot="prepend">状态</span>
+                                <i-select :model.sync="seachForm.state" clearable placeholder="请选择">
+                                    <i-option v-for="item in stateList" :value="item.value">{{ item.label }}</i-option>
+                                </i-select>
+                            </div>
+                        </Form-item>
                         <Form-item>
                             <i-button type="ghost" icon="search" @click="search('formInline')">搜索</i-button>
                         </Form-item>
@@ -116,7 +124,8 @@ import LTitle from '../../components/title'
 				self:this,
 				tableData:[],
 				seachForm:{
-					titleLike:''
+					titleLike:'',
+                    state:null
 				},
 				leftMenu:true,
 				spanLeft: 4,
@@ -131,6 +140,9 @@ import LTitle from '../../components/title'
                 newsRules:{
                     title:[
                         { required: true, message: '标题不能为空', trigger: 'blur' }
+                    ],
+                    thumb:[
+                        { required: true, message: '缩略图不能为空', trigger: 'blur' }
                     ]
                 },
 				tableCol: [
@@ -185,7 +197,8 @@ import LTitle from '../../components/title'
                 imgName: '',
                 visible: false,
                 isLook:false,
-                outContent:''
+                outContent:'',
+                stateList:[{value:1,label:'草稿'},{value:2,label:'发布'},{value:3,label:'结束发布'}]
 			}
 		},
 		ready(){
@@ -218,10 +231,19 @@ import LTitle from '../../components/title'
                     return "结束发布";
                 }
             },
-            getList(page=1,rows=10,titleLike=''){
+            getList(page=1,rows=10,t=null){
                 let self=this;
                 self.$Loading.start();
-                server.getPublish(page,rows,titleLike).then((res)=>{
+                let _list={
+                    page:page,
+                    rows:rows,
+                    titleLike:self.seachForm.titleLike
+                }
+                if(self.seachForm.state){
+                    _list.state=self.seachForm.state;
+                }
+
+                server.getPublish(_list).then((res)=>{
                     self.$Loading.finish();
                     self.tableData=res.data.rowsObject;
                     self.rowsTotal=res.data.total;

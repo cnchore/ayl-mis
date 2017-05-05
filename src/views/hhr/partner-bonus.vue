@@ -68,7 +68,7 @@
 		        		<Form-item label="银行卡号">
 		            		{{modelForm.bankNo}}
 		        		</Form-item>
-		        		<Form-item label="转账金额" prop="title">
+		        		<Form-item label="转账金额" prop="walletNew">
 				            <i-input :value.sync="modelForm.walletNew" placeholder="请输入转账金额"></i-input>
 				        </Form-item>
 		        	</i-col>
@@ -85,7 +85,18 @@
 		        		<Form-item label="开户名">
 		            		{{modelForm.bankAccountName}}
 		        		</Form-item>
-		        		<Form-item label="转账附件">
+		        		<Form-item label="转账凭证" prop="thumb">
+		        			<div class="l-upload-list" v-for="item in avatarDefaultList">
+                                <template v-if="item.status === 'finished'">
+                                    <img :src="item.avatar">
+                                    <div class="l-upload-list-cover">
+                                        <Icon type="ios-eye-outline" @click="handleView(item.url)"></Icon>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                                </template>
+                            </div>
 				            <Upload
                                 v-ref:avatarupload
                                 :show-upload-list="false"
@@ -131,7 +142,7 @@
             </div>
 		
 		</Modal>
-		 <Modal title="查看转账附件" :visible.sync="visible">
+		 <Modal title="查看转账凭证" :visible.sync="visible">
             <img :src="imgName" v-if="visible" style="width: 100%">
         </Modal>
     </div>
@@ -171,8 +182,11 @@ import LTitle from '../../components/title'
                 	walletNew:''
                 },
                 modeRule:{
-                	wallet: [
+                	walletNew: [
                         { required: true, message: '转账金额不能为空', trigger: 'blur' }
+                    ],
+                    thumb: [
+                        { required: true, message: '转账凭证不能为空', trigger: 'blur' }
                     ]
                 },
                 modelLoading:false,
@@ -301,6 +315,10 @@ import LTitle from '../../components/title'
 			},
 			modelShow(id){
 				let self=this;
+				self.modelLoading=false;
+				self.modelForm.attachUrl='';
+				self.avatarUploadList=[];
+                self.avatarDefaultList=[];
 				if(id){
 					self.$Loading.start();
 	                server.getParnerAccountByid(id).then((res)=>{
@@ -308,8 +326,7 @@ import LTitle from '../../components/title'
 	                    if(res.success){
 	                        self.modelForm=res.data;
 	                        self.modelForm.walletNew='';
-	                        self.modelForm.attachUrl='';
-	                        self.avatarDefaultList='';
+	                        
 	                        self.modalVisible=true;
 	                    }else{
 	                        self.modelForm={};
@@ -323,9 +340,24 @@ import LTitle from '../../components/title'
 			modelSubmit(){
 				let self=this;
 				self.modelLoading=true;
+				if(!self.modelForm.walletNew){
+					self.$Notice.error({
+						title:'错误',
+						desc:'转账金额不能为空'
+					});
+					self.modelLoading=false;
+					return;
+				}
+				if(!self.modelForm.attachUrl){
+					self.$Notice.error({
+						title:'错误',
+						desc:'转账凭证不能为空'
+					});
+					self.modelLoading=false;
+					return;
+				}
 				if(self.modelForm.id){
-					
-				}else{
+				
 	                server.addParnerBonus(self.modelForm).then((res)=>{
 	                	self.modelLoading=false;
 	                    if(res.success){

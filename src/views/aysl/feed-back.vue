@@ -172,7 +172,7 @@ import LTitle from '../../components/title'
 				tableCol: [
                     
                     {
-                        title: '反馈标题',
+                        title: '反馈标题',width:200,
                         
                         key: 'title',
                         render (row, column, index) {
@@ -181,12 +181,12 @@ import LTitle from '../../components/title'
                     },
                     {
                         title: '反馈内容',
-                        width:125,className:'l-ellipsis',
+                        width:200,className:'l-ellipsis',
                         key: 'content'
                     },
                     {
                         title: '反馈状态',
-                        width:95,
+                        width:150,
                         key: 'state',
                         render(row,column,index){
                             return `{{getStatusName(${row.state})}}`;
@@ -196,6 +196,11 @@ import LTitle from '../../components/title'
                         title: '反馈时间',
                        width:170,
                         key: 'feedbackTime'
+                    },
+                    {
+                        title: '回复时间',
+                       width:170,
+                        key: 'replyTime'
                     },
                     {
                         title: '操作',

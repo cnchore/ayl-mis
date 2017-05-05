@@ -23,24 +23,24 @@
 	<Menu :active-key="activeKey" class="q-menu q-lg-icon"
     v-show="activeMenu==='1'" width="auto" @on-select="handleSelect">
         
-            <Menu-item key="1-1">
+            <Menu-item key="1-1" v-if="userInfo.type===1">
                 <i class="iconfont icon-mendianzhanshiguanli"></i>
                 <span>门店展示管理</span>
             </Menu-item>
-            <Menu-item key="1-2">
+            <Menu-item key="1-2" v-if="userInfo.type===1">
                 <i class="iconfont icon-zixunguanli-tishi"></i>
                 艾臣资讯管理
             </Menu-item>
-            <Menu-item key="1-3">
+            <Menu-item key="1-3" v-if="userInfo.type===1">
                 <i class="iconfont icon-chanpinjieshao"></i>
                 产品介绍
             </Menu-item>
-            <Menu-item key="1-4">
+            <Menu-item key="1-4" v-if="userInfo.type===1">
                 <i class="iconfont icon-yijianfankuiguanli"></i>
                 意见反馈管理
             </Menu-item>
        
-            <Menu-item key="1-5">
+            <Menu-item key="1-5" v-if="userInfo.type===1">
                 <i class="iconfont icon-changjianwentiguanli"></i>
                 常见问题管理
             </Menu-item>
@@ -48,11 +48,11 @@
                 <i class="iconfont icon-youhuihuodongfabu"></i>
                 优惠活动发布
             </Menu-item>
-            <Menu-item key="1-7">
+            <Menu-item key="1-7" v-if="userInfo.type===1">
                 <i class="iconfont icon-youhuiquanmingxipeizhi"></i>
                 优惠券明细配置
             </Menu-item>
-            <Menu-item key="1-8">
+            <Menu-item key="1-8" v-if="userInfo.type===1">
                 <i class="iconfont icon-lingqulipinguanli"></i>
                 领取礼品管理
             </Menu-item>
@@ -61,28 +61,28 @@
     <Menu :active-key="activeKey" class="q-menu q-lg-icon" 
     v-show="activeMenu==='2'" width="auto" @on-select="handleSelect">
         
-            <Menu-item key="2-1">
+            <Menu-item key="2-1" v-if="userInfo.type===1">
                 <i class="iconfont icon-hehuorenzhanghaoguanli"></i>
                 合伙人账号管理
             </Menu-item>
-            <Menu-item key="2-2">
+            <Menu-item key="2-2" v-if="userInfo.type===1">
                 <i class="iconfont icon-xianjinquanpeizhiguanli"></i>
                 现金券配置
             </Menu-item>
-            <Menu-item key="2-3">
+            <Menu-item key="2-3" v-if="userInfo.type===1">
                 <i class="iconfont icon-xianjinquanshenqingguanli"></i>
                 现金券申请
             </Menu-item>
-            <Menu-item key="2-4">
+            <Menu-item key="2-4" v-if="userInfo.type===1">
                 <i class="iconfont icon-xianjinquanshiyongqingkuangguanlir"></i>
                 现金券使用情况
             </Menu-item>
        
-            <Menu-item key="2-5">
+            <Menu-item key="2-5" v-if="userInfo.type===1">
                 <i class="iconfont icon-gonggaofabuguanli"></i>
                 公告发布管理
             </Menu-item>
-            <Menu-item key="2-6">
+            <Menu-item key="2-6" v-if="userInfo.type===1">
                 <i class="iconfont icon-shensuguanli"></i>
                 申诉管理
             </Menu-item>
@@ -173,7 +173,9 @@
     </Menu>
 </template>
 <script>
-	export default{
+import server,{ storage } from '../libs/server'
+import env from '../config/env';
+    export default{
 		props: {
 	      activeKey:{
 	        type:String,
@@ -184,6 +186,12 @@
             default:'1'
           }
 	  	},
+        data(){
+            return {
+                userInfo:env==='development'?{userName:'TestName',type:1}:storage.session.get('userInfo')
+
+            }
+        },
 		ready(){
 
 		},

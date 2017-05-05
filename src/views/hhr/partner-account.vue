@@ -17,7 +17,7 @@
                         <Form-item prop="storeName">
                             <div class="l-sel-inline">
                                 <span slot="prepend">注册人</span>
-                                <i-input :value.sync="seachForm.partnerNameLike"  placeholder="请输入收货人" ></i-input>
+                                <i-input :value.sync="seachForm.partnerNameLike"  placeholder="请输入注册人姓名" ></i-input>
                             </div>
                         </Form-item>
                         <Form-item prop="storeName">
@@ -43,25 +43,25 @@
                         <Form-item prop="storeName">
                             <div class="l-sel-inline">
                                 <span slot="prepend">推荐人</span>
-                               <i-input :value.sync="seachForm.referralNameLike"  placeholder="请输入手机号码" ></i-input>
+                               <i-input :value.sync="seachForm.referralNameLike"  placeholder="请输入推荐人" ></i-input>
                             </div>
                         </Form-item>
                         <Form-item prop="storeName">
                             <div class="l-sel-inline">
                                 <span slot="prepend">推荐人Tel</span>
-                               <i-input :value.sync="seachForm.referralPhoneLike"  placeholder="请输入手机号码" ></i-input>
+                               <i-input :value.sync="seachForm.referralPhoneLike"  placeholder="请输入推荐人手机号码" ></i-input>
                             </div>
                         </Form-item>
                         <Form-item prop="storeName">
                             <div class="l-sel-inline">
                                 <span slot="prepend">代理商</span>
-                               <i-input :value.sync="seachForm.agentNameLike"  placeholder="请输入手机号码" ></i-input>
+                               <i-input :value.sync="seachForm.agentNameLike"  placeholder="请输入代理商" ></i-input>
                             </div>
                         </Form-item>
                         <Form-item prop="storeName">
                             <div class="l-sel-inline">
                                 <span slot="prepend">代理商Tel</span>
-                               <i-input :value.sync="seachForm.agentPhoneLike"  placeholder="请输入手机号码" ></i-input>
+                               <i-input :value.sync="seachForm.agentPhoneLike"  placeholder="请输入代理商手机号码" ></i-input>
                             </div>
                         </Form-item>
                         <Form-item>
@@ -123,7 +123,7 @@ import LTitle from '../../components/title'
 				tableCol: [
 				{key:'partnerName',width:120,title:'合伙人姓名'},
 				{
-					width:100,key:'state',title:'状态',
+					width:120,key:'state',title:'状态',
 
 					render(row,column,index){
 						return `{{getStatusName(${row.state},'s')}}`;
@@ -142,12 +142,12 @@ import LTitle from '../../components/title'
 						return `{{getStatusName(${row.industryType},'t')}}`;
 					}
 				},
-				{key:'storeBrand',className:'l-min-width',title:'卖场/品牌'},
+				{key:'storeBrand',width:150,className:'l-min-width',title:'卖场/品牌'},
 				{key:'referralName',width:120,title:'推荐人姓名'},
-				{key:'referralPhone',width:150,title:'推荐人电话'},
+				{key:'referralPhone',width:170,title:'推荐人电话'},
 				{key:'agentName',width:150,title:'代理商名称'},
-				{key:'agentPhone',width:150,title:'代理商电话'},
-				{key:'registerTime',className:'l-min-width',title:'注册时间'},
+				{key:'agentPhone',width:125,title:'代理商电话'},
+				{key:'registerTime',width:170,title:'注册时间'},
 
 				{
 					title: '操作',

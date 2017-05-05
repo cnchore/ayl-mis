@@ -149,7 +149,7 @@ const serverPath={
 	confirmOrder:'/owner/order/confirmOrder',
 	ownerOrderNext:'/owner/order/next',
 	orgNext:'/owner/order/orgNext',
-	
+
 	//
 	getVcode:'/web/captchaImage',
 
@@ -470,8 +470,9 @@ export default {
     	return this.postPromise(serverPath.loginOut,{},'loginOut');
 	},
 	//艾臣资讯管理
-	getPublish(page=1,rows=10,titleLike=''){
-    	return this.getPromise(serverPath.getPublish,{type:3,page,rows,titleLike},'getPublish');
+	getPublish(searchData){
+		searchData.type=3;
+    	return this.getPromise(serverPath.getPublish,searchData,'getPublish');
 	},
 	getAllPublish(){
     	return this.getPromise(serverPath.getAllPublish,{type:3},'getAllPublish');

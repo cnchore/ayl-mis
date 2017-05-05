@@ -114,7 +114,7 @@ import LTitle from '../../components/title'
                     key:'orderNo',title:'订单号',width:200
                 },
                 {
-                    width:140,key:'state',title:'当前阶段',
+                    width:140,key:'state',title:'订单进度',
 
                     render(row,column,index){
                         return `{{getStatusName(${row.state})}}`;

@@ -98,9 +98,7 @@ import LTitle from '../../components/title'
 				spanLeft: 4,
                 spanRight: 20,
 				tableCol: [
-                {
-                    key:'applyCouponName',title:'优惠券名称',width:120
-                },
+                
                 {
                     width:100,key:'state',title:'状态',
 
@@ -109,10 +107,20 @@ import LTitle from '../../components/title'
                     }
                 },
                 {
-                    key:'applier',title:'申请人名称',width:120
+                    key:'applier',title:'申请人',width:120
                 },
                 {
                     key:'applierPhone',title:'申请人电话',width:150
+                },
+                
+                {
+                    key:'ownerName',title:'客户名称',width:120
+                },
+                {
+                    key:'ownerPhone',title:'客户电话',width:150
+                },
+                {
+                    key:'applyCouponName',title:'优惠券名称',width:120
                 },
                 {
                     key:'couponValue',title:'券值',width:120
@@ -122,19 +130,13 @@ import LTitle from '../../components/title'
                     key:'applyNum',title:'申请数量',width:120
                 },
                 {
-                    key:'applyTime',title:'申请时间',width:200
-                },
-                {
-                    key:'province',title:'客户地址',className:'l-m-min-width l-ellipsis',
+                    key:'province',title:'客户地址',width:400,
                     render(row){
                         return `${row.province}${row.city}${row.area}${row.street}${row.unit}`
                     }
                 },
                 {
-                    key:'ownerName',title:'客户名称',width:120
-                },
-                {
-                    key:'ownerPhone',title:'客户电话',width:150
+                    key:'applyTime',title:'申请时间',width:200
                 },
                 {
                     key:'houseStyle',title:'房子风格',width:120

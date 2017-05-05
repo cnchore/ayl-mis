@@ -110,14 +110,14 @@
                             <v-editor :input-content="modelForm.productProp" :out-content.sync="outProp"></v-editor>
                         </Form-item>
                         <Form-item label="适用范围" prop="application">
-                          <i-input :value.sync="modelForm.application" placeholder="请输入产品名称"></i-input>
+                          <i-input :value.sync="modelForm.application" placeholder="请输入适用范围"></i-input>
                         </Form-item>
+                        
+                    </i-col>
+                    <i-col span="12">
                         <Form-item label="技术参数" prop="params">
                             <v-editor editor-id="editorParams" :input-content="modelForm.params" :out-content.sync="outParams"></v-editor>
                         </Form-item>
-                    </i-col>
-                    <i-col span="12">
-                        
                         <Form-item label="实景展示" prop="pictureShows">
                             <div class="l-upload-list l-desc" v-for="item in uploadList">
                                 <template v-if="item.status === 'finished'">

@@ -102,30 +102,30 @@ import LTitle from '../../components/title'
                 modelLoading:false,
 				tableCol: [
 				{
-					key:'title',title:'标题'
+					key:'title',title:'标题',width:200
 				},
 				{
-					key:'state',title:'状态',
+					key:'state',title:'状态',width:150,
 
 					render(row,column,index){
 						return `{{getStatusName(${row.state})}}`;
 					}
 				},
 				{
-					key:'createTime',title:'创建时间'
+					key:'createTime',title:'创建时间',width:170
 				},
 				
 				{
-					key:'publishTime',title:'更新时间'
+					key:'publishTime',title:'更新时间',width:170
 				},
 				{
-					key:'content',title:'内容'
+					key:'content',title:'内容',width:200,className:'l-ellipsis'
 				},
 				{
 					title: '操作',
 					key: 'action',
 					fixed:'right',
-					width:170,
+					width:210,
 					align: 'center',
 					render (row, column, index) {
 					return `

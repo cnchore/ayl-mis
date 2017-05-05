@@ -131,7 +131,7 @@
                     	<div class="container q-table">
                     		<i-form :model="modelForm" :label-width="100" >
                     			<Row>
-                    				<i-col span="12">
+                    				<i-col span="12" style="padding-bottom: 0px;">
 										<Form-item label="联系人姓名">
 		            						{{modelForm.name}}
 								        </Form-item>
@@ -143,7 +143,7 @@
 								            {{modelForm.belongNames}}
 								        </Form-item>
                     				</i-col>
-                    				<i-col span="12">
+                    				<i-col span="12" style="padding-bottom: 0px;">
 										<Form-item label="装修项目" v-show="modelForm.sourceType===2">
 								           {{modelForm.decorateProject}}
 								        </Form-item>
@@ -157,7 +157,7 @@
 								           
 								        </Form-item>
                     				</i-col>
-                    				<i-col span="24">
+                    				<i-col span="24" style="padding-top: 0px;">
 										<Form-item label="备注">
 								           {{modelForm.remark}}
 								        </Form-item>

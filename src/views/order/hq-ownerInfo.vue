@@ -20,7 +20,14 @@
                                 <i-input :value.sync="seachForm.nameOrPhoneLike"  placeholder="请输入名称或电话" ></i-input>
                             </div>
                         </Form-item>
-                        
+                        <Form-item prop="storeName">
+                            <div class="l-sel-inline">
+                                <span slot="prepend">归属门店</span>
+                                <i-select clearable :model.sync="seachForm.createrId" placeholder="请选择">
+                                    <i-option v-for="item in agentList" :value="item.id">{{ item.agentName }}</i-option>
+                                </i-select>
+                            </div>
+                        </Form-item>
                         <Form-item>
                             <i-button type="ghost" icon="search" @click="search('formInline')">搜索</i-button>
                         </Form-item>
@@ -66,34 +73,19 @@ import LTitle from '../../components/title'
                
 				tableCol: [
 				{title:'客户名称',key:'name',width:125},
-				{title:'成交总金额',width:125,
-                    render(row){
-                        let c='';
-                        if(row.orderList&&row.orderList[0])
-                        {
-                            row.orderList.forEach((item)=>{
-                                let t=row.orderList.turnoverAmount?row.orderList.turnoverAmount:0;
-                                c+=parseFloat(t);
-                            })
-                            
-                        }
-                        return c;
-                    }
-                },
+				{title:'成交总金额',width:125,key:'turnoverAmountTotal'},
 				{title:'电话',key:'mobilePhone',width:125},
 				{title:'客户地址',width:400,
                     render(row){
                         return `${row.province?row.province:''}${row.city?row.city:''}${row.area?row.area:''}${row.address?row.address:''}`;
                     }
                 },
-                {title:'客户归属',key:'belongNames',width:125},
-
 				{title:'客户来源',key:'sourceType',width:125,
                     render(row){
                         return `${row.sourceType==1?'预约订单':'后台新增'}`;
                     }
                 },
-				{title:'备注',key:'remark',width:125},
+				{title:'备注',key:'remark',width:200},
 				{
 					title: '操作',
 					key: 'action',
@@ -104,11 +96,13 @@ import LTitle from '../../components/title'
                         <i-button type="primary" icon="eye" @click="look(${row.id})" title="查看" size="small"></i-button>
 					`;
 					}   
-				}]
+				}],
+                agentList:[],
 			}
 		},
 		ready(){
 			this.getList();
+            this.getAgentList();
 		},
 		methods:{
 			
@@ -126,7 +120,21 @@ import LTitle from '../../components/title'
                     }
                 })
             },
-			
+			getAgentList(){
+                let self=this;
+                server.getAgentAll({}).then((res)=>{
+                    self.agentList=[];
+                    if(res.data&&res.data.length>0){
+                        res.data.forEach((item)=>{
+                             self.agentList.push({
+                                id:item.userId,
+                                agentName:item.agentName
+                            })
+                        })
+                        
+                    }
+                })
+            },
 			changePage(index){
                 this.pageIndex=index+0;
                 this.getList(index+0,10);

@@ -57,7 +57,7 @@
             width="800"
             :mask-closable="false" 
             scrollable=>
-             <i-form v-ref:form-validate :model="modelForm" :rules="ruleValidate" :label-width="100">
+             <i-form v-ref:form-validate :model="modelForm" :rules="ruleValidate" :label-width="125">
                 <Row>
                     <i-col span="12">
                         <Form-item label="优惠券名称" prop="couponName">
@@ -86,7 +86,7 @@
                             <Date-picker type="datetime" :value="modelForm.startTime" format="yyyy-MM-dd HH:mm:ss" @on-change="strDateChange"  placeholder="选择时间"></Date-picker>
                         </Form-item>
                         <Form-item label="有效终止时间" prop="endTimeStr">
-                             <Date-picker type="datetime" :value="modelForm.startTime" format="yyyy-MM-dd HH:mm:ss" @on-change="endDateChange"  placeholder="选择时间"></Date-picker>
+                             <Date-picker type="datetime" :value="modelForm.endTime" format="yyyy-MM-dd HH:mm:ss" @on-change="endDateChange"  placeholder="选择时间"></Date-picker>
                         </Form-item>
                         <Form-item label="兑奖须知" prop="notice">
                             <i-input :value.sync="modelForm.notice" type="textarea" :rows="3"  placeholder="请输入兑奖须知"></i-input>
@@ -154,37 +154,37 @@ import LTitle from '../../components/title'
 				tableCol: [
                     
                     {
-                        title: '是否启用',
+                        title: '是否启用',width:95,
                         key: 'isEnabled',
                         render(row,column,index){
                             return `{{getStatusName(${row.isEnabled},'s')}}`;
                         }
                     },
                     {
-                        title: '优惠券名称',
+                        title: '优惠券名称',width:135,
                         key: 'couponName'
                     },
                     {
-                        title: '优惠券类型',
+                        title: '优惠券类型',width:135,
                         key: 'couponType',
                         render(row,column,index){
                             return `{{getStatusName(${row.couponType},'t')}}`;
                         }
                     },
                     {
-                        title: '券面值',
+                        title: '券面值',width:135,
                         key: 'couponValue'
                     },
                     {
-                        title: '有效开始时间',
+                        title: '有效开始时间',width:170,
                         key: 'startTime'
                     },
                     {
-                        title: '有效终止时间',
+                        title: '有效终止时间',width:170,
                         key: 'endTime'
                     },
                     {
-                        title: '客服电话',
+                        title: '客服电话',width:125,
                         key: 'serviceTel'
                     },
                     {
