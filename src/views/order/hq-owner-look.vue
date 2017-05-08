@@ -129,36 +129,36 @@
                         	<i class="iconfont icon-kehuxinxi"></i>客户信息
                     	</div>
                     	<div class="container q-table">
-                    		<i-form :model="modelForm" :label-width="100" >
+                    		<i-form :model="modelForm" class="q-form-no-bottom" :label-width="100" >
                     			<Row>
                     				<i-col span="12" style="padding-bottom: 0px;">
-										<Form-item label="联系人姓名">
+										<Form-item label="联系人姓名:">
 		            						{{modelForm.name}}
 								        </Form-item>
 		                    			
-		            					<Form-item label="联系人手机">
+		            					<Form-item label="联系人手机:">
 								            {{modelForm.mobilePhone}}
 								        </Form-item>
-		                    			<Form-item label="客户归属"  v-show="modelForm.sourceType===2">
+		                    			<Form-item label="客户归属:"  v-show="modelForm.sourceType===2">
 								            {{modelForm.belongNames}}
 								        </Form-item>
                     				</i-col>
                     				<i-col span="12" style="padding-bottom: 0px;">
-										<Form-item label="装修项目" v-show="modelForm.sourceType===2">
+										<Form-item label="装修项目:" v-show="modelForm.sourceType===2">
 								           {{modelForm.decorateProject}}
 								        </Form-item>
-		            					<Form-item label="所在地区">
+		            					<Form-item label="所在地区:">
 						        			
 								            {{modelForm.province}} {{modelForm.city}} {{modelForm.area}}
 								           
 								        </Form-item>
-		            					<Form-item label="详细地址">
+		            					<Form-item label="详细地址:">
 								            {{modelForm.address}}
 								           
 								        </Form-item>
                     				</i-col>
-                    				<i-col span="24" style="padding-top: 0px;">
-										<Form-item label="备注">
+                    				<i-col span="24" style="padding-top: 0px;padding-bottom: 0px;">
+										<Form-item label="备注:">
 								           {{modelForm.remark}}
 								        </Form-item>
                     				</i-col>
@@ -242,20 +242,24 @@ import LTitle from '../../components/title'
 				self:this,
 				tableData:[],
 				tableCol: [
-				{title:'订单编号',key:'orderNo',
+				{title:'订单编号',key:'orderNo',width:170,
 					render(row){
 						return `<a v-link="{path:'/order/look?id='+${row.id}}">${row.orderNo}</a>`;
 					}
 				},
-				{title:'下单日期',key:'createTime'},
-				{title:'下单人',key:'byAgent'},
-				{title:'订单成交额',key:'turnoverAmount'},
-				{title:'订单状态',key:'state',
+				{title:'下单日期',key:'createTime',width:170},
+				{title:'下单人',key:'byAgent',width:125},
+				{title:'订单成交额',key:'turnoverAmount',width:200,
+					render(row){
+                        return `{{${row.turnoverAmount} | currency '¥' '2'}}`
+                    }
+				},
+				{title:'订单状态',key:'state',width:125,
 					render(row){
 						return `{{getStatusName(${row.state})}}`
 					}
 				},
-				{title:'订单来源',key:'sourceType',
+				{title:'订单来源',key:'sourceType',width:95,
 					render(row){
 						return row.sourceType?row.sourceType===1?'预约':'后台添加':'无'
 					}

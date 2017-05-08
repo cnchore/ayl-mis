@@ -172,8 +172,11 @@ import LTitle from '../../components/title'
                         }
                     },
                     {
-                        title: '券面值',width:135,
-                        key: 'couponValue'
+                        title: '券面值',width:200,
+                        key: 'couponValue',
+                        render(row){
+                            return `{{${row.couponValue} | currency '¥' '2'}}`
+                        }
                     },
                     {
                         title: '有效开始时间',width:170,
@@ -184,7 +187,7 @@ import LTitle from '../../components/title'
                         key: 'endTime'
                     },
                     {
-                        title: '客服电话',width:125,
+                        title: '客服电话',width:170,
                         key: 'serviceTel'
                     },
                     {

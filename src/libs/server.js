@@ -87,8 +87,9 @@ const serverPath={
 	updateCouponConfig:'/partner/couponConfig/update',
 	delCouponConfig:'/partner/couponConfig/deleteById',
 	upDownCouponConfig:'/partner/couponConfig/upDown',
-
+	//优惠券使用情况
 	getParnerCoupon:'/partner/coupon/getPage',
+	getParnerAllCoupon:'/partner/coupon/getList',
 
 	getNotice:'/sys/notice/getPage',
 	getNoticeByid:'/sys/notice/getById',
@@ -388,16 +389,45 @@ export default {
 	    })
     	return promise
 	},
+	DateFormat(date,fmt) {
+		var date=new Date(date); 
+	    var o = {
+	        "M+": date.getMonth() + 1, //月份 
+	        "d+": date.getDate(), //日 
+	        "H+": date.getHours(), //小时 
+	        "m+": date.getMinutes(), //分 
+	        "s+": date.getSeconds(), //秒 
+	        "q+": Math.floor((date.getMonth() + 3) / 3), //季度 
+	        "S": date.getMilliseconds() //毫秒 
+	    };
+	    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+	    for (var k in o)
+	    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+	    return fmt;
+	},
+	is7nImage(url){
+		if(!url){
+			return false;
+		}
+		if(url.indexOf('?imageView2/1/w/')>-1){
+			return true;
+		}else{
+			return false;
+		}
+	},
 	image: {
 	    thumb(src, width, height) {
 	      width = width || 320
+	      height =height || 200
 	      if(!src){ 
 	        return ''
 	      }
+	      src+=`?imageView2/1/w/${width}/h/${height}/format/webp/interlace/0/q/50`
+	      /*
 	      src += `?imageMogr2/format/jpg/interlace/1/quality/75/gravity/Center/thumbnail/${width}x`
 	      if(height){
 	        src += `/crop/x${height}`
-	      }
+	      }*/
 	      return src
 	    },
 	    thumbyWidth(src, width) {
@@ -815,6 +845,9 @@ export default {
 	getParnerCoupon(searchData){
 		return this.getPromise(serverPath.getParnerCoupon,searchData,'getParnerCoupon');
 
+	},
+	getParnerAllCoupon(){
+		return this.getPromise(serverPath.getParnerAllCoupon,searchData,'getParnerAllCoupon');
 	}
 	//公告发布管理
 	,

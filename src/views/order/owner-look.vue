@@ -242,20 +242,24 @@ import LTitle from '../../components/title'
 				self:this,
 				tableData:[],
 				tableCol: [
-				{title:'订单编号',
+				{title:'订单编号',width:170,
 					render(row){
 						return `<a v-link="{path:'/owner/order/look?id='+${row.id}}">${row.orderNo}</a>`;
 					}
 				},
-				{title:'下单日期',key:'createTime'},
-				{title:'下单人',key:'byAgent'},
-				{title:'订单成交额',key:'turnoverAmount'},
-				{title:'订单状态',key:'state',
+				{title:'下单日期',key:'createTime',width:170},
+				{title:'下单人',key:'byAgent',width:300},
+				{title:'订单成交额',key:'turnoverAmount',width:200,
+					render(row){
+						return `{{${row.turnoverAmount} | currency '¥' '2'}}`
+					}
+				},
+				{title:'订单状态',key:'state',width:125,
 					render(row){
 						return `{{getStatusName(${row.state})}}`
 					}
 				},
-				{title:'订单来源',key:'sourceType',
+				{title:'订单来源',key:'sourceType',width:125,
 					render(row){
 						return row.sourceType?row.sourceType===1?'预约':'后台添加':'无'
 					}

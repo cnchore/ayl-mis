@@ -228,15 +228,15 @@ import chinaAddress from '../../components/china-address-0408'
                     case 2:
                     return "待设计报价";
                     case 3:
-                    return "待确认";
+                    return "待客户确认";
                     case 31:
                 	return "待重新设计报价";
                     case 4:
                     return "待下单";
                     case 5:
-                    return "待总部确认";
+                    return "待确认订单";
                     case 6:
-                    return "总部确认";
+                    return "已确认订单";
                 }
             },
             

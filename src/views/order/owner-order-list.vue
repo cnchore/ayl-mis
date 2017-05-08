@@ -175,9 +175,9 @@ import LTitle from '../../components/title'
                     }
                 },
                 {
-                    title:'成交金额',width:95,
+                    title:'成交金额',width:200,
                     render(row){
-                        return row.turnoverAmount?row.turnoverAmount:'无'
+                        return `{{${row.turnoverAmount} | currency '¥' '2'}}`
                     }
                 },
                 {
@@ -192,15 +192,10 @@ import LTitle from '../../components/title'
                 {
                     title:'下单时间',width:170,
                     render(row){
-                        return row.createTime?row.createTime:'无'
+                        return row.orderTime?row.orderTime:'无'
                     }
                 },
-                {
-                    title:'下单人',width:95,
-                    render(row){
-                        return row.byAgent?row.byAgent:'无'
-                    }
-                },
+                
                 {
                    title:'接收时间',width:170,
                    render(row){
@@ -215,10 +210,10 @@ import LTitle from '../../components/title'
                     align: 'center',
                     render (row, column, index) {
                     return `
-                        <i class="iconfont icon-chakanyuyue btn" v-show="${row.appointId}!=0"  title="查看预约" @click="changeClick(${row.id},${row.state})"></i>
+                        <i class="iconfont icon-chakanyuyue btn" v-show="${row.appointId}!=0"  title="查看预约" @click="modelShow(${row.appointId})"></i>
                         <i class="iconfont icon-chakandingdan btn" title="查看订货单" @click="actionShow(${row.id})"></i>
-                        <i class="iconfont icon-bianji btn" title="编辑订货单" v-show="${row.flowState}!=1" @click="actionShow(${row.id},true)"></i>
-                        <i class="iconfont icon-fasong btn" title="提交" v-show="${row.flowState}!=1" @click="actionNext(${row.id})"></i>
+                        <i class="iconfont icon-bianji btn" title="编辑订货单" v-show="${row.flowState}===0" @click="actionShow(${row.id},true)"></i>
+                        <i class="iconfont icon-fasong btn" title="提交" v-show="${row.flowState}===0" @click="actionNext(${row.id})"></i>
                     `;
                     }   
                 }]

@@ -238,7 +238,7 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
 	    }
 	    return o;
 	};
-
+	
 	export default{
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
@@ -278,7 +278,7 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
                 modelLoading:false,
 				tableCol: [
 				{
-					width:35,key:'memoLevel',
+					width:95,key:'memoLevel',title:'优先级',
 
 					render(row,column,index){
 						return `<span class="l-s-Error">{{getStatusName(${row.memoLevel})}}</span>`;
@@ -599,6 +599,7 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
 			addOrUpdate(id){
 				let self=this;
 				console.log(id);
+
 				if(id){
 					self.$Loading.start();
 	                server.getMemoByid(id).then((res)=>{
@@ -615,6 +616,7 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
 					self.modelForm={};
 					self.formVisable=true;
 				}
+				self.modelForm.memoTimeStr=server.DateFormat(self.value,"yyyy-MM-dd HH:mm:ss");
 			},
 			modelSubmit(){
 				let self=this;

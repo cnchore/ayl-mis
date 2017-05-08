@@ -136,21 +136,21 @@ import LTitle from '../../components/title'
                         return `{{getStatusName(${row.state})}}`;
                     }
                 },
-                {width:125,key:'billCode',title:'单号'},
+                {width:250,key:'billCode',title:'单号'},
                 {width:125,key:'giftName',title:'礼品名称'},
                 {width:95,key:'consignee',title:'收货人'},
-                {width:125,key:'consigneePhone',title:'收货人手机号码'},
+                {width:150,key:'consigneePhone',title:'收货人手机号码'},
                 {width:95,key:'province',title:'省会名称'},
                 {width:95,key:'city',title:'城市名称'},
                 {width:95,key:'area',title:'区域名称'},
-                {width:400,key:'address',title:'详细地址'},
+                {width:500,key:'address',title:'详细地址'},
                 {width:170,key:'createTime',title:'创建时间'},
                 {width:170,key:'updateTime',title:'更新时间'
                 },{
                     title: '操作',
                     key: 'action',
                     fixed:'right',
-                    width:135,
+                    width:170,
                     align: 'center',
                     render (row, column, index) {
                         return `

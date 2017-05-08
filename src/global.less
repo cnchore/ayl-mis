@@ -387,18 +387,24 @@ header{
 	background-color:#eee;
 }
 .q-imgs .container .q-row .ivu-col.q-col-right{
-	-webkit-box-align:end;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
 	padding-left:5px;
 	padding-right: 5px; 
-	input{
+	
+	.ivu-input{
 		text-align: right;
-		width: 100%;
+		width: 100px;
 		padding-right: 5px;
 	}
 	.q-discout{
 		display: flex;
 		align-items: center;
-		
+		justify-content: flex-end;
+		.ivu-input{
+			width: 85px;
+		}
 		&::after{
 			content:'%';
 
@@ -419,7 +425,11 @@ header{
 	padding-right: 5px;
 	justify-content: center;
 }
-
+.q-form-no-bottom{
+	.ivu-form-item{
+		margin-bottom: 0px;
+	}
+}
 
 /*======页面字体大小=start=======*/
 /*

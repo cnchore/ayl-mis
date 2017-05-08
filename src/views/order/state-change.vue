@@ -145,6 +145,10 @@ import LTitle from '../../components/title'
                     }
                 },
                 {
+                    title:'交货周期',key:'finishTime',width:170
+                    
+                },
+                {
                     title: '操作',
                     key: 'action',
                     fixed:'right',

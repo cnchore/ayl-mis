@@ -53,60 +53,60 @@
         </Row>
         <Modal
             :visible.sync="modalVisible"
-            title="新增／修改"
+            title="预约信息查看"
             @on-ok="modelSubmit"
             width=800
             
             :mask-closable="false"
             >
-            <i-form v-ref:form-validate :model="modelForm" :rules="modeRule" :label-width="130">
+            <i-form v-ref:form-validate :model="modelForm" :rules="modeRule" :label-width="132">
                 <Row>
                 <i-col span="24">
-                     <Form-item label="流水单号">
+                     <Form-item label="流水单号:">
                     {{modelForm.billCode}}
                 </Form-item>
                 </i-col>
                 <i-col span="12">
                
-                <Form-item label="预约人姓名" prop="">
+                <Form-item label="预约人姓名:" prop="">
                     {{modelForm.name}}
                 </Form-item>
-                <Form-item label="上门量尺时间" prop="">
+                <Form-item label="上门量尺时间:" prop="">
                     {{modelForm.homeTime}}
                 </Form-item>
-                <Form-item label="上门设计师" prop="">
+                <Form-item label="上门设计师:" prop="">
                     {{modelForm.designer}}
                 </Form-item>
-                <Form-item label="装修项目" prop="">
+                <Form-item label="装修项目:" prop="">
                     {{modelForm.decorateProject}}
                 </Form-item>
-                <Form-item label="所属代理商" prop="">
+                <Form-item label="所属代理商:" prop="">
                     {{modelForm.byAgent}}
                 </Form-item>
                 </i-col>
                 <i-col span="12">
                 
-                <Form-item label="预约人手机" prop="">
+                <Form-item label="预约人手机:" prop="">
                     {{modelForm.mobilePhone}}
                 </Form-item>
-                <Form-item label="预计装修时间" prop="">
+                <Form-item label="预计装修时间:" prop="">
                   {{modelForm.decoratingTime}}
                 </Form-item>
-                <Form-item label="上门设计师电话">
+                <Form-item label="上门设计师电话:">
                    {{modelForm.designerPhone}}
                 </Form-item>
-                <Form-item label="工程预算" >
+                <Form-item label="工程预算:" >
                     {{modelForm.budgetRange}}
                 </Form-item>
-                <Form-item label="所在城市" prop="">
+                <Form-item label="所在城市:" prop="">
                    {{modelForm.province}}{{modelForm.city}}{{modelForm.area}}
                 </Form-item>
                 </i-col>
                 </Row>
-                <Form-item label="装修地址" prop="address">
+                <Form-item label="装修地址:" prop="address">
                     {{modelForm.address}}
                 </Form-item>
-                <Form-item label="说明">
+                <Form-item label="说明:">
                     {{modelForm.remark}}
                 </Form-item>
             </i-form>
@@ -176,9 +176,9 @@ import LTitle from '../../components/title'
                 },
                 
                 {
-                    title:'成交金额',width:95,
+                    title:'成交金额',width:200,
                     render(row){
-                        return row.turnoverAmount?row.turnoverAmount:'无'
+                        return `{{${row.turnoverAmount} | currency '¥' '2'}}`
                     }
                 },
                 {
@@ -193,11 +193,11 @@ import LTitle from '../../components/title'
                 {
                     title:'下单时间',width:170,
                     render(row){
-                        return row.createTime?row.createTime:'无'
+                        return row.orderTime?row.orderTime:'无'
                     }
                 },
                 {   
-                    title:'下单人',width:200,
+                    title:'下单人',width:300,
                     render(row){
                         return row.byAgent?row.byAgent:'无'
                     }
@@ -216,10 +216,10 @@ import LTitle from '../../components/title'
                     align: 'center',
                     render (row, column, index) {
                     return `
-                        <i class="iconfont icon-chakanyuyue btn" v-show="${row.appointId}!=0" title="查看预约" @click="modelShow(${row.id})"></i>
+                        <i class="iconfont icon-chakanyuyue btn" v-show="${row.appointId}!=0" title="查看预约" @click="modelShow(${row.appointId})"></i>
                         <i class="iconfont icon-chakandingdan btn" title="查看订货单" @click="actionShow(${row.id})"></i>
-                        <i class="iconfont icon-bianji btn" v-show="${row.flowState}!=2" title="编辑订货单" @click="actionShow(${row.id},true)"></i>
-                        <i class="iconfont icon-fasong btn" v-show="${row.flowState}!=2" title="提交" @click="orgNext(${row.id})"></i>
+                        <i class="iconfont icon-bianji btn" v-show="${row.flowState}===1" title="编辑订货单" @click="actionShow(${row.id},true)"></i>
+                        <i class="iconfont icon-fasong btn" v-show="${row.flowState}===1" title="提交" @click="orgNext(${row.id})"></i>
 
                     `;
                     }   

@@ -123,7 +123,10 @@ import LTitle from '../../components/title'
                     key:'applyCouponName',title:'优惠券名称',width:120
                 },
                 {
-                    key:'couponValue',title:'券值',width:120
+                    key:'couponValue',title:'券值',width:200,
+                    render(row){
+                        return `{{${row.couponValue} | currency '¥' '2'}}`
+                    }
                 },
                 
                 {

@@ -57,60 +57,60 @@
 	        <i-form v-ref:form-validate :model="modelForm" :rules="modeRule" :label-width="140">
 		        <Row>
 		        <i-col span="24">
-		        	 <Form-item label="流水单号">
+		        	 <Form-item label="流水单号:">
 		            {{modelForm.billCode}}
 		        </Form-item>
 		        </i-col>
 		        <i-col span="12">
 		       
-		        <Form-item label="预约人姓名" prop="name">
+		        <Form-item label="预约人姓名:" prop="name">
 		            <i-input :value.sync="modelForm.name" placeholder="请输入姓名"></i-input>
 		        </Form-item>
-		        <Form-item label="上门量尺时间" prop="">
+		        <Form-item label="上门量尺时间:" prop="">
 		           <Date-picker type="datetime" :value="modelForm.homeTime" format="yyyy-MM-dd HH:mm:ss" @on-change="homeTimeDateChange"  placeholder="选择时间"></Date-picker>
 		        </Form-item>
-		        <Form-item label="上门设计师" prop="">
+		        <Form-item label="上门设计师:" prop="">
 		            <i-input :value.sync="modelForm.designer" placeholder="请输入上门设计师"></i-input>
 		        </Form-item>
-		        <Form-item label="装修项目" prop="">
+		        <Form-item label="装修项目:" prop="">
 		            <Checkbox-group :model.sync="decorateCkList">
 				        <Checkbox :value="item.id" v-for="item in decorateList">
 				        	<span>{{item.dicName}}</span>
 				        </Checkbox>
 				    </Checkbox-group>
 		        </Form-item>
-		        <Form-item label="所属代理商" prop="agent">
-		            <i-select :model.sync="agentListCk">
+		        <Form-item label="所属代理商:" prop="agent">
+		            <i-select :model.sync="agentListCk" filterable clearable>
 				        <i-option v-for="item in agentList" :value="item.id">{{ item.agentName }}</i-option>
 				    </i-select>
 		        </Form-item>
 				</i-col>
 				<i-col span="12">
 				
-		        <Form-item label="预约人手机" prop="Phone">
+		        <Form-item label="预约人手机:" prop="Phone">
 		            <i-input v-if="!id" :value.sync="modelForm.mobilePhone" placeholder="请输入手机号码"></i-input>
 		            <span v-else>{{modelForm.mobilePhone}}</span>
 		        </Form-item>
-		        <Form-item label="预计装修时间" prop="">
+		        <Form-item label="预计装修时间:" prop="">
 		           <Date-picker type="date" :value="modelForm.decoratingTime" format="yyyy-MM-dd" @on-change="decoratingDateChange"  placeholder="选择时间"></Date-picker>
 		        </Form-item>
-		        <Form-item label="上门设计师电话">
+		        <Form-item label="上门设计师电话:">
 		            <i-input :value.sync="modelForm.designerPhone" placeholder="请输入电话"></i-input>
 		        </Form-item>
-		        <Form-item label="工程预算" >
+		        <Form-item label="工程预算:" >
 		        	 <i-select :model.sync="modelForm.budgetRange">
 				        <i-option v-for="item in budgetRangeList" :value="item.dicName">{{ item.dicName }}</i-option>
 				    </i-select>
 		        </Form-item>
-		        <Form-item label="所在城市" prop="area">
+		        <Form-item label="所在城市:" prop="area">
 		            <Cascader :data="addressData" @on-change="addrSelected" :value.sync="addressValue" trigger="hover"></Cascader>
 		        </Form-item>
 				</i-col>
 				</Row>
-		        <Form-item label="装修地址" prop="address">
+		        <Form-item label="装修地址:" prop="address">
 		            <i-input :value.sync="modelForm.address" placeholder="请输入地址"></i-input>
 		        </Form-item>
-		        <Form-item label="说明">
+		        <Form-item label="说明:">
 		            <i-input :value.sync="modelForm.remark" type="textarea" :rows="3" placeholder="请输入说明"></i-input>
 		        </Form-item>
 		    </i-form>
@@ -207,7 +207,7 @@ import chinaAddress from '../../components/china-address-0408'
 					}
 				},
 				{
-					key:'dealer',title:'发送人',width:95
+					key:'dealer',title:'发送人',width:125
 				},
 				
 				{
@@ -285,15 +285,15 @@ import chinaAddress from '../../components/china-address-0408'
                     case 2:
                     return "待设计报价";
                     case 3:
-                    return "待确认";
+                    return "待客户确认";
                     case 31:
                 	return "待重新设计报价";
                     case 4:
                     return "待下单";
                     case 5:
-                    return "待总部确认";
+                    return "待确认订单";
                     case 6:
-                    return "总部确认";
+                    return "已确认订单";
                 }
             },
             getAgentList(){

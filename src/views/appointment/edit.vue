@@ -145,8 +145,8 @@
                         	<i class="iconfont icon-kehuyijian"></i>客户意见区
                     	</div>
                 		<div class="container q-table">
-                			<Collapse active-key="1">
-						        <Panel :key="item.id" v-for="item in optionList">
+                			<Collapse active-key="0">
+						        <Panel :key="index" v-for="(index,item) in optionList">
 						            {{item.createTime}}
 						            <p slot="content">{{item.remark}}</p>
 						        </Panel>
@@ -186,7 +186,7 @@
 		                                <template v-if="item.status === 'finished'">
 		                                    <img :src="item.avatar">
 		                                    <div class="l-upload-list-cover">
-		                                    	<Icon type="eye" title="查看" v-show="item.avatar.indexOf('imageMogr2/format')>-1" @click="handleView(item.attachAddress)"></Icon>
+		                                    	<Icon type="eye" title="查看" v-show="server.is7nImage(item.avatar)" @click="handleView(item.attachAddress)"></Icon>
 		                                        <a :href="item.attachAddress" target="_blank">
 				                           			<Icon type="ios-download-outline" title="下载"></Icon>
 				                            	</a>
