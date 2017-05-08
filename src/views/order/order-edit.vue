@@ -188,7 +188,7 @@
                                 :show-upload-list="false"
                                 :default-file-list="defaultList"
                                 :on-success="handleSuccess"
-                                :format="['jpg','jpeg','png','doc','docx','xls','xlsx','pdf','dwg']"
+                                :format="['jpg','jpeg','png','doc','docx','txt','ppt','pptx','xls','xlsx','pdf','dwg']"
                                 :max-size="10240"
                                 :on-format-error="handleFormatError"
                                 :on-exceeded-size="handleMaxSize"
@@ -229,7 +229,7 @@
 		                                <template v-if="item.status === 'finished'">
 		                                    <img :src="item.avatar">
 		                                    <div class="l-upload-list-cover">
-		                                    	<Icon type="eye" title="查看" v-show="item.avatar.indexOf('imageMogr2/format')>-1" @click="handleView(item.attachAddress)"></Icon>
+		                                    	<Icon type="eye" title="查看" v-show="server.is7nImage(item.avatar)" @click="handleView(item.attachAddress)"></Icon>
 		                                        <a :href="item.attachAddress" target="_blank">
 				                           			<Icon type="ios-download-outline" title="下载"></Icon>
 				                            	</a>
@@ -290,9 +290,9 @@
 						        <i-col span="14">&nbsp;</i-col>
 						    </Row>
 						    <Row class="q-row">
-						        <i-col span="5">交货日期</i-col>
+						        <i-col span="5">交货周期</i-col>
 						        <i-col span="5" class="q-col-right">
-						        	<i-input :value.sync="modelForm.limitDays" ></i-input>
+						        	<i-input style="text-align:right" :value.sync="modelForm.limitDays" ></i-input>
 						        </i-col>
 						        <i-col span="14">&nbsp;</i-col>
 						    </Row>
@@ -433,11 +433,11 @@ import CurrencyInput from '../../components/currency-input'
             	let d=1;
             	this.costVoList.forEach((item)=>{
             		if(item.costType===7 || item.costType===8){
-            			d*=parseFloat(item.costValue)/100;
+            			d*=parseFloat(item.costValue);
             		}
             		
             	})
-            	return d;
+            	return d/100;
             },
             getDealToal(){
             	return this.getSaleToal*this.costVoList[4].costValue/100-this.costVoList[5].costValue-this.getCouponToal;
@@ -568,6 +568,7 @@ import CurrencyInput from '../../components/currency-input'
 	                        }
 	                    }else{
 	                        self.modelForm={};
+	                        self.modelForm.level=1;
 	                    }
 	                })
             	}

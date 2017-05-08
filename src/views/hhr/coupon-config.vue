@@ -131,33 +131,36 @@ import LTitle from '../../components/title'
                 modelLoading:false,
 				tableCol: [
 				{
-					key:'couponName',title:'券名'
+					key:'couponName',title:'券名',width:150
 				},
 				{
-					key:'couponValue',title:'券面值'
+					key:'couponValue',title:'券面值',width:200,
+					render(row){
+						return `{{${row.couponValue} | currency '¥' '2'}}`
+					}
 				},
 				{
-					key:'state',title:'状态',
+					key:'state',title:'状态',width:125,
 
 					render(row,column,index){
 						return `{{getStatusName(${row.state})}}`;
 					}
 				},
 				{
-					key:'achieveMoney',title:'使用条件',
+					key:'achieveMoney',title:'使用条件',width:200,
 					render(row){
 						return `订单满足 ${row.achieveMoney} 元可以使用`;
 					}
 				},
 				
 				{
-					key:'effectDays',title:'有效天数',
+					key:'effectDays',title:'有效天数',width:230,
 					render(row){
 						return `申请通过后 ${row.effectDays} 天内可以使用`;
 					}
 				},
 				{
-					key:'remark',title:'备注'
+					key:'remark',title:'备注',width:200,className:'l-ellipsis'
 				},
 				{
 					title: '操作',

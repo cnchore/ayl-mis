@@ -60,7 +60,7 @@
 		            		{{modelForm.partnerName}}
 		        		</Form-item>
 		        		<Form-item label="未转分红">
-		            		{{modelForm.wallet+modelForm.walletHad}}
+		            		{{modelForm.walletGet+modelForm.walletHad | currency '¥' '2'}}
 		        		</Form-item>
 		        		<Form-item label="身份证号">
 		            		{{modelForm.cardID}}
@@ -69,7 +69,8 @@
 		            		{{modelForm.bankNo}}
 		        		</Form-item>
 		        		<Form-item label="转账金额" prop="walletNew">
-				            <i-input :value.sync="modelForm.walletNew" placeholder="请输入转账金额"></i-input>
+				            <currency-input :value="modelForm.walletNew | currency '¥' '2'" :out-value.sync="modelForm.walletNew" placeholder="请输入转账金额"></currency-input>
+				            
 				        </Form-item>
 		        	</i-col>
 		        	<i-col span="12">
@@ -77,7 +78,7 @@
 		            		{{modelForm.mobilePhone}}
 		        		</Form-item>
 		        		<Form-item label="已转分红">
-		            		{{modelForm.walletHad}}
+		            		{{modelForm.walletHad | currency '¥' '2'}}
 		        		</Form-item>
 		        		<Form-item label="开户行">
 		            		{{modelForm.bankName}}
@@ -86,7 +87,7 @@
 		            		{{modelForm.bankAccountName}}
 		        		</Form-item>
 		        		<Form-item label="转账凭证" prop="thumb">
-		        			<div class="l-upload-list" v-for="item in avatarDefaultList">
+		        			<div class="l-upload-list" v-for="item in avatarUploadList">
                                 <template v-if="item.status === 'finished'">
                                     <img :src="item.avatar">
                                     <div class="l-upload-list-cover">
@@ -152,8 +153,9 @@ import server from '../../libs/server'
 import LeftMenu from '../../components/left-menu'
 import LHeader from '../../components/header'
 import LTitle from '../../components/title'
+import CurrencyInput from '../../components/currency-input'
 	export default{
-		components:{LHeader,LeftMenu,LTitle},
+		components:{LHeader,LeftMenu,LTitle,CurrencyInput},
 		data(){
 			return{
                 breads:[{text:'首页',href:'/index'},{text:'分红管理',href:''}],
@@ -200,22 +202,23 @@ import LTitle from '../../components/title'
 					key:'cardID',title:'身份证号',width:200
 				},
 				{
-					key:'wallet',title:'总分红',width:95,
+					title:'总分红',width:200,
 					render(row){
-						return `<strong>${row.wallet}</strong>`
+						return `<strong>{{${row.walletGet} | currency '¥' '2'}}</strong>`
+					}
+
+				},
+				{
+					title:'未转分红',width:200,
+					render(row){
+						return `<span class="l-s-Error">{{${row.walletGet}+${row.walletHad} | currency '¥' '2'}}</span>`;
 					}
 				},
 				{
-					title:'未转分红',width:95,
-					render(row){
-						return `<span class="l-s-Error">{{${row.wallet}+${row.walletHad}}}</span>`;
-					}
-				},
-				{
-					key:'walletHad',title:'已转分红',width:95,
+					key:'walletHad',title:'已转分红',width:200,
 
 					render(row){
-						return `<span class="l-s-Info">${row.walletHad}</span>`;
+						return `<span class="l-s-Info">{{${row.walletHad} | currency '¥' '2'}}</span>`;
 					}
 				},
 				{
@@ -259,7 +262,8 @@ import LTitle from '../../components/title'
 							 icon="eye" size="small">查看</i-button>`
                     	}
                 	}
-				]
+				],
+				avatarDefaultList:[]
 			}
 		},
 		ready(){
@@ -414,7 +418,9 @@ import LTitle from '../../components/title'
                 this.avatarDefaultList.push({
                     url:file.url,
                     avatar:file.avatar
+                    
                 })
+
                 if(file.url){
                     this.modelForm.attachUrl=file.url;
                 }

@@ -165,7 +165,7 @@
                         	<i class="iconfont icon-kehuxinxi"></i>客户信息
                     	</div>
                     	<div class="container q-table">
-                    		<i-form :model="modelForm" :label-width="100" :rules="ruleForm">
+                    		<i-form v-ref:form-validate :model="modelForm" :label-width="100" :rules="ruleForm">
                     			
             					<Form-item label="联系人姓名" prop="name">
 						            <i-input :value.sync="modelForm.name" placeholder="请输入..."></i-input>
@@ -207,7 +207,7 @@
                                 :show-upload-list="false"
                                 :default-file-list="defaultList"
                                 :on-success="handleSuccess"
-                                :format="['jpg','jpeg','png','doc','docx','xls','xlsx','pdf','dwg']"
+                                :format="['jpg','jpeg','png','doc','docx','txt','ppt','pptx','xls','xlsx','pdf','dwg']"
                                 :max-size="10240"
                                 :on-format-error="handleFormatError"
                                 :on-exceeded-size="handleMaxSize"
@@ -254,7 +254,7 @@
 		                    		<div class="l-upload-list" >
 	                                    <img :src="item.avatar">
 	                                    <div class="l-upload-list-cover">
-	                                    	<Icon type="eye" title="查看" v-show="item.avatar.indexOf('imageMogr2/format')>-1" @click="handleView(item.attachAddress)"></Icon>
+	                                    	<Icon type="eye" title="查看" v-show="server.is7nImage(item.avatar)" @click="handleView(item.attachAddress)"></Icon>
 	                                        <a :href="item.attachAddress" target="_blank">
 			                           			<Icon type="ios-download-outline" title="下载"></Icon>
 			                            	</a>
@@ -298,7 +298,7 @@
 		            				<span v-if="item.costType===4">{{getCouponToal | currency '¥' '2'}}</span>
 		            				<span v-if="item.costType===11">{{getSaleToal | currency '¥' '2'}}</span>
 		            				<span v-if="item.costType===12">{{getDealToal | currency '¥' '2'}}</span>
-		            				<a  v-if="item.costType===4 && getSaleToal>5000 && couponList && couponList[0]" @click="modalVisible=true">选择现金券</a>
+		            				<a  v-if="item.costType===4 && getSaleToal>5000" @click="showSelCoupon">选择现金券</a>
 
 						        </i-col>
 						        <i-col span="14" class="q-flex">
@@ -315,7 +315,7 @@
 						        <i-col span="14">&nbsp;</i-col>
 						    </Row>
 						    <Row class="q-row" v-show="id">
-						        <i-col span="5">交货日期</i-col>
+						        <i-col span="5">交货周期</i-col>
 						        <i-col span="5"  class="q-col-right">
 						        	{{modelForm.limitDays}}
 						        </i-col>
@@ -505,11 +505,11 @@ import CurrencyInput from '../../components/currency-input'
             	let d=1;
             	this.costVoList.forEach((item)=>{
             		if(item.costType===7 || item.costType===8){
-            			d*=parseFloat(item.costValue)/100;
+            			d*=parseFloat(item.costValue);
             		}
             		
             	})
-            	return d;
+            	return d/100;
             },
             getDealToal(){
             	return this.getSaleToal*this.costVoList[4].costValue/100-this.costVoList[5].costValue-this.getCouponToal;
@@ -541,6 +541,46 @@ import CurrencyInput from '../../components/currency-input'
 				this.modelForm.couponIds=this.targetKeysCoupon.join();
 				
 				this.modalVisible=false;
+			},
+			showSelCoupon(){
+				
+                let self=this;
+                self.$refs['formValidate'].validate((valid) => {
+                    if (valid) {
+                    	if(self.couponList[0]&&self.id){
+                    		self.modalVisible=true;
+                    		return;
+                    	}
+                    	self.$Loading.start();
+		                let _list={
+		                	ownerPhoneLike:self.modelForm.mobilePhone,
+		                	state:0
+		                }
+		                server.getParnerAllCoupon(_list).then((res)=>{
+		                    self.$Loading.finish();
+		                    self.couponList=[];
+                        	res.data.forEach((item)=>{
+                        		self.couponList.push({
+                        			key:item.id,
+                        			name:item.applyCouponName,
+                        			code:item.couponCode,
+                        			value:item.couponValue,
+                        			orderId:item.orderId,
+                        			orderCode:item.orderCode,
+                        			state:item.state
+                        		});
+                        	})
+		                }).then(()=>{
+		                	self.modalVisible=true;
+		                })
+                        
+                    } else {
+                        self.$Notice.error('请输入完整的客户信息后再点我!');
+                        self.modalVisible=false;
+                    }
+                })
+                
+	            
 			},
 			addrSelected(value,selectedData){
                 //console.log(selectedData);

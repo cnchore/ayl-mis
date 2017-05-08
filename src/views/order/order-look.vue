@@ -191,7 +191,7 @@
 		                    		<div class="l-upload-list" >
 	                                    <img :src="item.avatar">
 	                                    <div class="l-upload-list-cover">
-	                                    	<Icon type="eye" title="查看" v-show="item.avatar.indexOf('imageMogr2/format')>-1" @click="handleView(item.attachAddress)"></Icon>
+	                                    	<Icon type="eye" title="查看" v-show="server.is7nImage(item.avatar)" @click="handleView(item.attachAddress)"></Icon>
 	                                        <a :href="item.attachAddress" target="_blank">
 			                           			<Icon type="ios-download-outline" title="下载"></Icon>
 			                            	</a>
@@ -258,19 +258,19 @@
 						    </Row>
 						    </template>	
 						    <Row class="q-row">
-						        <i-col span="5">折后金额</i-col>
+						        <i-col span="5">折后金额:</i-col>
 						        <i-col span="5" class="q-col-right">{{getDiscout | currency '¥' '2'}}</i-col>
 						        <i-col span="14">&nbsp;</i-col>
 						    </Row>
 						    <Row class="q-row">
-						        <i-col span="5">交货日期</i-col>
+						        <i-col span="5">交货周期:</i-col>
 						        <i-col span="5" class="q-col-right">
 						        	{{modelForm.limitDays}}
 						        </i-col>
 						        <i-col span="14">&nbsp;</i-col>
 						    </Row>
 						    <Row class="q-row">
-						        <i-col span="5">优先级</i-col>
+						        <i-col span="5">优先级:</i-col>
 						        <i-col span="5" class="q-col-right">
 									{{modelForm.level?modelForm.level===1?'低':modelForm.level===2?'中':'高':'无'}}
 						         </i-col>
@@ -284,12 +284,12 @@
                         	<i class="iconfont icon-beizhu"></i>备注
                     	</div>
                     	<div class="container q-table">
-                    		<i-form :model="modelForm" :label-width="100">
-                    			<Form-item label="经销商备注">
+                    		<i-form :model="modelForm" :label-width="132">
+                    			<Form-item label="经销商备注:">
                     				{{modelForm.agentRemark}}
 						        </Form-item>
                     		
-                    			<Form-item label="总部备注">
+                    			<Form-item label="总部备注:">
 						            {{modelForm.remark}}
 						        </Form-item>
 						        
@@ -333,19 +333,19 @@ import LTitle from '../../components/title'
                 	
                 },
                 costVoList:[
-                	{costName:'产品费',costValue:0,desc:'',costType:1},
-                	{costName:'运输费',costValue:0,desc:'',costType:2},
-                	{costName:'安装费',costValue:0,desc:'',costType:3},
-                	{costName:'总金额',costValue:0,desc:'',costType:11},
+                	{costName:'产品费:',costValue:0,desc:'',costType:1},
+                	{costName:'运输费:',costValue:0,desc:'',costType:2},
+                	{costName:'安装费:',costValue:0,desc:'',costType:3},
+                	{costName:'总金额:',costValue:0,desc:'',costType:11},
 
-                	{costName:'折  扣',costValue:100,desc:'',costType:5},
-                	{costName:'优惠券',costValue:0,desc:'',costType:6},
-                	{costName:'现金券',costValue:0,desc:'',costType:4},
+                	{costName:'折  扣:',costValue:100,desc:'',costType:5},
+                	{costName:'优惠券:',costValue:0,desc:'',costType:6},
+                	{costName:'现金券:',costValue:0,desc:'',costType:4},
                 	
-                	{costName:'成交额',costValue:0,desc:'',costType:12},
+                	{costName:'成交额:',costValue:0,desc:'',costType:12},
                 	
-                	{costName:'出厂金额',costValue:0,desc:'',costType:7},
-                	{costName:'折扣',costValue:100,desc:'',costType:8},
+                	{costName:'出厂金额:',costValue:0,desc:'',costType:7},
+                	{costName:'折扣:',costValue:100,desc:'',costType:8},
                 ],
                 id:null,
                 optionList:[],
@@ -397,11 +397,11 @@ import LTitle from '../../components/title'
             	let d=1;
             	this.costVoList.forEach((item)=>{
             		if(item.costType===7 || item.costType===8){
-            			d*=parseFloat(item.costValue)/100;
+            			d*=parseFloat(item.costValue);
             		}
             		
             	})
-            	return d;
+            	return d/100;
             },
             getDealToal(){
             	return this.getSaleToal*this.costVoList[4].costValue/100-this.costVoList[5].costValue-this.getCouponToal;

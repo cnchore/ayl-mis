@@ -33,7 +33,9 @@
             
             updateValue(e){
                 var val=e.target.value;
-                
+                if(val){
+                    val=val.replace(/,/g,'').replace('¥','');
+                }
                 if(!isNaN(val)){
                     this.$els.input.value=this.formatMoney(val,2); 
                     this.outValue=parseFloat(val);

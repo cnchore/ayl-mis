@@ -132,7 +132,8 @@
                         <i class="iconfont icon-zhanghuzongjine"></i>
                         <div class="q-title">成交总金额</div>
                         
-                        <h3>{{formData.totalAmount?formData.totalAmount:0}}</h3>
+                        <h3>{{formData.totalAmount | currency '¥' '2'}}</h3>
+
                     </div>
                 </Card>
             </i-col>
@@ -321,7 +322,7 @@ import LHeader from '../components/header'
                 },
                 
                 {
-                    key:'updateTime',title:'下单时间',width:170
+                    key:'orderTime',title:'下单时间',width:170
                     
                 },
                 {

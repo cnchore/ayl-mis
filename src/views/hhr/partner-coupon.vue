@@ -109,7 +109,7 @@ import LTitle from '../../components/title'
                 spanRight: 20,
 				tableCol: [
 				{
-					key:'couponCode',title:'券号',width:150
+					key:'couponCode',title:'券号',width:170
 				},
 				{
 					key:'ownerName',title:'业主名称',width:120
@@ -128,7 +128,10 @@ import LTitle from '../../components/title'
 					key:'applyCouponName',title:'优惠券名称',width:120
 				},
 				{
-					key:'couponValue',title:'优惠券券值',width:120
+					key:'couponValue',title:'优惠券券值',width:200,
+                    render(row){
+                        return `{{${row.couponValue} | currency '¥' '2'}}`
+                    }
 				},
 				{
 					width:100,key:'state',title:'状态',
