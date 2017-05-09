@@ -66,6 +66,7 @@ import LTitle from '../../components/title'
                
 				tableCol: [
 				{title:'客户名称',key:'name',width:125},
+                {title:'成单数量',key:'orderNum',width:125},
 				{title:'成交总金额',width:200,key:'turnoverAmountTotal',
                     render(row) {
                         return `{{${row.turnoverAmountTotal} | currency '¥' '2'}}`

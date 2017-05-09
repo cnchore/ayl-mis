@@ -20,7 +20,7 @@
                 h3{
                     cursor: pointer;
                     text-align: right;
-                    font-size: 30px;
+                    font-size: 24px;
                     font-weight: normal;
                 }
                 

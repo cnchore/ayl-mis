@@ -406,6 +406,7 @@ export default {
 	    return fmt;
 	},
 	is7nImage(url){
+
 		if(!url){
 			return false;
 		}
@@ -415,6 +416,40 @@ export default {
 			return false;
 		}
 	},
+	uploadFormat(){
+		return ['jpg','jpeg','png','doc','docx','txt','ppt','pptx','xls','xlsx','pdf','dwg'];
+	},
+	getFileType(v){
+    	if(!v){
+    		return null;
+    	}
+    	let l=v.lastIndexOf('.');
+    	switch(v.substr(l)){
+    		case '.doc':
+    		case '.docx':
+    			return require('../imgs/doc.png');
+    		case '.dwg':
+    			return require('../imgs/noimg.png');
+			case '.pdf':
+    			return require('../imgs/pdf.png');
+			case '.ppt':
+			case '.pptx':
+    			return require('../imgs/noimg.png');
+			case '.xls':
+			case '.xlsx':
+    			return require('../imgs/xls.png');
+    		case '.zip':
+    			return require('../imgs/zip.png');
+    		case '.jpg':
+    		case '.png':
+    			return this.image.thumb(v,60,60);
+    		case '.txt':
+    			return require('../imgs/txt.png');
+    		default :
+    			return require('../imgs/noimg.png');
+
+    	}
+    },
 	image: {
 	    thumb(src, width, height) {
 	      width = width || 320
@@ -422,7 +457,7 @@ export default {
 	      if(!src){ 
 	        return ''
 	      }
-	      src+=`?imageView2/1/w/${width}/h/${height}/format/webp/interlace/0/q/50`
+	      src+='?imageView2/1/w/320/h/200/format/webp/interlace/0/q/50';
 	      /*
 	      src += `?imageMogr2/format/jpg/interlace/1/quality/75/gravity/Center/thumbnail/${width}x`
 	      if(height){
@@ -438,6 +473,20 @@ export default {
 	      src += `?imageMogr2/thumbnail/${width}x/format/jpg/blur/1x0/quality/75|imageslim`
 	      return src
 	    }
+	},
+	isCanUseCoupon(total,discount,cashCounpon,coupon){
+		this.isCanUse=false;
+		this.msg='';
+		//（总金额*折扣-优惠券）*0.1 >=可使用现金券金额
+		if((parseFloat(total)*parseFloat(discount)-parseFloat(cashCounpon))*0.1>=parseFloat(coupon))
+		{
+			this.isCanUse= true;
+		}else{
+			this.msg='可以使用的现金券总金额不能超过：'+(parseFloat(total)*parseFloat(discount)-parseFloat(cashCounpon))*0.1+'元';
+			this.isCanUse=false;
+			
+		}
+		
 	},
 	getBaseUrl(){
 		return util.serverPath;
@@ -846,7 +895,7 @@ export default {
 		return this.getPromise(serverPath.getParnerCoupon,searchData,'getParnerCoupon');
 
 	},
-	getParnerAllCoupon(){
+	getParnerAllCoupon(searchData){
 		return this.getPromise(serverPath.getParnerAllCoupon,searchData,'getParnerAllCoupon');
 	}
 	//公告发布管理

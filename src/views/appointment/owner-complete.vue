@@ -48,13 +48,13 @@
         </Row>
         <Modal
 	        :visible.sync="modalVisible"
-	        title="新增／修改"
+	        title="预约信息查看"
 	        @on-ok="modelSubmit"
 	        width=800
 	        
 			:mask-closable="false"
 	        >
-	        <i-form v-ref:form-validate :model="modelForm" :rules="modeRule" :label-width="130">
+	        <i-form v-ref:form-validate class="q-form-no-bottom" :model="modelForm" :rules="modeRule" :label-width="130">
 		        <Row>
 		        <i-col span="24">
 		        	 <Form-item label="流水单号">

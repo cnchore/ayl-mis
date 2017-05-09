@@ -34,15 +34,14 @@
 				width: 100%;
 				padding-left: 10px;
 				.q-img-list{
-					width:198px;
 					height:158px;
 					display: inline-block;
 					margin:0px 10px 20px 10px;
 					.l-upload-list{
-						width:198px;
 						height:128px;
 						margin: 0px;
 					}
+
 					.l-upload-list-cover{
 						&:hover{
 							display: flex;
@@ -168,7 +167,7 @@
 		                    		<div class="l-upload-list" >
 	                                    <img :src="item.avatar">
 	                                    <div class="l-upload-list-cover">
-	                                    	<Icon type="eye" title="查看" v-show="server.is7nImage(item.avatar)" @click="handleView(item.attachAddress)"></Icon>
+	                                    	<Icon type="eye" title="查看" v-if="is7nImage(item.avatar)" @click="handleView(item.attachAddress)"></Icon>
 	                                        <a :href="item.attachAddress" target="_blank">
 			                           			<Icon type="ios-download-outline" title="下载"></Icon>
 			                            	</a>
@@ -282,6 +281,9 @@ import LTitle from '../../components/title'
 			if(this.id){
 				this.getList();
 			}
+			if(!this.costVoList[7].desc){
+				this.costVoList[7].desc='成交额=总金额*折扣-优惠券-现金券';
+			}
 		},
 		route:{
             data:function(transition){
@@ -332,6 +334,9 @@ import LTitle from '../../components/title'
             }
         },
 		methods:{
+			is7nImage(url){
+				return server.is7nImage(url);
+			},
 			getIsShowDate(index,dateStr){
 				if(!dateStr){
 					return false;
@@ -379,7 +384,13 @@ import LTitle from '../../components/title'
 	                        	})
 	                        }
 	                        if(res.data.optionList){
-	                        	self.optionList=res.data.optionList;
+	                        	self.optionList=[];
+	                        	res.data.optionList.forEach((item)=>{
+	                        		self.optionList.push({
+	                        			createTime:item.createTime,
+	                        			remark:item.remark.substr(item.remark.lastIndexOf('；')+1)
+	                        		})
+	                        	})
 	                        	
 	                        }
 	                        if(res.data.couponList){
@@ -413,35 +424,7 @@ import LTitle from '../../components/title'
                 this.visible = true;
             },
             getFileType(v){
-            	if(!v){
-            		return null;
-            	}
-            	let l=v.lastIndexOf('.');
-            	switch(v.substr(l)){
-            		case '.doc':
-            		case '.docx':
-            			return require('../../imgs/doc.png');
-            		case '.dwg':
-            			return require('../../imgs/noimg.png');
-					case '.pdf':
-            			return require('../../imgs/pdf.png');
-        			case '.ppt':
-        			case '.pptx':
-            			return require('../../imgs/noimg.png');
-        			case '.xls':
-        			case '.xlsx':
-            			return require('../../imgs/xls.png');
-            		case '.zip':
-            			return require('../../imgs/zip.png');
-            		case '.jpg':
-            		case '.png':
-            			return server.image.thumb(v,60,60);
-            		case '.txt':
-            			return require('../../imgs/txt.png');
-            		default :
-            			return require('../../imgs/noimg.png');
-
-            	}
+            	return server.getFileType(v);
             },
             
 		}

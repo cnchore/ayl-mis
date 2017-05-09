@@ -54,13 +54,13 @@
         </Row>
         <Modal
             :visible.sync="modalVisible"
-            title="新增／修改"
+            title="预约信息查看"
             @on-ok="modelSubmit"
             width=800
             
             :mask-closable="false"
             >
-            <i-form v-ref:form-validate :model="modelForm" :rules="modeRule" :label-width="130">
+            <i-form v-ref:form-validate class="q-form-no-bottom" :model="modelForm" :rules="modeRule" :label-width="130">
                 <Row>
                 <i-col span="24">
                      <Form-item label="流水单号">
@@ -153,10 +153,10 @@ import LTitle from '../../components/title'
                     key:'orderNo',title:'订单号',width:200
                 },
                 {
-                    key:'state',title:'当前阶段',width:140,
+                    title:'当前阶段',width:140,
 
                     render(row,column,index){
-                        return `{{getStatusName(${row.state})}}`;
+                        return `{{getStatusName(${row.flowState})}}`;
                     }
                 },
                 {
@@ -168,12 +168,7 @@ import LTitle from '../../components/title'
                         return l;
                     }
                 },
-                {
-                    title:'订单总金额',width:125,
-                    render(row){
-                        return row.salesAmount?row.salesAmount:'无';
-                    }
-                },
+                
                 {
                     title:'成交金额',width:200,
                     render(row){
@@ -233,16 +228,12 @@ import LTitle from '../../components/title'
             getStatusName(v){
                 
                 switch(v){
+                    case 0:
+                    return "待下单";
                     case 1:
-                    return "确认订单";
+                    return "待总部确认";
                     case 2:
-                    return "生产中";
-                    case 3:
-                    return "产品入库";
-                    case 4:
-                    return "已发货";
-                    case 5:
-                    return "已收货";
+                    return "总部已确认";
                 }
             },
             

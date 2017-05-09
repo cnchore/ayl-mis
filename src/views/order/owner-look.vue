@@ -129,7 +129,7 @@
                         	<i class="iconfont icon-kehuxinxi"></i>客户信息
                     	</div>
                     	<div class="container q-table">
-                    		<i-form :model="modelForm" :label-width="100" >
+                    		<i-form :model="modelForm" class="q-form-no-bottom" :label-width="100" >
                     			<Row>
                     				<i-col span="12">
 										<Form-item label="联系人姓名">
@@ -199,6 +199,8 @@
 		                            </div>
 		                            <div>{{item.createTime}}</div>
 		                            <div>
+										<Icon type="eye" title="查看" v-if="is7nImage(item.avatar)" @click="handleView(item.attachAddress)"></Icon>
+
 		                            	<a :href="item.attachAddress" target="_blank">
 		                           			<Icon type="ios-download-outline" title="下载"></Icon>
 		                            	</a>
@@ -210,7 +212,10 @@
                          </div>
                          
                     </div>
-                  
+                  	<div class="q-form-btn">
+                     	
+                     	<i-button type="ghost" size="large" @click="cancel">取消</i-button>
+                     </div>  
                     
                 </div>
                 <div class="layout-copy">
@@ -220,6 +225,9 @@
         </Row>
         
     </div>
+    <Modal title="查看图片" :visible.sync="visible">
+		<img :src="imgName" v-if="visible" style="width: 100%">
+	</Modal>
 </template>
 <script>
 import server from '../../libs/server'
@@ -242,7 +250,7 @@ import LTitle from '../../components/title'
 				self:this,
 				tableData:[],
 				tableCol: [
-				{title:'订单编号',width:170,
+				{title:'订单编号',width:200,
 					render(row){
 						return `<a v-link="{path:'/owner/order/look?id='+${row.id}}">${row.orderNo}</a>`;
 					}
@@ -256,7 +264,7 @@ import LTitle from '../../components/title'
 				},
 				{title:'订单状态',key:'state',width:125,
 					render(row){
-						return `{{getStatusName(${row.state})}}`
+						return `{{getStatusName(${row.flowState})}}`
 					}
 				},
 				{title:'订单来源',key:'sourceType',width:125,
@@ -265,6 +273,8 @@ import LTitle from '../../components/title'
 					}
 				}],
 				orderList:[],
+				imgName: '',
+                visible: false,
 			}
 		},
 		ready(){
@@ -291,16 +301,12 @@ import LTitle from '../../components/title'
 			getStatusName(v){
                 
                 switch(v){
+                    case 0:
+                    return "待下单";
                     case 1:
-                    return "确认订单";
+                    return "待总部确认";
                     case 2:
-                    return "生产中";
-                    case 3:
-                    return "产品入库";
-                    case 4:
-                    return "已发货";
-                    case 5:
-                    return "已收货";
+                    return "总部已确认";
                 }
             },
 			getList(){
@@ -327,37 +333,23 @@ import LTitle from '../../components/title'
 					}
 				})
 			},
+			cancel(){
+				this.$router.go('/order/ownerInfo');
+			},
 			changePage(index){
                 this.pageIndex=index+0;
                 //this.getList(index+0,10);
             },
             getFileType(v){
-            	if(!v){
-            		return null;
-            	}
-            	let l=v.lastIndexOf('.');
-            	switch(v.substr(l)){
-            		case '.doc':
-            		case '.docx':
-            			return require('../../imgs/doc.png');
-            		case '.dwg':
-            			return require('../../imgs/noimg.png');
-					case '.pdf':
-            			return require('../../imgs/pdf.png');
-        			case '.ppt':
-            			return require('../../imgs/noimg.png');
-        			case '.xls':
-            			return require('../../imgs/xls.png');
-            		case '.zip':
-            			return require('../../imgs/zip.png');
-            		case '.jpg':
-            		case '.png':
-            			return server.image.thumb(v,60,60);
-            		default :
-            			return require('../../imgs/noimg.png');
-
-            	}
+            	return server.getFileType(v);
             },
+            is7nImage(url){
+				return server.is7nImage(url);
+			},
+           	handleView (name) {
+                this.imgName = name;
+                this.visible = true;
+            }
             
 		}
 	}

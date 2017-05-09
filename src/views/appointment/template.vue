@@ -118,7 +118,7 @@
 		                            </div>
 		                            <span>{{item.attachName}}</span>
 	                            </div>
-
+	<Icon type="eye" title="查看" v-if="is7nImage(item.avatar)" @click="handleView(item.attachAddress)"></Icon>
 	<Modal title="查看图片" :visible.sync="visible">
 		<img :src="imgName" v-if="visible" style="width: 100%">
 	</Modal>
@@ -127,33 +127,13 @@
 <script>
 				imgName: '',
                 visible: false,
-
-				switch(v.substr(l)){
-            		case '.doc':
-            		case '.docx':
-            			return require('../../imgs/doc.png');
-            		case '.dwg':
-            			return require('../../imgs/noimg.png');
-					case '.pdf':
-            			return require('../../imgs/pdf.png');
-        			case '.ppt':
-        			case '.pptx':
-            			return require('../../imgs/noimg.png');
-        			case '.xls':
-        			case '.xlsx':
-            			return require('../../imgs/xls.png');
-            		case '.zip':
-            			return require('../../imgs/zip.png');
-            		case '.jpg':
-            		case '.png':
-            			return server.image.thumb(v,60,60);
-            		case '.txt':
-            			return require('../../imgs/txt.png');
-            		default :
-            			return require('../../imgs/noimg.png');
-
-            	}
-
+                //uploadFormat:server.uploadFormat(),
+			getFileType(v){
+            	return server.getFileType(v);
+            },
+            is7nImage(url){
+				return server.is7nImage(url);
+			},
            	handleView (name) {
                 this.imgName = name;
                 this.visible = true;

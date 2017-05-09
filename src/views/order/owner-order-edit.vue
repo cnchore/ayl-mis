@@ -34,12 +34,10 @@
 				width: 100%;
 				padding-left: 10px;
 				.q-img-list{
-					width:198px;
 					height:158px;
 					display: inline-block;
 					margin:0px 10px 20px 10px;
 					.l-upload-list{
-						width:198px;
 						height:128px;
 						margin: 0px;
 					}
@@ -160,6 +158,7 @@
                 </div>
                 <br/>
                 <div class="layout-content" >
+
                 	<div class="q-imgs">
                     	<div class="q-title">
                         	<i class="iconfont icon-kehuxinxi"></i>客户信息
@@ -207,7 +206,7 @@
                                 :show-upload-list="false"
                                 :default-file-list="defaultList"
                                 :on-success="handleSuccess"
-                                :format="['jpg','jpeg','png','doc','docx','txt','ppt','pptx','xls','xlsx','pdf','dwg']"
+                                :format="uploadFormat"
                                 :max-size="10240"
                                 :on-format-error="handleFormatError"
                                 :on-exceeded-size="handleMaxSize"
@@ -228,7 +227,7 @@
 		                                <template v-if="item.status === 'finished'">
 		                                    <img :src="item.avatar">
 		                                    <div class="l-upload-list-cover">
-		                                    	<Icon type="eye" title="查看" v-show="item.avatar.indexOf('imageMogr2/format')>-1" @click="handleView(item.attachAddress)"></Icon>
+		                                    	<Icon type="eye" title="查看" v-if="is7nImage(item.avatar)" @click="handleView(item.attachAddress)"></Icon>
 		                                        <a :href="item.attachAddress" target="_blank">
 				                           			<Icon type="ios-download-outline" title="下载"></Icon>
 				                            	</a>
@@ -245,7 +244,8 @@
 
 
 	                            <div class="q-top-b">
-	                            	<a href="#">下载报价单模版</a>
+	                            	<a href="/template/门窗订货单.xlsx" target="_blank">门窗订货单下载模板</a>
+	                            	<a href="/template/阳光房订货单.xlsx" target="_blank">阳光房订货单下载模板</a>
 	                            </div>
                             </div>
                             <div class="q-right" v-show="tabIndex===2 && id">
@@ -254,7 +254,7 @@
 		                    		<div class="l-upload-list" >
 	                                    <img :src="item.avatar">
 	                                    <div class="l-upload-list-cover">
-	                                    	<Icon type="eye" title="查看" v-show="server.is7nImage(item.avatar)" @click="handleView(item.attachAddress)"></Icon>
+	                                    	<Icon type="eye" title="查看" v-if="is7nImage(item.avatar)" @click="handleView(item.attachAddress)"></Icon>
 	                                        <a :href="item.attachAddress" target="_blank">
 			                           			<Icon type="ios-download-outline" title="下载"></Icon>
 			                            	</a>
@@ -264,7 +264,8 @@
 	                            </div>
 
 	                            <div class="q-top-b">
-	                            	<a href="#">下载报价单模版</a>
+	                            	<a href="/template/门窗订货单.xlsx" target="_blank">门窗订货单下载模板</a>
+	                            	<a href="/template/阳光房订货单.xlsx" target="_blank">阳光房订货单下载模板</a>
 	                            </div>
                             </div>
                          </div>   
@@ -341,13 +342,14 @@
 						            <i-input :value.sync="modelForm.agentRemark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
 						        </Form-item>
                     		
-                    			<Form-item label="总部备注" v-show="id">
+                    			<Form-item label="总部备注" v-show="id" v-if="false">
                     				{{modelForm.remark}}
 						        </Form-item>
 						        
 						    </i-form>
                     	</div>
                     </div>
+                 
                     <div class="q-btns">
                     	<i-button type="primary" :loading="modelLoading" @click="ownerSaveAppoint(true)" size="large">保存</i-button>
                     	<i-button type="primary" :loading="modelLoading" @click="ownerSaveAppoint(false)" size="large">提交</i-button>
@@ -361,7 +363,7 @@
         </Row>
         
     </div>
-  
+
     <Modal
         :visible.sync="modalVisible"
         title="选择现金券"
@@ -369,17 +371,16 @@
 		:mask-closable="false"
         >
         <Transfer
-        :data="couponList"
-        :target-keys="targetKeysCoupon"
-        :list-style="listStyle"
-        :render-format="renderCoupon"
-        :operations="['移给待选','移给已选']"
-        :titles="['待选优惠券','已选优惠券']"
-        filterable
-        :filter-method="filterMethod"
-        @on-change="handleTransfer">
-        
-    </Transfer>
+	        :data="couponList"
+	        :target-keys="targetKeysCoupon"
+	        :list-style="listStyle"
+	        :render-format="renderCoupon"
+	        :operations="['移给待选','移给已选']"
+	        :titles="['待选优惠券','已选优惠券']"
+	        filterable
+	        :filter-method="filterMethod"
+	        @on-change="handleTransfer">
+    	</Transfer>
 	    <div slot="footer">
             <i-button type="ghost" size="large" @click="modalVisible=fasle">关闭</i-button>
             <i-button type="primary" size="large" @click="selCoupon">确定</i-button>
@@ -413,6 +414,7 @@ import CurrencyInput from '../../components/currency-input'
                 spanRight: 20,
                 baseUrl:server.getBaseUrl(),
                 uploadData:{bucket:'dc-test'},
+                uploadFormat:server.uploadFormat(),
                 defaultList: [],
                 modalVisible:false,
                 modelLoading:false,
@@ -464,10 +466,14 @@ import CurrencyInput from '../../components/currency-input'
 			}
 		},
 		ready(){
+			
 			if(this.id){
 				this.getList();
 			}
 			this.getDict();
+			if(!this.costVoList[7].desc){
+				this.costVoList[7].desc='成交额=总金额*折扣-优惠券-现金券';
+			}
 		},
 		route:{
             data:function(transition){
@@ -528,6 +534,9 @@ import CurrencyInput from '../../components/currency-input'
             }
         },
 		methods:{
+			is7nImage(url){
+				return server.is7nImage(url);
+			},
 			filterMethod (data, query) {
                 return data.code.indexOf(query) > -1;
             },
@@ -545,40 +554,43 @@ import CurrencyInput from '../../components/currency-input'
 			showSelCoupon(){
 				
                 let self=this;
-                self.$refs['formValidate'].validate((valid) => {
-                    if (valid) {
-                    	if(self.couponList[0]&&self.id){
-                    		self.modalVisible=true;
-                    		return;
-                    	}
-                    	self.$Loading.start();
-		                let _list={
-		                	ownerPhoneLike:self.modelForm.mobilePhone,
-		                	state:0
-		                }
-		                server.getParnerAllCoupon(_list).then((res)=>{
-		                    self.$Loading.finish();
-		                    self.couponList=[];
-                        	res.data.forEach((item)=>{
-                        		self.couponList.push({
-                        			key:item.id,
-                        			name:item.applyCouponName,
-                        			code:item.couponCode,
-                        			value:item.couponValue,
-                        			orderId:item.orderId,
-                        			orderCode:item.orderCode,
-                        			state:item.state
-                        		});
-                        	})
-		                }).then(()=>{
-		                	self.modalVisible=true;
-		                })
-                        
-                    } else {
-                        self.$Notice.error('请输入完整的客户信息后再点我!');
-                        self.modalVisible=false;
-                    }
-                })
+
+                if (self.modelForm.mobilePhone) {
+                	if(self.couponList[0]&&self.id){
+                		self.couponShowList=self.couponList;
+                		self.modalVisible=true;
+                		return;
+                	}
+                	self.$Loading.start();
+	                let _list={
+	                	ownerPhoneLike:self.modelForm.mobilePhone,
+	                	state:0
+	                }
+	                server.getParnerAllCoupon(_list).then((res)=>{
+	                    self.$Loading.finish();
+	                    self.couponList=[];
+	                   
+                    	res.data.forEach((item)=>{
+                    		self.couponList.push({
+                    			key:item.id,
+                    			name:item.applyCouponName,
+                    			code:item.couponCode,
+                    			value:item.couponValue,
+                    			orderId:item.orderId,
+                    			orderCode:item.orderCode,
+                    			state:item.state
+                    		});
+                    	})
+	                }).then(()=>{
+	                	self.targetKeysCoupon=[];
+	                	self.modalVisible=true;
+	                })
+                    
+                } else {
+                    self.$Notice.error({title:'请输入联系人手机号码后再点我!'});
+                    self.modalVisible=false;
+                }
+               
                 
 	            
 			},
@@ -755,8 +767,19 @@ import CurrencyInput from '../../components/currency-input'
 			cancel(){
 				this.$router.go('/owner/order/list');
 			},
+			isCanUseCoupon(){
+				return new server.isCanUseCoupon(this.getSaleToal,this.costVoList[4].costValue/100,this.costVoList[5].costValue,this.getCouponToal)
+			},
 			ownerSaveAppoint(t){
 				let self=this;
+				let _isCanUseCoupon=self.isCanUseCoupon();
+				if(!_isCanUseCoupon.isCanUse){
+					self.$Notice.error({
+                        title:'错误',
+                        desc:_isCanUseCoupon.msg
+                    });
+					return;
+				}
 				self.modelLoading=true;
 				self.modelForm.isOnlySave=t;
 				self.modelForm.couponIds=self.targetKeysCoupon.join();
@@ -835,35 +858,7 @@ import CurrencyInput from '../../components/currency-input'
                	file.createTime=new Date();
             },
             getFileType(v){
-            	if(!v){
-            		return null;
-            	}
-            	let l=v.lastIndexOf('.');
-            	switch(v.substr(l)){
-            		case '.doc':
-            		case '.docx':
-            			return require('../../imgs/doc.png');
-            		case '.dwg':
-            			return require('../../imgs/noimg.png');
-					case '.pdf':
-            			return require('../../imgs/pdf.png');
-        			case '.ppt':
-        			case '.pptx':
-            			return require('../../imgs/noimg.png');
-        			case '.xls':
-        			case '.xlsx':
-            			return require('../../imgs/xls.png');
-            		case '.zip':
-            			return require('../../imgs/zip.png');
-            		case '.jpg':
-            		case '.png':
-            			return server.image.thumb(v,60,60);
-            		case '.txt':
-            			return require('../../imgs/txt.png');
-            		default :
-            			return require('../../imgs/noimg.png');
-
-            	}
+            	return server.getFileType(v);
             },
             handleView (name) {
                 this.imgName = name;
