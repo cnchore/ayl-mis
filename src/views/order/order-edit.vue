@@ -294,7 +294,7 @@
 						        <i-col span="5" class="q-col-right">
 						        	<i-input style="text-align:right" :value.sync="modelForm.limitDays" ></i-input>
 						        </i-col>
-						        <i-col span="14">&nbsp;</i-col>
+						        <i-col span="14">自然天</i-col>
 						    </Row>
 						    <Row class="q-row">
 						        <i-col span="5">优先级</i-col>

@@ -250,11 +250,11 @@ import LTitle from '../../components/title'
 				tableCol: [
 				{title:'订单编号',key:'orderNo',width:200,
 					render(row){
-						return `<a v-link="{path:'/order/look?id='+${row.id}}">${row.orderNo}</a>`;
+						return `<a v-link="{path:'/order/look?t=2&id='+${row.id}}">${row.orderNo}</a>`;
 					}
 				},
 				{title:'下单日期',key:'createTime',width:170},
-				{title:'下单人',key:'byAgent',width:125},
+				{title:'下单人',key:'byAgent',width:200},
 				{title:'订单成交额',key:'turnoverAmount',width:200,
 					render(row){
                         return `{{${row.turnoverAmount} | currency '¥' '2'}}`

@@ -4,55 +4,58 @@
                 <i-col :xs="0" :sm="0" :md="0" :lg="5" v-show="spanLeft>0">
                     <div class="logo"></div>
                 </i-col>
-                <i-col  :md="20" :lg="15">
+                <i-col  :md="21" :lg="16">
                  <Menu mode="horizontal" theme="primary" class="q-menu" :active-key="activeKey" @on-select="handleSelect">
                     <Menu-item key="0">
                         <i class="iconfont icon-zhuye"></i>
                         <span>首页</span>
                     </Menu-item>
-                    <Menu-item key="3" v-show="userInfo.type===1">
+                    <Menu-item key="3" v-show="userInfo.type===1 && userInfo.roleName!='自助学习'">
                         <i class="iconfont icon-yuyueguanli"></i>
                         <span>预约管理</span>
                     </Menu-item>
-                    <Menu-item key="10" v-show="userInfo.type===2">
+                    <Menu-item key="10" v-show="userInfo.type===2 && userInfo.roleName!='自助学习'">
                         <i class="iconfont icon-yuyueguanli"></i>
                         <span>预约管理</span>
                     </Menu-item>
-                    <Menu-item key="4" v-show="userInfo.type===1">
+                    <Menu-item key="4" v-show="userInfo.type===1 && userInfo.roleName!='自助学习'">
                         <i class="iconfont icon-dingdan"></i>
                         <span>客户订单管理</span>
                     </Menu-item>
-                     <Menu-item key="11" v-show="userInfo.type===2">
+                     <Menu-item key="11" v-show="userInfo.type===2 && userInfo.roleName!='自助学习'">
                         <i class="iconfont icon-dingdan"></i>
                         <span>客户订单管理</span>
                     </Menu-item>
-                    <Menu-item key="1">
+                    <Menu-item key="1" v-if="userInfo.roleName!='自助学习'">
                         <i class="iconfont icon-qiye"></i>
                         <span>安居艾臣</span>
                     </Menu-item>
-                    <Menu-item key="2">
+                    <Menu-item key="2" v-if="userInfo.roleName!='自助学习'">
                         <i class="iconfont icon-hehuoren"></i>
                         <span>艾臣合伙人</span>
                     </Menu-item>
-                    <Menu-item key="5" v-show="userInfo.type==1">
+                    <Menu-item key="5" v-if="userInfo.type==1 && userInfo.roleName!='自助学习'">
                         <i class="iconfont icon-mendian"></i>
                         <span>经销商管理</span>
                     </Menu-item>
-                    <Menu-item key="9" v-show="userInfo.type==2">
+                    <Menu-item key="9" v-if="userInfo.type==2 && userInfo.roleName!='自助学习'">
                         <i class="iconfont icon-mendian"></i>
                         <span>门店管理</span>
                     </Menu-item>
-                    <Menu-item key="6">
+                    <Menu-item key="6" v-if="userInfo.roleName!='自助学习'">
                         <i class="iconfont icon-tongji"></i>
                         <span>统计分析</span>
                     </Menu-item>
-                    
-                    </Menu>
+                    <Menu-item key="12">
+                        <i class="iconfont icon-zizhuxuexi"></i>
+                        <span>自助学习</span>
+                    </Menu-item>
+                </Menu>
                 </i-col>
-                <i-col  :md="4" :lg="4">
+                <i-col  :md="3" :lg="3">
                     <Menu mode="horizontal" theme="primary" class="q-menu"  style="float: right;"
                     @on-select="handleSelect">
-                        <Menu-item key="7" class="q-right q-inline" v-show="false && spanLeft>0">
+                        <Menu-item key="7" class="q-right q-inline" v-if="false && spanLeft>0">
                             <i class="iconfont icon-xiaoxi"></i>
                         </Menu-item>
                         <Submenu key="8" class="q-right">
@@ -124,7 +127,11 @@ import env from '../config/env';
                 //this.$Message.info(key);
                 switch(key){
                     case '0':
-                        this.$router.go('/index');
+                        if(this.userInfo.roleName!='自助学习'){
+                            this.$router.go('/study/product/point');
+                        }else{
+                            this.$router.go('/index');
+                        }
                         break;
                     case '1':
                         if(this.userInfo.type===1){
@@ -174,6 +181,9 @@ import env from '../config/env';
                         break;
                     case '9':
                         this.$router.go('/staff');
+                        break;
+                    case '12'://自助学习
+                        this.$router.go('/study/product/point');
                         break;
                         
                 }

@@ -150,7 +150,7 @@
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="4" active-key="4-1"></left-menu>
+                <left-menu active-Menu="4" :active-key="activeKey"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
@@ -205,7 +205,7 @@
 		                    		<div class="l-upload-list" >
 	                                    <img :src="item.avatar">
 	                                    <div class="l-upload-list-cover">
-	                                    	<Icon type="eye" title="查看" v-show="item.avatar.indexOf('imageMogr2/format')>-1" @click="handleView(item.attachAddress)"></Icon>
+	                                    	<Icon type="eye" title="查看" v-show="is7nImage(item.avatar)" @click="handleView(item.attachAddress)"></Icon>
 	                                        <a :href="item.attachAddress" target="_blank">
 			                           			<Icon type="ios-download-outline" title="下载"></Icon>
 			                            	</a>
@@ -260,7 +260,7 @@
 						        <i-col span="5" class="q-col-right">
 						        	{{modelForm.limitDays}}
 						        </i-col>
-						        <i-col span="14">&nbsp;</i-col>
+						        <i-col span="14">自然天</i-col>
 						    </Row>
 						    <Row class="q-row">
 						        <i-col span="5">优先级:</i-col>
@@ -341,6 +341,8 @@ import LTitle from '../../components/title'
                 	{costName:'折扣:',costValue:100,desc:'',costType:8},
                 ],
                 id:null,
+                t:null,
+                activeKey:'4-1',
                 optionList:[],
                 appointId:null,
                 agentAttach:[],
@@ -362,6 +364,11 @@ import LTitle from '../../components/title'
                     let t=transition.to.query.id;
                     this.id=t;
                     
+                }
+                if(transition.to.query && transition.to.query.t){
+                	this.t=transition.to.query.t;
+                	this.activeKey='4-2';
+                	this.breads=[{text:'首页',href:'/index'},{text:'客户管理',href:'/order/hq/ownerInfo'},{text:'订货单查看',href:''}];
                 }
                 
             }
@@ -444,7 +451,8 @@ import LTitle from '../../components/title'
 				return b;
 			},
 			cancel(){
-				this.$router.go('/order/list');
+				//this.$router.go('/order/list');
+				this.$router.go(-1);
 			},
 			getList(){
 				let self=this;
@@ -540,35 +548,7 @@ import LTitle from '../../components/title'
                 this.visible = true;
             },
             getFileType(v){
-            	if(!v){
-            		return null;
-            	}
-            	let l=v.lastIndexOf('.');
-            	switch(v.substr(l)){
-            		case '.doc':
-            		case '.docx':
-            			return require('../../imgs/doc.png');
-            		case '.dwg':
-            			return require('../../imgs/noimg.png');
-					case '.pdf':
-            			return require('../../imgs/pdf.png');
-        			case '.ppt':
-        			case '.pptx':
-            			return require('../../imgs/noimg.png');
-        			case '.xls':
-        			case '.xlsx':
-            			return require('../../imgs/xls.png');
-            		case '.zip':
-            			return require('../../imgs/zip.png');
-            		case '.jpg':
-            		case '.png':
-            			return server.image.thumb(v,60,60);
-            		case '.txt':
-            			return require('../../imgs/txt.png');
-            		default :
-            			return require('../../imgs/noimg.png');
-
-            	}
+            	return server.getFileType(v);
             },
             
 		}

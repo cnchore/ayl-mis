@@ -150,7 +150,7 @@
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="11" active-key="11-1"></left-menu>
+                <left-menu active-Menu="11" :active-key="activeKey"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
@@ -164,24 +164,29 @@
                     	</div>
                     	<div class="container q-table">
                     		<i-form :model="modelForm" class="q-form-no-bottom" :label-width="100">
-                    			
-            					<Form-item label="联系人姓名">
-						       	 {{modelForm.name}}
-						        </Form-item>
-                    			
-            					<Form-item label="联系人手机" >
-						        {{modelForm.mobilePhone}}
-						        </Form-item>
-                    			
-						        <Form-item label="装修项目">
-						        {{modelForm.decorateProject}}
-						        </Form-item>
-            					<Form-item label="所在地区">
-						        {{modelForm.province}}{{modelForm.city}}{{modelForm.area}}
-						        </Form-item>
-            					<Form-item label="详细地址" prop="address">
-						        {{modelForm.address}}
-						        </Form-item>
+                    			<Row>
+                    				<i-col span="12" >
+										<Form-item label="联系人姓名">
+								       	 {{modelForm.name}}
+								        </Form-item>
+		                    			
+		            					<Form-item label="联系人手机" >
+								        {{modelForm.mobilePhone}}
+								        </Form-item>
+								        <Form-item label="详细地址" prop="address">
+								        {{modelForm.address}}
+								        </Form-item>
+                    				</i-col>
+                    				<i-col span="12" >
+										<Form-item label="装修项目">
+								        {{modelForm.decorateProject}}
+								        </Form-item>
+		            					<Form-item label="所在地区">
+								        {{modelForm.province}}{{modelForm.city}}{{modelForm.area}}
+								        </Form-item>
+                    				</i-col>
+                    			</Row>
+            					
 						    </i-form>
                     	</div>
                     </div>
@@ -246,14 +251,14 @@
 						        <i-col span="24">经销商报价区</i-col>
 						    </Row>
 						    <template v-for="item in costVoList">
-						     <Row class="q-row title" v-if="item.costType===7 && id">
+						     <Row class="q-row title" v-if="item.costType===7 && id  && modelForm.flowState===2">
 						        <i-col span="24">总部报价区</i-col>
 						    </Row>
-						    <Row class="q-row" v-if="(item.costType===1 || item.costType===2 || item.costType===3 || item.costType===5 || item.costType===6 || item.costType===4 || item.costType===11 || item.costType===12) || (id && (item.costType===7 || item.costType===8 ))">
+						    <Row class="q-row" v-if="(item.costType===1 || item.costType===2 || item.costType===3 || item.costType===5 || item.costType===6 || item.costType===4 || item.costType===11 || item.costType===12) || (id && (item.costType===7 || item.costType===8 ) && modelForm.flowState===2)">
 						        <i-col span="5">{{item.costName}}</i-col>
 						        <i-col span="5" class="q-col-right">
-		            				<span v-if="id && (item.costType===7 )">{{item.costValue| currency '¥' '2'}}</span>
-		            				<span v-if="id && (item.costType===8 )">{{item.costValue}}%</span>
+		            				<span v-if="id && (item.costType===7  && modelForm.flowState===2)">{{item.costValue| currency '¥' '2'}}</span>
+		            				<span v-if="id && (item.costType===8 && modelForm.flowState===2 )">{{item.costValue}}%</span>
 		            				<span v-if="item.costType===5 " >{{item.costValue}}%</span>
 		            				<span v-if="item.costType===1 || item.costType===2 || item.costType===3" >{{item.costValue | currency '¥' '2'}}</span>
 		            				<span v-if="item.costType===6" >{{item.costValue}}</span>
@@ -270,19 +275,19 @@
 						        </i-col>
 						    </Row>
 						    </template>	
-						    <Row class="q-row" v-show="id">
+						    <Row class="q-row" v-if="id && modelForm.flowState===2">
 						        <i-col span="5">折后金额</i-col>
 						        <i-col span="5" class="q-col-right">{{getDiscout | currency '¥' '2'}}</i-col>
 						        <i-col span="14" >&nbsp;</i-col>
 						    </Row>
-						    <Row class="q-row" v-show="id">
+						    <Row class="q-row" v-if="id && modelForm.flowState===2">
 						        <i-col span="5">交货周期</i-col>
 						        <i-col span="5" class="q-col-right">
 						        	{{modelForm.limitDays}}
 						        </i-col>
-						        <i-col span="14">&nbsp;</i-col>
+						        <i-col span="14">自然天</i-col>
 						    </Row>
-						    <Row class="q-row" v-show="id">
+						    <Row class="q-row" v-if="id && modelForm.flowState===2">
 						        <i-col span="5">优先级</i-col>
 						        <i-col span="5" class="q-col-right">
 						        	{{modelForm.level?modelForm.level===1?'低':modelForm.level===2?'中':'高':'无'}}
@@ -335,6 +340,7 @@ import LTitle from '../../components/title'
 		data(){
 			return{
 				breads:[{text:'首页',href:'/index'},{text:'订单管理',href:'/owner/order/list'},{text:'订货单查看',href:''}],
+				activeKey:'11-1',
 				couponList:[],
 				targetKeysCoupon:[],
 				imgName: '',
@@ -366,6 +372,7 @@ import LTitle from '../../components/title'
                 	{costName:'折扣',costValue:100,desc:'',costType:8},
                 ],
                 id:null,
+                t:null,
                 optionList:[],
                 appointId:null,
                 orgAttach:[],
@@ -386,7 +393,12 @@ import LTitle from '../../components/title'
                 if(transition.to.query &&transition.to.query.id){
                     let t=transition.to.query.id;
                     this.id=t;
-                    
+                }
+                if(transition.to.query && transition.to.query.t){
+                	this.t=transition.to.query.t;
+                	this.activeKey='11-2';
+					this.breads=[{text:'首页',href:'/index'},{text:'客户管理',href:'/order/ownerInfo'},{text:'订货单查看',href:''}];
+
                 }
                 
             }
@@ -485,7 +497,9 @@ import LTitle from '../../components/title'
 				return b;
 			},
 			cancel(){
-				this.$router.go('/owner/order/list');
+					//this.$router.go('/order/ownerInfo');
+					//this.$router.go('/owner/order/list');
+				this.$router.go(-1);
 			},
 			getList(){
 				let self=this;
@@ -587,35 +601,7 @@ import LTitle from '../../components/title'
                 this.visible = true;
             },
             getFileType(v){
-            	if(!v){
-            		return null;
-            	}
-            	let l=v.lastIndexOf('.');
-            	switch(v.substr(l)){
-            		case '.doc':
-            		case '.docx':
-            			return require('../../imgs/doc.png');
-            		case '.dwg':
-            			return require('../../imgs/noimg.png');
-					case '.pdf':
-            			return require('../../imgs/pdf.png');
-        			case '.ppt':
-        			case '.pptx':
-            			return require('../../imgs/noimg.png');
-        			case '.xls':
-        			case '.xlsx':
-            			return require('../../imgs/xls.png');
-            		case '.zip':
-            			return require('../../imgs/zip.png');
-            		case '.jpg':
-            		case '.png':
-            			return server.image.thumb(v,60,60);
-            		case '.txt':
-            			return require('../../imgs/txt.png');
-            		default :
-            			return require('../../imgs/noimg.png');
-
-            	}
+            	server.getFileType(v);
             },
             
 		}

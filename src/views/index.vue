@@ -91,7 +91,7 @@
             <i-col span="6">
                 <Card>
                     <div>
-                        <i class="iconfont icon-daiban"></i>
+                        <i class="iconfont icon-yuyuedaiban"></i>
                         <div class="q-title">预约代办</div>
                         <h3 @click="actionGoAppoint()">{{formData.waitDoNum?formData.waitDoNum:0}}</h3>
                     </div>
@@ -161,7 +161,7 @@
                 <div class="q-body">
                     <Row type="flex" justify="center" align="middle">
                         <i-col :md="3" :lg="2" class="q-title">
-                            <i class="iconfont icon-wodedaiban"></i>
+                            <i class="iconfont icon-wodedingdandaiban"></i>
                         </i-col>
                         <i-col :md="18" :lg="20">
                             我的订单待办
@@ -179,7 +179,7 @@
                 <div class="q-body">
                     <Row type="flex" justify="center" align="middle">
                         <i-col :md="3" :lg="2" class="q-title">
-                            <i class="iconfont icon-dingdan1"></i>
+                            <i class="iconfont icon-dingdanyujing"></i>
                         </i-col>
                         <i-col :md="18" :lg="20">
                             订单预警
@@ -353,6 +353,10 @@ import LHeader from '../components/header'
                 return;
             }
             this.userType=userInfo.type;
+            if(userInfo.roleName==='自助学习'){
+                this.$router.go('/info');
+                return;
+            }
             this.getList(); 
         },
         methods:{
