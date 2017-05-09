@@ -34,12 +34,10 @@
 				width: 100%;
 				padding-left: 10px;
 				.q-img-list{
-					width:198px;
 					height:158px;
 					display: inline-block;
 					margin:0px 10px 20px 10px;
 					.l-upload-list{
-						width:198px;
 						height:128px;
 						margin: 0px;
 					}
@@ -165,7 +163,7 @@
                         	<i class="iconfont icon-kehuxinxi"></i>客户信息
                     	</div>
                     	<div class="container q-table">
-                    		<i-form :model="modelForm" :label-width="100">
+                    		<i-form :model="modelForm" class="q-form-no-bottom" :label-width="100">
                     			
             					<Form-item label="联系人姓名">
 						       	 {{modelForm.name}}
@@ -205,7 +203,7 @@
 		                    		<div class="l-upload-list" >
 	                                    <img :src="item.avatar">
 	                                    <div class="l-upload-list-cover">
-	                                    	<Icon type="eye" title="查看" v-show="item.avatar.indexOf('imageMogr2/format')>-1" @click="handleView(item.attachAddress)"></Icon>
+	                                    	<Icon type="eye" title="查看" v-if="is7nImage(item.avatar)" @click="handleView(item.attachAddress)"></Icon>
 	                                        <a :href="item.attachAddress" target="_blank">
 			                           			<Icon type="ios-download-outline" title="下载"></Icon>
 			                            	</a>
@@ -213,9 +211,7 @@
 		                            </div>
 		                            <span>{{item.attachName}}</span>
 	                            </div>
-	                            <div class="q-top-b">
-	                            	<a href="#">下载报价单模版</a>
-	                            </div>
+	                            
                             </div>
                             <div class="q-right" v-show="tabIndex===2 && id">
 
@@ -223,7 +219,7 @@
 		                    		<div class="l-upload-list" >
 	                                    <img :src="item.avatar">
 	                                    <div class="l-upload-list-cover">
-	                                    	<Icon type="eye" title="查看" v-show="server.is7nImage(item.avatar)" @click="handleView(item.attachAddress)"></Icon>
+	                                    	<Icon type="eye" title="查看" v-if="is7nImage(item.avatar)" @click="handleView(item.attachAddress)"></Icon>
 	                                        <a :href="item.attachAddress" target="_blank">
 			                           			<Icon type="ios-download-outline" title="下载"></Icon>
 			                            	</a>
@@ -232,9 +228,7 @@
 		                            <span>{{item.attachName}}</span>
 	                            </div>
 
-	                            <div class="q-top-b">
-	                            	<a href="#">下载报价单模版</a>
-	                            </div>
+	                            
                             </div>
                          </div>   
                     </div>
@@ -383,6 +377,9 @@ import LTitle from '../../components/title'
 				this.getList();
 			}
 			this.getDict();
+			if(!this.costVoList[7].desc){
+				this.costVoList[7].desc='成交额=总金额*折扣-优惠券-现金券';
+			}
 		},
 		route:{
             data:function(transition){
@@ -443,7 +440,9 @@ import LTitle from '../../components/title'
             }
         },
 		methods:{
-			
+			is7nImage(url){
+				return server.is7nImage(url);
+			},
 			getDict(){
             	//ProductCategory_bigType
             	let self=this;

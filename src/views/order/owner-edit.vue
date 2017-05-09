@@ -176,7 +176,7 @@
                                 :show-upload-list="false"
                                 :default-file-list="defaultList"
                                 :on-success="handleSuccess"
-                                :format="['jpg','jpeg','png','doc','docx','xls','xlsx','pdf','dwg']"
+                                :format="uploadFormat"
                                 :max-size="10240"
                                 :on-format-error="handleFormatError"
                                 :on-exceeded-size="handleMaxSize"
@@ -207,6 +207,7 @@
 		                            </div>
 		                            <div v-show="item.status === 'finished' ||item.state===1">{{item.createTime}}</div>
 		                            <div v-show="item.status === 'finished' ||item.state===1">
+		                            	<Icon type="eye" title="查看" v-if="is7nImage(item.avatar)" @click="handleView(item.attachAddress)"></Icon>
 		                            	<a :href="item.attachAddress" target="_blank">
 		                           			<Icon type="ios-download-outline" title="下载"></Icon>
 		                            	</a>
@@ -219,7 +220,7 @@
                          </div>
                          <div class="q-form-btn">
                          	<i-button type="primary" :loading="modelLoading" size="large" @click="submit">提交</i-button>
-                         	<i-button type="ghost" size="large">取消</i-button>
+                         	<i-button type="ghost" size="large" @click="cancel">取消</i-button>
                          </div>   
                     </div>
                   
@@ -232,6 +233,9 @@
         </Row>
         
     </div>
+    <Modal title="查看图片" :visible.sync="visible">
+		<img :src="imgName" v-if="visible" style="width: 100%">
+	</Modal>
 </template>
 <script>
 import server from '../../libs/server'
@@ -249,6 +253,7 @@ import chinaAddress from '../../components/china-address-0408'
                 spanRight: 20,
                 baseUrl:server.getBaseUrl(),
                 uploadData:{bucket:'dc-test'},
+                uploadFormat:server.uploadFormat(),
                 defaultList: [],
                 modelForm:{},
                 ruleForm:{
@@ -276,7 +281,8 @@ import chinaAddress from '../../components/china-address-0408'
                 belongList:[],
                 modelLoading:false,
                 id:null,
-               
+               	imgName: '',
+                visible: false,
 
 			}
 		},
@@ -386,7 +392,7 @@ import chinaAddress from '../../components/china-address-0408'
             },
             getBelong(){
             	let self=this;
-            	server.getStaffAll({}).then((res)=>{
+            	server.getStaffAll({isDisable:false}).then((res)=>{
             		self.belongList=[];
             		if(res.data){
             			res.data.forEach((item)=>{
@@ -427,6 +433,8 @@ import chinaAddress from '../../components/china-address-0408'
 	                            title:'修改成功',
 	                            desc:res.message
 	                        });
+							self.$router.go('/order/ownerInfo');
+
 	                    }else{
 	                        self.$Notice.error({
 	                            title:'修改失败',
@@ -442,6 +450,8 @@ import chinaAddress from '../../components/china-address-0408'
 	                            title:'新增成功',
 	                            desc:res.message
 	                        });
+							self.$router.go('/order/ownerInfo');
+
 	                    }else{
 	                        self.$Notice.error({
 	                            title:'新增失败',
@@ -451,6 +461,16 @@ import chinaAddress from '../../components/china-address-0408'
 	                })
 				}
 			},
+			cancel(){
+				this.$router.go('/order/ownerInfo');
+			},
+			is7nImage(url){
+				return server.is7nImage(url);
+			},
+			handleView (name) {
+                this.imgName = name;
+                this.visible = true;
+            },
             handleRemove (file) {
                 // 从 upload 实例删除数据
                 const fileList = this.$refs.upload.fileList;
@@ -471,31 +491,7 @@ import chinaAddress from '../../components/china-address-0408'
                
             },
             getFileType(v){
-            	if(!v){
-            		return null;
-            	}
-            	let l=v.lastIndexOf('.');
-            	switch(v.substr(l)){
-            		case '.doc':
-            		case '.docx':
-            			return require('../../imgs/doc.png');
-            		case '.dwg':
-            			return require('../../imgs/noimg.png');
-					case '.pdf':
-            			return require('../../imgs/pdf.png');
-        			case '.ppt':
-            			return require('../../imgs/noimg.png');
-        			case '.xls':
-            			return require('../../imgs/xls.png');
-            		case '.zip':
-            			return require('../../imgs/zip.png');
-            		case '.jpg':
-            		case '.png':
-            			return server.image.thumb(v,60,60);
-            		default :
-            			return require('../../imgs/noimg.png');
-
-            	}
+            	return server.getFileType(v);
             },
             handleFormatError (file) {
                 this.$Notice.warning({
@@ -511,7 +507,7 @@ import chinaAddress from '../../components/china-address-0408'
             },
             handleBeforeUpload () {
                 
-                const check = this.uploadList.length < 161;
+                const check = this.uploadList.length < 160;
                 if (!check) {
                     this.$Notice.warning({
                         title: '最多只能上传 160 个文件'

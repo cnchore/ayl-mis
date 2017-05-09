@@ -41,8 +41,8 @@ import CurrencyInput from '../../components/currency-input'
         components:{CurrencyInput},
         data () {
             return {
-                data3: this.getMockData(),
-                targetKeys3: this.getTargetKeys(),
+                data3: [],
+                targetKeys3:[],
                 listStyle: {
                     width: '250px',
                     height: '300px'
@@ -243,7 +243,7 @@ import CurrencyInput from '../../components/currency-input'
             },
             reloadMockData () {
                 this.data3 = this.getMockData();
-                this.targetKeys3 = this.getTargetKeys();
+                this.targetKeys3 = [];//this.getTargetKeys();
             }
         }
     }

@@ -114,10 +114,10 @@ import LTitle from '../../components/title'
                     key:'orderNo',title:'订单号',width:200
                 },
                 {
-                    width:140,key:'state',title:'订单进度',
+                    width:140,title:'当前阶段',
 
                     render(row,column,index){
-                        return `{{getStatusName(${row.state})}}`;
+                        return `{{getStatusName(${row.flowState})}}`;
                     }
                 },
                 {
@@ -261,16 +261,12 @@ import LTitle from '../../components/title'
             getStatusName(v){
                 
                 switch(v){
+                    case 0:
+                    return "待下单";
                     case 1:
-                    return "确认订单";
+                    return "待总部确认";
                     case 2:
-                    return "生产中";
-                    case 3:
-                    return "产品入库";
-                    case 4:
-                    return "已发货";
-                    case 5:
-                    return "已收货";
+                    return "总部已确认";
                 }
             },
             

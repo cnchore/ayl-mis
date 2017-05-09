@@ -161,7 +161,7 @@ import LTitle from '../../components/title'
                     title: '操作',
                     key: 'action',
                     fixed:'right',
-                    width:105,
+                    width:140,
                     align: 'center',
                     render (row, column, index) {
                     return `

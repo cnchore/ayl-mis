@@ -59,7 +59,7 @@
             
             :mask-closable="false"
             >
-            <i-form v-ref:form-validate :model="modelForm" :rules="modeRule" :label-width="132">
+            <i-form v-ref:form-validate class="q-form-no-bottom" :model="modelForm" :rules="modeRule" :label-width="132">
                 <Row>
                 <i-col span="24">
                      <Form-item label="流水单号:">
@@ -155,16 +155,10 @@ import LTitle from '../../components/title'
                     width:125,key:'flowState',title:'当前阶段',
 
                     render(row,column,index){
-                        return row.flowState?row.flowState===0?'待经销商确认':row.flowState===1?'经销商已确认':'总部确认':'无';
+                        return row.flowState?row.flowState===0?'待下单':row.flowState===1?'待总部确认':'总部已确认':'无';
                     }
                 },
-                {
-                    width:125,key:'state',title:'订单状态',
-
-                    render(row,column,index){
-                        return `{{getStatusName(${row.state})}}`;
-                    }
-                },
+                
                 {
                     title:'订单级别',width:95,
                     render(row){
@@ -195,6 +189,10 @@ import LTitle from '../../components/title'
                     render(row){
                         return row.orderTime?row.orderTime:'无'
                     }
+                },
+                {
+                    title:'交货周期',key:'finishTime',width:170
+                    
                 },
                 {   
                     title:'下单人',width:300,

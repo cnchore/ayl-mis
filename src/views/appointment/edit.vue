@@ -34,12 +34,12 @@
 				width: 100%;
 				padding-left: 10px;
 				.q-img-list{
-					width:198px;
+					
 					height:158px;
 					display: inline-block;
 					margin:0px 10px 20px 10px;
 					.l-upload-list{
-						width:198px;
+						
 						height:128px;
 						margin: 0px;
 					}
@@ -186,7 +186,7 @@
 		                                <template v-if="item.status === 'finished'">
 		                                    <img :src="item.avatar">
 		                                    <div class="l-upload-list-cover">
-		                                    	<Icon type="eye" title="查看" v-show="server.is7nImage(item.avatar)" @click="handleView(item.attachAddress)"></Icon>
+		                                    	<Icon type="eye" title="查看" v-show="is7nImage(item.avatar)" @click="handleView(item.attachAddress)"></Icon>
 		                                        <a :href="item.attachAddress" target="_blank">
 				                           			<Icon type="ios-download-outline" title="下载"></Icon>
 				                            	</a>
@@ -202,7 +202,8 @@
 	                            </div>
 	
 	                            <div class="q-top-b">
-	                            	<a href="#">下载报价单模版</a>
+	                            	<a href="/template/门窗订货单.xlsx" target="_blank">门窗订货单下载模板</a>
+	                            	<a href="/template/阳光房订货单.xlsx" target="_blank">阳光房订货单下载模板</a>
 	                            </div>
                             </div>
                          </div>   
@@ -352,6 +353,9 @@ import CurrencyInput from '../../components/currency-input'
 			if(this.id){
 				this.getList();
 			}
+			if(!this.costVoList[7].desc){
+				this.costVoList[7].desc='成交额=总金额*折扣-优惠券-现金券';
+			}
 			
 		},
 		route:{
@@ -402,6 +406,12 @@ import CurrencyInput from '../../components/currency-input'
             }
         },
 		methods:{
+			isCanUseCoupon(){
+				return new server.isCanUseCoupon(this.getSaleToal,this.costVoList[4].costValue/100,this.costVoList[5].costValue,this.getCouponToal)
+			},
+			is7nImage(url){
+				return server.is7nImage(url);
+			},
 			getIsShowDate(index,dateStr){
 				if(!dateStr){
 					return false;
@@ -468,8 +478,13 @@ import CurrencyInput from '../../components/currency-input'
 	                        	})
 	                        }
 	                        if(res.data.optionList){
-	                        	self.optionList=res.data.optionList;
-	                        	
+	                        	self.optionList=[];
+	                        	res.data.optionList.forEach((item)=>{
+	                        		self.optionList.push({
+	                        			createTime:item.createTime,
+	                        			remark:item.remark.substr(item.remark.lastIndexOf('；')+1)
+	                        		})
+	                        	})
 	                        }
 	                        if(res.data.couponList){
 	                        	self.couponList=[];
@@ -500,6 +515,14 @@ import CurrencyInput from '../../components/currency-input'
 			},
 			ownerSaveAppoint(t){
 				let self=this;
+				let _isCanUseCoupon=self.isCanUseCoupon();
+				if(!_isCanUseCoupon.isCanUse){
+					self.$Notice.error({
+                        title:'错误',
+                        desc:_isCanUseCoupon.msg
+                    });
+					return;
+				}
 				self.modelLoading=true;
 				self.modelForm.isOnlySave=t;
 				self.modelForm.attachmentVoList=self.uploadList;
@@ -545,35 +568,7 @@ import CurrencyInput from '../../components/currency-input'
                	file.createTime=new Date();
             },
             getFileType(v){
-            	if(!v){
-            		return null;
-            	}
-            	let l=v.lastIndexOf('.');
-            	switch(v.substr(l)){
-            		case '.doc':
-            		case '.docx':
-            			return require('../../imgs/doc.png');
-            		case '.dwg':
-            			return require('../../imgs/noimg.png');
-					case '.pdf':
-            			return require('../../imgs/pdf.png');
-        			case '.ppt':
-        			case '.pptx':
-            			return require('../../imgs/noimg.png');
-        			case '.xls':
-        			case '.xlsx':
-            			return require('../../imgs/xls.png');
-            		case '.zip':
-            			return require('../../imgs/zip.png');
-            		case '.jpg':
-            		case '.png':
-            			return server.image.thumb(v,60,60);
-            		case '.txt':
-            			return require('../../imgs/txt.png');
-            		default :
-            			return require('../../imgs/noimg.png');
-
-            	}
+            	return server.getFileType(v);
             },
             handleFormatError (file) {
                 this.$Notice.warning({

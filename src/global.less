@@ -424,13 +424,42 @@ header{
 	padding-left: 5px;
 	padding-right: 5px;
 	justify-content: center;
+	align-items: center;
 }
 .q-form-no-bottom{
 	.ivu-form-item{
 		margin-bottom: 0px;
 	}
+	
 }
+.layout .l-row .q-form-no-bottom.ivu-form{
+	.ivu-col{
+		padding-top: 0px;
+		padding-bottom: 0px;
+	}
+}
+.q-imgs .container .q-right .q-img-list,
+.q-imgs .container .q-right .q-img-list .l-upload-list{
+	width: 158px;
+}
+.q-imgs .container .q-right .q-img-list span{
+	display: inline-block;
+    width: 158px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    height: 42px;
+    &:hover{
+		white-space: pre-line;
+    }
+}
+.q-top-b a{
 
+	&:first-child{
+		margin-right:10px;
+	}
+}
 /*======页面字体大小=start=======*/
 /*
 .ivu-menu,.ivu-menu-item,
