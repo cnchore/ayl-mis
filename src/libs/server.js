@@ -151,9 +151,10 @@ const serverPath={
 	ownerOrderNext:'/owner/order/next',
 	orgNext:'/owner/order/orgNext',
 
-	//
+	//验证码
 	getVcode:'/web/captchaImage',
-
+	//自助学习
+	getCourse:'/sys/course/getPage',
 
 }
 
@@ -482,7 +483,7 @@ export default {
 		{
 			this.isCanUse= true;
 		}else{
-			this.msg='可以使用的现金券总金额不能超过：'+(parseFloat(total)*parseFloat(discount)-parseFloat(cashCounpon))*0.1+'元';
+			this.msg='现金券不能超过：'+(parseFloat(total)*parseFloat(discount)-parseFloat(cashCounpon))*0.1+'元，请重新选择现金券';
 			this.isCanUse=false;
 			
 		}
@@ -1507,6 +1508,9 @@ export default {
 	},
 	getVcode(){
 		return this.getPromiseByNoParams(serverPath.getVcode,'getVcode');
+	},
+	getCourse(searchData){
+		return this.getPromise(serverPath.getCourse,searchData,'getCourse');
 	},
 
 }

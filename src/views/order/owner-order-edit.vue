@@ -310,19 +310,19 @@
 						        </i-col>
 						    </Row>
 						    </template>	
-						    <Row class="q-row" v-show="id">
+						    <Row class="q-row" v-if="false">
 						        <i-col span="5">折后金额</i-col>
 						        <i-col span="5" class="q-col-right">{{getDiscout | currency '¥' '2'}}</i-col>
 						        <i-col span="14">&nbsp;</i-col>
 						    </Row>
-						    <Row class="q-row" v-show="id">
+						    <Row class="q-row" v-if="false">
 						        <i-col span="5">交货周期</i-col>
 						        <i-col span="5"  class="q-col-right">
 						        	{{modelForm.limitDays}}
 						        </i-col>
-						        <i-col span="14">&nbsp;</i-col>
+						        <i-col span="14">自然天</i-col>
 						    </Row>
-						    <Row class="q-row" v-show="id">
+						    <Row class="q-row" v-if="false">
 						        <i-col span="5">优先级</i-col>
 						        <i-col span="5"  class="q-col-right">
 						        	{{modelForm.level?modelForm.level===1?'低':modelForm.level===2?'中':'高':'无'}}
@@ -448,10 +448,7 @@ import CurrencyInput from '../../components/currency-input'
                 	{costName:'优惠券',costValue:0,desc:'',costType:6},
                 	{costName:'现金券',costValue:0,desc:'',costType:4},
                 	
-                	{costName:'成交额',costValue:0,desc:'',costType:12},
-                	
-                	{costName:'出厂金额',costValue:0,desc:'',costType:7},
-                	{costName:'折扣',costValue:100,desc:'',costType:8},
+                	{costName:'成交额',costValue:0,desc:'',costType:12}
                 ],
                 id:null,
                 optionList:[],

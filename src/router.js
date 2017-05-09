@@ -268,6 +268,31 @@ const routers = {
         },
         meta: { requiresAuth: true,title:'艾臣营销管理平台－人员管理' }
     },
+    //自助学习
+    '/study/product/point': {
+        component(resolve) {
+            require(['./views/study/product-point.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－产品卖点' }
+    },
+    '/study/customer/service': {
+        component(resolve) {
+            require(['./views/study/customer-service.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－售后服务' }
+    },
+    '/study/sys/introduce': {
+        component(resolve) {
+            require(['./views/study/sys-introduce.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－系统介绍' }
+    },
+    '/study/operating/system': {
+        component(resolve) {
+            require(['./views/study/operating-system.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－运营体系' }
+    },
 
 };
 export default routers;

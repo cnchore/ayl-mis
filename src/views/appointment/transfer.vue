@@ -18,6 +18,7 @@
 <currency-input :value="total | currency '¥' '2'" :out-value="total" style="width:200px;"></currency-input>
 <currency-input :value="total2" :out-value="total2" style="width:200px;"></currency-input>
 <button @click="getVal">getVal</button>
+<button @click="cancel">cancel</button>
 <br/>
 {{total | currency '¥' '2'}}
 <br/>
@@ -165,6 +166,9 @@ import CurrencyInput from '../../components/currency-input'
             
         },
         methods: {
+            cancel(){
+                this.$router.go(-1);
+            },
             getVal(){
                 console.log(this.total1);
             },

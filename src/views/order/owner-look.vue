@@ -252,7 +252,7 @@ import LTitle from '../../components/title'
 				tableCol: [
 				{title:'订单编号',width:200,
 					render(row){
-						return `<a v-link="{path:'/owner/order/look?id='+${row.id}}">${row.orderNo}</a>`;
+						return `<a v-link="{path:'/owner/order/look?t=2&id='+${row.id}}">${row.orderNo}</a>`;
 					}
 				},
 				{title:'下单日期',key:'createTime',width:170},

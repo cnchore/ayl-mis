@@ -89,8 +89,8 @@ import util from '../libs/util'
         data () {
             return {
                 formValidate: {
-                    userName: 'superadmin',
-                    pwd: '000000',
+                    userName: '',
+                    pwd: '',
                     validateCode: ''
                 },
                 ruleValidate: {

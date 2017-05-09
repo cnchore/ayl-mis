@@ -4,7 +4,7 @@
 </style>
 <template>
     <Menu :active-key="activeKey" class="q-menu q-lg-icon"
-    v-show="activeMenu==='0'" width="auto" @on-select="handleSelect">
+    v-if="activeMenu==='0'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="0-1">
                 <i class="iconfont icon-zhanghaoxinxi"></i>
@@ -14,14 +14,14 @@
                 <i class="iconfont icon-xiugaimima"></i>
                 修改密码
             </Menu-item>
-            <Menu-item key="0-3">
+            <Menu-item key="0-3" v-if="userInfo.roleName!='自助学习'">
                 <i class="iconfont icon-beiwanglu"></i>
                 备忘录
             </Menu-item>
        
     </Menu>
 	<Menu :active-key="activeKey" class="q-menu q-lg-icon"
-    v-show="activeMenu==='1'" width="auto" @on-select="handleSelect">
+    v-if="activeMenu==='1'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="1-1" v-if="userInfo.type===1">
                 <i class="iconfont icon-mendianzhanshiguanli"></i>
@@ -59,14 +59,14 @@
        
     </Menu>
     <Menu :active-key="activeKey" class="q-menu q-lg-icon" 
-    v-show="activeMenu==='2'" width="auto" @on-select="handleSelect">
+    v-if="activeMenu==='2'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="2-1" v-if="userInfo.type===1">
-                <i class="iconfont icon-hehuorenzhanghaoguanli"></i>
+                <i class="iconfont icon-hehuorenzhanghaoguanli1"></i>
                 合伙人账号管理
             </Menu-item>
             <Menu-item key="2-2" v-if="userInfo.type===1">
-                <i class="iconfont icon-xianjinquanpeizhiguanli"></i>
+                <i class="iconfont icon-xianjinquanpeizhi"></i>
                 现金券配置
             </Menu-item>
             <Menu-item key="2-3" v-if="userInfo.type===1">
@@ -74,27 +74,27 @@
                 现金券申请
             </Menu-item>
             <Menu-item key="2-4" v-if="userInfo.type===1">
-                <i class="iconfont icon-xianjinquanshiyongqingkuangguanlir"></i>
+                <i class="iconfont icon-xianjinquanshiyongqingkuang"></i>
                 现金券使用情况
             </Menu-item>
        
             <Menu-item key="2-5" v-if="userInfo.type===1">
-                <i class="iconfont icon-gonggaofabuguanli"></i>
+                <i class="iconfont icon-gonggaofabuguanli1"></i>
                 公告发布管理
             </Menu-item>
             <Menu-item key="2-6" v-if="userInfo.type===1">
-                <i class="iconfont icon-shensuguanli"></i>
+                <i class="iconfont icon-shensuguanli_icon"></i>
                 申诉管理
             </Menu-item>
             <Menu-item key="2-7">
-                <i class="iconfont icon-fenhongguanli"></i>
+                <i class="iconfont icon-fenhongguanli1"></i>
                 分红管理
             </Menu-item>
             
        
     </Menu>
     <Menu :active-key="activeKey" class="q-menu q-lg-icon"
-    v-show="activeMenu==='3'" width="auto" @on-select="handleSelect">
+    v-if="activeMenu==='3'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="3-1">
                 <i class="iconfont icon-daiban"></i>
@@ -111,7 +111,7 @@
        
     </Menu>
     <Menu :active-key="activeKey" class="q-menu q-lg-icon"
-    v-show="activeMenu==='10'" width="auto" @on-select="handleSelect">
+    v-if="activeMenu==='10'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="10-1">
                 <i class="iconfont icon-daiban"></i>
@@ -124,7 +124,7 @@
             
     </Menu>
     <Menu :active-key="activeKey" class="q-menu q-lg-icon"
-    v-show="activeMenu==='4'" width="auto" @on-select="handleSelect">
+    v-if="activeMenu==='4'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="4-1">
                 <i class="iconfont icon-dingdanguanli"></i>
@@ -141,7 +141,7 @@
             
     </Menu>
     <Menu :active-key="activeKey" class="q-menu q-lg-icon"
-    v-show="activeMenu==='11'" width="auto" @on-select="handleSelect">
+    v-if="activeMenu==='11'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="11-1">
                 <i class="iconfont icon-dingdanguanli"></i>
@@ -154,7 +154,7 @@
             
     </Menu>
     <Menu :active-key="activeKey" class="q-menu q-lg-icon"
-    v-show="activeMenu==='5'" width="auto" @on-select="handleSelect">
+    v-if="activeMenu==='5'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="5-1">
                 <i class="iconfont icon-mendian"></i>
@@ -163,11 +163,32 @@
             
     </Menu>
     <Menu :active-key="activeKey" class="q-menu q-lg-icon"
-    v-show="activeMenu==='9'" width="auto" @on-select="handleSelect">
+    v-if="activeMenu==='9'" width="auto" @on-select="handleSelect">
         
             <Menu-item key="9-1">
                 <i class="iconfont icon-kehu"></i>
                 <span>人员管理</span>
+            </Menu-item>
+            
+    </Menu>
+    <Menu :active-key="activeKey" class="q-menu q-lg-icon"
+    v-if="activeMenu==='12'" width="auto" @on-select="handleSelect">
+        
+            <Menu-item key="12-1">
+                <i class="iconfont icon-chanpinmaidian"></i>
+                <span>产品卖点</span>
+            </Menu-item>
+            <Menu-item key="12-2">
+                <i class="iconfont icon-xitongjieshao"></i>
+                <span>系统介绍</span>
+            </Menu-item>
+            <Menu-item key="12-3">
+                <i class="iconfont icon-anzhuangshouhou"></i>
+                <span>安装售后</span>
+            </Menu-item>
+            <Menu-item key="12-4">
+                <i class="iconfont icon-yunyingtixi"></i>
+                <span>运营体系</span>
             </Menu-item>
             
     </Menu>
@@ -294,6 +315,19 @@ import env from '../config/env';
 
                     case '9-1':
                         this.$router.go('/staff');
+                        break;
+                    //自助学习
+                    case '12-1':
+                        this.$router.go('/study/product/point');
+                        break;
+                    case '12-2':
+                        this.$router.go('/study/sys/introduce');
+                        break;
+                    case '12-3':
+                        this.$router.go('/study/customer/service');
+                        break;
+                    case '12-4':
+                        this.$router.go('/study/operating/system');
                         break;
 
                 }
