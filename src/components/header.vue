@@ -4,7 +4,7 @@
                 <i-col :xs="0" :sm="0" :md="0" :lg="5" v-show="spanLeft>0">
                     <div class="logo"></div>
                 </i-col>
-                <i-col  :md="21" :lg="16">
+                <i-col  :md="20" :lg="16">
                  <Menu mode="horizontal" theme="primary" class="q-menu" :active-key="activeKey" @on-select="handleSelect">
                     <Menu-item key="0">
                         <i class="iconfont icon-zhuye"></i>
@@ -52,7 +52,7 @@
                     </Menu-item>
                 </Menu>
                 </i-col>
-                <i-col  :md="3" :lg="3">
+                <i-col  :md="4" :lg="3">
                     <Menu mode="horizontal" theme="primary" class="q-menu"  style="float: right;"
                     @on-select="handleSelect">
                         <Menu-item key="7" class="q-right q-inline" v-if="false && spanLeft>0">
@@ -127,7 +127,7 @@ import env from '../config/env';
                 //this.$Message.info(key);
                 switch(key){
                     case '0':
-                        if(this.userInfo.roleName!='自助学习'){
+                        if(this.userInfo.roleName==='自助学习'){
                             this.$router.go('/study/product/point');
                         }else{
                             this.$router.go('/index');

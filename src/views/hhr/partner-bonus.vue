@@ -149,7 +149,7 @@
     </div>
 </template>
 <script>
-import server from '../../libs/server'
+import server,{ storage } from '../../libs/server'
 import LeftMenu from '../../components/left-menu'
 import LHeader from '../../components/header'
 import LTitle from '../../components/title'
@@ -238,7 +238,7 @@ import CurrencyInput from '../../components/currency-input'
 					align: 'center',
 					render (row, column, index) {
 					return `
-						<i-button type="primary" title="添加转账" icon="plus" @click="modelShow(${row.id})" size="small"></i-button>
+						<i-button type="primary" v-if="userInfo.type===2" title="添加转账" icon="plus" @click="modelShow(${row.id})" size="small"></i-button>
 						
 						<i-button type="primary"
 							 @click="showBonus(${row.id})"
@@ -263,7 +263,9 @@ import CurrencyInput from '../../components/currency-input'
                     	}
                 	}
 				],
-				avatarDefaultList:[]
+				avatarDefaultList:[],
+                userInfo:storage.session.get('userInfo'),
+
 			}
 		},
 		ready(){

@@ -44,25 +44,33 @@ router.beforeEach((transition) => {
     //loading=Loading.service({ fullscreen: true })
     window.scrollTo(0, 0);
     iView.LoadingBar.start();
-  if(transition.to.meta &&transition.to.meta.requiresAuth) {
-    // this route requires auth, check if logged in
-    // if not, redirect to login page.
-    let userInfo=storage.session.get('userInfo');
-    //console.log(userInfo)
-    if(env!='development' && !(userInfo && userInfo.userName) ){
-        //let lc=window.document.location;
-        //window.document.location.href=lc.origin+lc.pathname+'#!/login?redirect='+transition.to.path;
-        //transition.abort();
-        transition.redirect({
-            path: '/login',
-            query: { redirect: transition.to.fullPath }
-          })
+    if(transition.to.meta &&transition.to.meta.requiresAuth) {
+        // this route requires auth, check if logged in
+        // if not, redirect to login page.
+        let userInfo=storage.session.get('userInfo');
+        console.log('transition',transition);
+        //console.log(userInfo)
+        if(env!='development' && !(userInfo && userInfo.userName) ){
+            //let lc=window.document.location;
+            //window.document.location.href=lc.origin+lc.pathname+'#!/login?redirect='+transition.to.path;
+            //transition.abort();
+            transition.redirect({
+                path: '/login',
+                query: { redirect: transition.to.fullPath }
+            })
+        }else {
+            if(userInfo&&userInfo.roleName==='自助学习'&&transition.to.path==='/index'){
+                transition.redirect({
+                    path: '/info',
+                    query: { redirect: transition.to.fullPath }
+                })
+            }else{
+                transition.next();
+            }
+        }
     } else {
-      transition.next();
+        transition.next() // 确保一定要调用 next()
     }
-  } else {
-    transition.next() // 确保一定要调用 next()
-  }
 })
 
 

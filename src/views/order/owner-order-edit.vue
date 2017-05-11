@@ -244,8 +244,7 @@
 
 
 	                            <div class="q-top-b">
-	                            	<a href="/template/门窗订货单.xlsx" target="_blank">门窗订货单下载模板</a>
-	                            	<a href="/template/阳光房订货单.xlsx" target="_blank">阳光房订货单下载模板</a>
+	                            	<a href="/template/订货单.xlsx" target="_blank">门窗订货单模板下载</a>
 	                            </div>
                             </div>
                             <div class="q-right" v-show="tabIndex===2 && id">
@@ -264,8 +263,7 @@
 	                            </div>
 
 	                            <div class="q-top-b">
-	                            	<a href="/template/门窗订货单.xlsx" target="_blank">门窗订货单下载模板</a>
-	                            	<a href="/template/阳光房订货单.xlsx" target="_blank">阳光房订货单下载模板</a>
+	                            	<a href="/template/订货单.xlsx" target="_blank">门窗订货单模板下载</a>
 	                            </div>
                             </div>
                          </div>   
@@ -274,6 +272,7 @@
                     	<div class="q-title">
                         	<i class="iconfont icon-dinghuodan"></i>艾臣家居门窗订货单
                     	</div>
+                    	
                     	<div class="container q-table">
                     		<Row class="q-row thead">
 						        <i-col span="5">项目</i-col>
@@ -284,22 +283,23 @@
 						        <i-col span="24">经销商报价区</i-col>
 						    </Row>
 						    <template v-for="item in costVoList">
-						     <Row class="q-row title" v-if="item.costType===7 && id">
+						     <Row class="q-row title" v-if="item.costType===7 && id && false">
 						        <i-col span="24">总部报价区</i-col>
 						    </Row>
-						    <Row class="q-row" v-show="(item.costType===1 || item.costType===2 || item.costType===3 || item.costType===5 || item.costType===6 || item.costType===4 || item.costType===11 || item.costType===12) || (id && (item.costType===7 || item.costType===8 ))">
+						    <Row class="q-row" v-show="(item.costType===1 || item.costType===2 || item.costType===3 || item.costType===5 || item.costType===6 || item.costType===4 || item.costType===11 || item.costType===12) || (false && id && (item.costType===7 || item.costType===8 ))">
 						        <i-col span="5">{{item.costName}}</i-col>
 						        <i-col span="5" class="q-col-right">
 		            				<span v-if="id && (item.costType===7 )">{{item.costValue| currency '¥' '2'}}</span>
 		            				<span v-if="id && (item.costType===8 )">{{item.costValue}}%</span>
-		            				<i-input class="q-discout" v-if="item.costType===5 " :value.sync="item.costValue" ></i-input>
+		            				
+		            				<discount-input v-if="item.costType===5 " :value.sync="item.costValue" :min-value="60"></discount-input>
 		            				<currency-input v-if="item.costType===1 || item.costType===2 || item.costType===3" :value="item.costValue | currency '¥' '2'" :out-value.sync="item.costValue" ></currency-input>
 		            				<span v-if="item.costType===6" >{{item.costValue}}</span>
 		
 		            				<span v-if="item.costType===4">{{getCouponToal | currency '¥' '2'}}</span>
 		            				<span v-if="item.costType===11">{{getSaleToal | currency '¥' '2'}}</span>
 		            				<span v-if="item.costType===12">{{getDealToal | currency '¥' '2'}}</span>
-		            				<a  v-if="item.costType===4 && getSaleToal>5000" @click="showSelCoupon">选择现金券</a>
+		            				<a  v-if="item.costType===4 && (getDealToal>5000 || modelForm.couponIds)" @click="showSelCoupon">选择现金券</a>
 
 						        </i-col>
 						        <i-col span="14" class="q-flex">
@@ -342,7 +342,7 @@
 						            <i-input :value.sync="modelForm.agentRemark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
 						        </Form-item>
                     		
-                    			<Form-item label="总部备注" v-show="id" v-if="false">
+                    			<Form-item label="总部备注" v-if="false">
                     				{{modelForm.remark}}
 						        </Form-item>
 						        
@@ -397,8 +397,9 @@ import LHeader from '../../components/header'
 import LTitle from '../../components/title'
 import chinaAddress from '../../components/china-address-0408'
 import CurrencyInput from '../../components/currency-input'
+import DiscountInput from '../../components/discount-input'
 	export default{
-		components:{LHeader,LeftMenu,LTitle,CurrencyInput},
+		components:{LHeader,LeftMenu,LTitle,CurrencyInput,DiscountInput},
 		data(){
 			return{
 				breads:[{text:'首页',href:'/index'},{text:'订单管理',href:'/owner/order/list'},{text:'订货单编辑',href:''}],
@@ -448,7 +449,10 @@ import CurrencyInput from '../../components/currency-input'
                 	{costName:'优惠券',costValue:0,desc:'',costType:6},
                 	{costName:'现金券',costValue:0,desc:'',costType:4},
                 	
-                	{costName:'成交额',costValue:0,desc:'',costType:12}
+                	{costName:'成交额',costValue:0,desc:'',costType:12},
+
+                	{costName:'出厂金额',costValue:0,desc:'',costType:7},
+                	{costName:'折扣',costValue:100,desc:'',costType:8},
                 ],
                 id:null,
                 optionList:[],

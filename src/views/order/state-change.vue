@@ -121,6 +121,13 @@ import LTitle from '../../components/title'
                     }
                 },
                 {
+                    width:140,title:'当前状态',
+
+                    render(row,column,index){
+                        return `{{getStateName(${row.state})}}`;
+                    }
+                },
+                {
                     title:'订单级别',width:95,
                     render(row){
                         let l=''
@@ -159,7 +166,19 @@ import LTitle from '../../components/title'
                         <i class="iconfont icon-bianji btn" v-show="${row.flowState}===2" title="修改订单状态" @click="changeClick(${row.id},${row.state})"></i>
                     `;
                     }   
-                }]
+                }],
+                id:null,
+                queryState:null,
+            }
+        },
+        route:{
+            data:function({to}){
+                if(to.query &&to.query.id){
+                    this.id=to.query.id;
+                }
+                if(to.query && to.query.s){
+                    this.queryState=to.query.s;
+                }
             }
         },
         ready(){
@@ -269,7 +288,20 @@ import LTitle from '../../components/title'
                     return "总部已确认";
                 }
             },
-            
+            getStateName(v){
+                switch(v){
+                    case 1:
+                    return "确认订单";
+                    case 2:
+                    return "生产中";
+                    case 3:
+                    return "产品入库";
+                    case 4:
+                    return "已发货";
+                    case 5:
+                    return "已收货";
+                }
+            },
             getList(page=1,rows=10){
                 let self=this;
                 self.$Loading.start();
@@ -282,6 +314,10 @@ import LTitle from '../../components/title'
                     if(res.data&&res.data.rowsObject){
                         self.tableData=res.data.rowsObject;
                         self.rowsTotal=res.data.total;
+                    }
+                }).then(()=>{
+                    if(self.id && self.queryState){
+                        self.changeClick(self.id,self.queryState);
                     }
                 })
             },
