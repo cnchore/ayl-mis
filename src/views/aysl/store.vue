@@ -376,6 +376,7 @@ import LTitle from '../../components/title'
                     this.formValidate[obj]='';
                 }
                 this.defaultList=[];
+                this.avatarDefaultList=[];
                 this.addModal=true;
             },
             changePage (e){

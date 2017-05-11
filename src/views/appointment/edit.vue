@@ -202,8 +202,7 @@
 	                            </div>
 	
 	                            <div class="q-top-b">
-	                            	<a href="/template/门窗订货单.xlsx" target="_blank">门窗订货单下载模板</a>
-	                            	<a href="/template/阳光房订货单.xlsx" target="_blank">阳光房订货单下载模板</a>
+	                            	<a href="/template/订货单.xlsx" target="_blank">门窗订货单模板下载</a>
 	                            </div>
                             </div>
                          </div>   
@@ -226,14 +225,13 @@
 						        <i-col span="5" class="q-col-right" :class="{'q-col':item.costType===4}">
 		            				
 		            				<currency-input v-if="item.costType!=4 && item.costType!=6 && item.costType!=5 && item.costType!=11 && item.costType!=12" :value="item.costValue | currency '¥' '2'" :out-value.sync="item.costValue" ></currency-input>
-		            				
-		            				<i-input v-if="item.costType===5" class="q-discout" :value.sync="item.costValue" ></i-input>
+		            				<discount-input v-if="item.costType===5 " :value.sync="item.costValue" :min-value="60"></discount-input>
 		            				
 									<span v-if="item.costType===6">{{item.costValue | currency '¥' '2'}}</span>
 		            				<span v-if="item.costType===4">{{getCouponToal | currency '¥' '2'}}</span>
 		            				<span v-if="item.costType===11">{{getSaleToal | currency '¥' '2'}}</span>
 		            				<span v-if="item.costType===12">{{getDealToal | currency '¥' '2'}}</span>
-		            				<a  v-if="item.costType===4 && getSaleToal>5000 && couponList && couponList[0]" @click="modalVisible=true">选择现金券</a>
+		            				<a  v-if="item.costType===4 && (getDealToal>5000 || modelForm.couponIds) && couponList && couponList[0]" @click="modalVisible=true">选择现金券</a>
 						        </i-col>
 						        <i-col span="14" class="q-flex">
 		            				<i-input v-if="item.costType!=6 &&  item.costType!=11 && item.costType!=12" :value.sync="item.desc" ></i-input>
@@ -308,8 +306,9 @@ import LeftMenu from '../../components/left-menu'
 import LHeader from '../../components/header'
 import LTitle from '../../components/title'
 import CurrencyInput from '../../components/currency-input'
+import DiscountInput from '../../components/discount-input'
 	export default{
-		components:{LHeader,LeftMenu,LTitle,CurrencyInput},
+		components:{LHeader,LeftMenu,LTitle,CurrencyInput,DiscountInput},
 		data(){
 			return{
 				breads:[{text:'首页',href:'/index#!/index'},{text:'预约管理',href:'/owner/waiting'},{text:'订货单编辑',href:''}],

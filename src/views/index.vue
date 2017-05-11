@@ -92,7 +92,7 @@
                 <Card>
                     <div>
                         <i class="iconfont icon-yuyuedaiban"></i>
-                        <div class="q-title">预约代办</div>
+                        <div class="q-title">预约待办</div>
                         <h3 @click="actionGoAppoint()">{{formData.waitDoNum?formData.waitDoNum:0}}</h3>
                     </div>
                 </Card>
@@ -101,7 +101,7 @@
                 <Card>
                     <div>
                         <i class="iconfont icon-daiban"></i>
-                        <div class="q-title">订单代办</div>
+                        <div class="q-title">订单待办</div>
                         <h3 @click="actionGoOrder()">{{formData.orderWaitDoPage?formData.orderWaitDoPage.total:0}}</h3>
                     </div>
                 </Card>
@@ -142,10 +142,10 @@
             <i-col :span="userType===2?18:12">
                 <div class="q-body">
                     <Row type="flex" justify="center" align="middle">
-                        <i-col :md="3" :lg="2" class="q-title">
+                        <i-col :md="2" :lg="2" class="q-title">
                             <i class="iconfont icon-wodedaiban"></i>
                         </i-col>
-                        <i-col :md="18" :lg="20">
+                        <i-col :md="19" :lg="20">
                             我的预约待办
                         </i-col>
                         <i-col :md="3" :lg="2" class="q-right">
@@ -160,10 +160,10 @@
             <i-col span="12" v-show="userType===1">
                 <div class="q-body">
                     <Row type="flex" justify="center" align="middle">
-                        <i-col :md="3" :lg="2" class="q-title">
+                        <i-col :md="2" :lg="2" class="q-title">
                             <i class="iconfont icon-wodedingdandaiban"></i>
                         </i-col>
-                        <i-col :md="18" :lg="20">
+                        <i-col :md="19" :lg="20">
                             我的订单待办
                         </i-col>
                         <i-col :md="3" :lg="2" class="q-right">
@@ -178,10 +178,10 @@
             <i-col span="12" v-show="userType===1">
                 <div class="q-body">
                     <Row type="flex" justify="center" align="middle">
-                        <i-col :md="3" :lg="2" class="q-title">
+                        <i-col :md="2" :lg="2" class="q-title">
                             <i class="iconfont icon-dingdanyujing"></i>
                         </i-col>
-                        <i-col :md="18" :lg="20">
+                        <i-col :md="19" :lg="20">
                             订单预警
                         </i-col>
                         <i-col :md="3" :lg="2" class="q-right">
@@ -203,10 +203,10 @@
             <i-col :span="userType===2?18:12">
                <div class="q-body">
                     <Row type="flex" justify="center" align="middle">
-                        <i-col :md="3" :lg="2" class="q-title">
+                        <i-col :md="2" :lg="2" class="q-title">
                             <i class="iconfont icon-beiwanglu"></i>
                         </i-col>
-                        <i-col :md="18" :lg="20">
+                        <i-col :md="19" :lg="20">
                             我的备忘录
                         </i-col>
                         <i-col :md="3" :lg="2"  class="q-right">
@@ -338,7 +338,7 @@ import LHeader from '../components/header'
                     render (row, column, index) {
                     return `
                         <i-button type="primary" 
-                             size="small" @click="actionGoOrder(${row.id})">办理</i-button>
+                             size="small" @click="actionGoOrder(${row.id},${row.state})">办理</i-button>
                     `;
                     }   
                 }
@@ -405,12 +405,16 @@ import LHeader from '../components/header'
                     }
                 }
             },
-            actionGoOrder(id){
+            actionGoOrder(id,t=null){
                 if(this.userType===2){
                     this.$router.go('/owner/order/list');
                 }else{
                     if(id){
-                        this.$router.go('/order/edit?id='+id);
+                        if(t){
+                            this.$router.go('/order/state/change?id='+id)+'&s='+t;
+                        }else{
+                            this.$router.go('/order/edit?id='+id);
+                        }
                     }else{
                         this.$router.go('/order/list');
                     }
@@ -435,15 +439,15 @@ import LHeader from '../components/header'
                     case 2:
                     return "待设计报价";
                     case 3:
-                    return "待确认";
+                    return "待客户确认";
                     case 31:
                     return "待重新设计报价";
                     case 4:
                     return "待下单";
                     case 5:
-                    return "待总部确认";
+                    return "待确认订单";
                     case 6:
-                    return "总部确认";
+                    return "已确认订单";
                 }
             },
             getList(){

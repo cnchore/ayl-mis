@@ -33,7 +33,7 @@
 			.q-right{
 				width: 100%;
 				padding-left: 10px;
-				.q-img-list{
+				.q-l-img-list{
 					height:58px;
 					display: flex;
 					align-items: center;
@@ -192,7 +192,7 @@
                             </Upload>
                             </div>
                             <div class="q-right">
-	                            <div class="q-img-list" v-for="item in uploadList">
+	                            <div class="q-l-img-list" v-for="item in uploadList">
 		                    		<div class="l-upload-list" >
 		                                <template v-if="item.status === 'finished' || item.state===1">
 
@@ -298,6 +298,7 @@ import chinaAddress from '../../components/china-address-0408'
 				this.defaultList=[];
 				this.addressValue=[];
 			}
+			
 		},
 		route:{
             data:function(transition){
@@ -351,7 +352,7 @@ import chinaAddress from '../../components/china-address-0408'
 						if(res.data.decorateProject){
 							self.decorateCkList=res.data.decorateProject.split(',');
 						}
-						console.log(self.belongIdsCk,self.decorateCkList,self.addressValue);
+						//console.log(self.belongIdsCk,self.decorateCkList,self.addressValue);
 					}
 				})
 			},
@@ -420,8 +421,13 @@ import chinaAddress from '../../components/china-address-0408'
 					self.modelForm.belongIds=self.belongIdsCk.join(',');
 					self.modelForm.belongNames='';
 					self.belongList.forEach((item)=>{
-						if(self.belongIdsCk.findIndex((v)=>v===item.value)){
-							self.modelForm.belongNames+=item.label+',';
+						self.belongIdsCk.forEach((ck)=>{
+							if(parseInt(ck)===parseInt(item.value)){
+								self.modelForm.belongNames+=item.label+',';
+							}
+						})
+						if(self.modelForm.belongNames && self.modelForm.belongNames.length>1){
+							self.modelForm.belongNames=self.modelForm.belongNames.substr(0,self.modelForm.belongNames.lastIndexOf(','));
 						}
 					})
 				}

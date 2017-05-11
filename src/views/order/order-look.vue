@@ -357,6 +357,7 @@ import LTitle from '../../components/title'
 			if(!this.costVoList[7].desc){
 				this.costVoList[7].desc='成交额=总金额*折扣-优惠券-现金券';
 			}
+
 		},
 		route:{
             data:function(transition){
@@ -451,8 +452,14 @@ import LTitle from '../../components/title'
 				return b;
 			},
 			cancel(){
-				//this.$router.go('/order/list');
-				this.$router.go(-1);
+				if(this.t){
+					//console.info(this.t);
+					this.$router.go('/order/hq/owner/look?id='+this.t);
+				}else{
+
+				this.$router.go('/order/list');
+				}
+				//this.$router.go(-1);
 			},
 			getList(){
 				let self=this;

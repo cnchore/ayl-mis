@@ -133,7 +133,8 @@ import util from '../libs/util'
                         server.login(self.formValidate).then((res)=>{
                             self.$Loading.finish();
                             if(res.success){
-                                storage.session.set('userInfo',res.data.user);
+                                storage.session.set('userInfo',res.data.sessionInfo.user);
+                                storage.session.set('menuList',res.data.menuList);
                                 self.$router.go('/index');
                             }else{
                                 self.$Message.error(res.message);

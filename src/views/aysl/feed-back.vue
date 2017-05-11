@@ -210,7 +210,7 @@ import LTitle from '../../components/title'
                         align: 'center',
                         render (row, column, index) {
                             return `
-                            <i-button type="primary" size="small" title="回复" icon="reply" @click="reply(${row.id})"></i-button>
+                            <i-button type="primary" size="small" @click="reply(${row.id})">回复</i-button>
                             <i-button type="primary" size="small" title="查看" icon="eye" @click="look(${row.id})"></i-button>
                             `;
                         }   

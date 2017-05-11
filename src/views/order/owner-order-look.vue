@@ -497,9 +497,14 @@ import LTitle from '../../components/title'
 				return b;
 			},
 			cancel(){
-					//this.$router.go('/order/ownerInfo');
-					//this.$router.go('/owner/order/list');
-				this.$router.go(-1);
+				if(this.t){
+
+					this.$router.go('/order/owner/look?id='+this.t);
+				}else{
+					this.$router.go('/owner/order/list');
+
+				}
+				//this.$router.go(-1);
 			},
 			getList(){
 				let self=this;
@@ -601,7 +606,7 @@ import LTitle from '../../components/title'
                 this.visible = true;
             },
             getFileType(v){
-            	server.getFileType(v);
+            	return server.getFileType(v);
             },
             
 		}

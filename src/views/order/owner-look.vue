@@ -33,7 +33,7 @@
 			.q-right{
 				width: 100%;
 				padding-left: 10px;
-				.q-img-list{
+				.q-l-img-list{
 					height:58px;
 					display: flex;
 					align-items: center;
@@ -190,7 +190,7 @@
                     	<div class="container">
                     		
                             <div class="q-right">
-	                            <div class="q-img-list" v-show="item.state==1" v-for="item in defaultList">
+	                            <div class="q-l-img-list" v-show="item.state==1" v-for="item in defaultList">
 		                    		<div class="l-upload-list" >
 		                                    <img :src="item.avatar">
 		                            </div>
@@ -281,6 +281,7 @@ import LTitle from '../../components/title'
 			if(this.id){
 				this.getList();
 			}
+			
 		},
 		route:{
             data:function(transition){

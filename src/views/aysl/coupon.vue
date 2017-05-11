@@ -138,8 +138,11 @@
                           <i-input :value.sync="modelForm.location" placeholder="请输入活动地点"></i-input>
                         </Form-item>
                         
-                        <Form-item v-show="isToVerify" label="审批意见" prop="curAuditOpinion">
+                        <Form-item v-if="isToVerify" label="审批意见" prop="curAuditOpinion">
                           <i-input :value.sync="curAuditOpinion" placeholder="请输入审批意见"></i-input>
+                        </Form-item>
+                        <Form-item v-if="showOpinion" label="审批意见">
+                            {{modelForm.auditOpinion}}
                         </Form-item>
                     </i-col>
                 </Row>
@@ -147,9 +150,9 @@
             </i-form>
             <div slot="footer">
                 <i-button type="ghost" size="large" @click="addModal=fasle">取消</i-button>
-                <i-button type="primary" v-show="!isToVerify" size="large" :loading="modelLoading" @click="modalOk">确定</i-button>
-                <i-button type="primary" v-show="isToVerify" size="large" :loading="modelLoading" @click="verify('y')">通过</i-button>
-                <i-button type="primary" v-show="isToVerify" size="large" :loading="modelLoading" @click="verify('n')">不通过</i-button>
+                <i-button type="primary" v-if="!isToVerify" size="large" :loading="modelLoading" @click="modalOk">确定</i-button>
+                <i-button type="primary" v-if="isToVerify" size="large" :loading="modelLoading" @click="verify('y')">通过</i-button>
+                <i-button type="primary" v-if="isToVerify" size="large" :loading="modelLoading" @click="verify('n')">不通过</i-button>
             </div>
         </Modal>
     </div>
@@ -233,20 +236,20 @@ import chinaAddress from '../../components/china-address-0408'
                         align: 'center',
                         render (row, column, index) {
                             return `
-                                <i-button type="primary" v-show="btnShow(${row.userType},${row.state},${row.auditState},'e')" size="small" icon="edit" @click="modalShow(${row.id},'u')" title="修改"></i-button>
-                                <i-button type="primary" v-show="btnShow(${row.userType},${row.state},${row.auditState},'a')" size="small"  @click="apply(${row.id})">申请</i-button>
+                                <i-button type="primary" v-if="btnShow(${row.userType},${row.state},${row.auditState},'e')" size="small" icon="edit" @click="modalShow(${row.id},'u')" title="修改"></i-button>
+                                <i-button type="primary" v-if="btnShow(${row.userType},${row.state},${row.auditState},'a')" size="small"  @click="apply(${row.id})">申请</i-button>
                                 
                                 <i-button type="primary" 
-                                    v-show="btnShow(${row.userType},${row.state},${row.auditState},'ul')"
+                                    v-if="btnShow(${row.userType},${row.state},${row.auditState},'ul')"
                                     @click="changeState(${row.id},'您确认上线吗？')"
                                     size="small" icon="arrow-graph-up-right" title="上线"></i-button>
 
                                 <i-button type="primary"  
-                                    v-show="btnShow(${row.userType},${row.state},${row.auditState},'dl')"
+                                    v-if="btnShow(${row.userType},${row.state},${row.auditState},'dl')"
                                     @click="changeState(${row.id},'您确认下线吗？')"
                                     size="small" icon="arrow-graph-down-right" title="下线"></i-button>
                                 
-                                <i-button type="primary" v-show="btnShow(${row.userType},${row.state},${row.auditState},'vf')" size="small" icon="hammer" @click="modalShow(${row.id},'v')" title="审核"></i-button>
+                                <i-button type="primary" v-if="btnShow(${row.userType},${row.state},${row.auditState},'vf')" size="small" icon="hammer" @click="modalShow(${row.id},'v')" title="审核"></i-button>
                                 <i-button type="primary" size="small" icon="eye" @click="modalShow(${row.id},'l')" title="查看"></i-button>
                             `;
                         }   
@@ -307,7 +310,8 @@ import chinaAddress from '../../components/china-address-0408'
                 imgName: '',
                 visible: false,
                 modelLoading:false,
-                curAuditOpinion:''
+                curAuditOpinion:'',
+                showOpinion:false
 			}
 		},
 		ready(){
@@ -500,6 +504,7 @@ import chinaAddress from '../../components/china-address-0408'
 			add(){
                 this.isLook=false;
                 this.isToVerify=false;
+                this.showOpinion=false;
                 for (var obj in this.modelForm) {
                     this.modelForm[obj]='';
                 }
@@ -510,13 +515,16 @@ import chinaAddress from '../../components/china-address-0408'
 			},
 			modalShow(id,t){
                 let self=this;
+                self.showOpinion=false;
                 if(t=='u'){
                     self.isLook=false;
                     self.isToVerify=false;
                 }else if(t=='l'){
+                    self.showOpinion=true;
                     self.isLook=true;
                     self.isToVerify=false;
                 }else if(t=='v'){
+                    
                     self.isLook=false;
                     self.isToVerify=true;
                 }
@@ -550,6 +558,7 @@ import chinaAddress from '../../components/china-address-0408'
                     if(self.modelForm.areaId){
                         self.addressValue.push(self.modelForm.areaId);
                     }
+
                     self.addModal=true;
                 })
 			},

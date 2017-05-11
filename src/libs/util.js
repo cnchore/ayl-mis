@@ -5,9 +5,9 @@ let util = {
 
 };
 const _HOST = window.location.origin;
-let ajaxUrl = 'http://ktz.aylsonclub.com/admin';
+let ajaxUrl = 'https://www.aylsonclub.com/service';
 // 测试环境
-if(_HOST.indexOf('http://ktz.aylsonclub.com') === -1){
+if(_HOST.indexOf('https://www.aylsonclub.com') === -1){
 	ajaxUrl='http://test.aylsonclub.com/admin'
 	//ajaxUrl='http://localhost:8080/admin'
 	//本地后台接口
