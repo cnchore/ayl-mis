@@ -146,11 +146,11 @@
 	}
 </style>
 <template>
-    <l-header active-key="11"></l-header>
+    <l-header page-src="/order/list"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="11" :active-key="activeKey"></left-menu>
+                <left-menu :page-src="pageSrc"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
@@ -335,6 +335,16 @@ import server from '../../libs/server'
 import LeftMenu from '../../components/left-menu'
 import LHeader from '../../components/header'
 import LTitle from '../../components/title'
+	
+	function getPageSrc(){
+		var url=window.location.hash;
+
+		if(url.indexOf('owner/order/look?t=')===-1){
+			return '/order/list';
+		}else{
+			return '/order/hq/ownerInfo';
+		}
+	}
 	export default{
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
@@ -349,6 +359,7 @@ import LTitle from '../../components/title'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+                pageSrc:getPageSrc(),
                 baseUrl:server.getBaseUrl(),
                 uploadData:{bucket:'dc-test'},
                 defaultList: [],

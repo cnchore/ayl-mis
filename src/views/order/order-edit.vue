@@ -146,11 +146,11 @@
 	}
 </style>
 <template>
-    <l-header active-key="4"></l-header>
+    <l-header page-src="/order/list"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="4" active-key="4-1"></left-menu>
+                <left-menu page-src="/order/list"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
@@ -216,8 +216,7 @@
 		                            <span>{{item.attachName}}</span>
 	                            </div>
 	                            <div class="q-top-b">
-	                            	<a href="/template/门窗订货单.xlsx" target="_blank">门窗订货单下载模板</a>
-	                            	<a href="/template/阳光房订货单.xlsx" target="_blank">阳光房订货单下载模板</a>
+	                            	<a href="/template/订货单.xlsx" target="_blank">门窗订货单模板下载</a>
 	                            </div>
                             </div>
                             <div class="q-right" v-show="tabIndex===2">
@@ -243,8 +242,7 @@
 
 	                            </div>
 	                            <div class="q-top-b">
-	                            	<a href="/template/门窗订货单.xlsx" target="_blank">门窗订货单下载模板</a>
-	                            	<a href="/template/阳光房订货单.xlsx" target="_blank">阳光房订货单下载模板</a>
+	                            	<a href="/template/订货单.xlsx" target="_blank">门窗订货单模板下载</a>
 	                            </div>
                             </div>
                          </div>   

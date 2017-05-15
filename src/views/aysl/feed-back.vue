@@ -38,11 +38,11 @@
     }
 </style>
 <template>
-    <l-header :active-key="activeT"></l-header>
+    <l-header :page-src="pageSrc"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu :active-key="activeL" :active-Menu="activeMenu"></left-menu>
+                <left-menu :page-src="pageSrc"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
@@ -147,7 +147,12 @@ import server from '../../libs/server'
 import LeftMenu from '../../components/left-menu'
 import LHeader from '../../components/header'
 import LTitle from '../../components/title'
-	export default{
+	
+    function getPageSrc(){
+        var _hash=window.location.hash;
+        return _hash.replace('#!','');
+    }
+    export default{
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
 			return{
@@ -155,7 +160,7 @@ import LTitle from '../../components/title'
 				addModal:false,
                 activeMenu:'1',
                 activeT:'1',
-                activeL:'1-4',
+                pageSrc:getPageSrc(),
 				rowsTotal:10,
 				pageIndex:1,
 				self:this,
@@ -234,10 +239,12 @@ import LTitle from '../../components/title'
                     this.seachForm.feedbackerType=t;
                     if(t==5){
                         window.document.title="艾臣营销管理平台－申诉管理";
-                        this.activeMenu='2';
-                        this.activeL='2-6';
-                        this.activeT='2';
+                        
+                        this.pageSrc='/feed/back?t=5';
                     }
+                }else{
+                    this.pageSrc='/feed/back?t=4';
+
                 }
             }
         },

@@ -3,11 +3,11 @@
 	
 </style>
 <template>
-    <l-header active-key="1"></l-header>
+    <l-header page-src="/news" ></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-key="1-2"></left-menu>
+                <left-menu page-src="/news"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
@@ -105,7 +105,7 @@
     </div>
 </template>
 <script>
-import server from '../../libs/server'
+import server,{ storage } from '../../libs/server'
 import LeftMenu from '../../components/left-menu'
 import LHeader from '../../components/header'
 import Editor from '../../components/editor'
@@ -130,6 +130,7 @@ import LTitle from '../../components/title'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+               // keys:server.getForChild(storage.session.get('menuList'),"/news"),
                 newsForm:{
 					  thumb:'',   //缩略图
 					  summary:'', //摘要

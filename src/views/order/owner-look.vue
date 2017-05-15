@@ -112,11 +112,11 @@
 	}
 </style>
 <template>
-    <l-header active-key="11"></l-header>
+    <l-header page-src="/order/hq/ownerInfo"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="11" active-key="11-2"></left-menu>
+                <left-menu page-src="/order/hq/ownerInfo"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
@@ -252,7 +252,7 @@ import LTitle from '../../components/title'
 				tableCol: [
 				{title:'订单编号',width:200,
 					render(row){
-						return `<a v-link="{path:'/owner/order/look?t=2&id='+${row.id}}">${row.orderNo}</a>`;
+						return `<a v-link="{path:'/owner/order/look?t='+id+'&id='+${row.id}}">${row.orderNo}</a>`;
 					}
 				},
 				{title:'下单日期',key:'createTime',width:170},
@@ -281,7 +281,7 @@ import LTitle from '../../components/title'
 			if(this.id){
 				this.getList();
 			}
-			
+
 		},
 		route:{
             data:function(transition){

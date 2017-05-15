@@ -1,5 +1,43 @@
 
 <template>
+ <Menu mode="horizontal" :theme="theme1" active-key="1" @on-select="MenuSelect">
+        <Menu-item key="1">
+            <Icon type="ios-paper"></Icon>
+            内容管理
+        </Menu-item>
+        <Menu-item key="2">
+            <Icon type="ios-people"></Icon>
+            用户管理
+        </Menu-item>
+        
+        <Submenu key="3">
+            <template slot="title">
+                <Icon type="stats-bars"></Icon>
+                统计分析
+            </template>
+            <Menu-group title="使用">
+                <Menu-item key="3-1">新增和启动</Menu-item>
+                <Menu-item key="3-2">活跃分析</Menu-item>
+                <Menu-item key="3-3">时段分析</Menu-item>
+            </Menu-group>
+            <Menu-group title="留存">
+                <Menu-item key="3-4">用户留存</Menu-item>
+                <Menu-item key="3-5">流失用户</Menu-item>
+                <Menu-item key="3-6">退出</Menu-item>
+            </Menu-group>
+        </Submenu>
+        <Menu-item key="4">
+            <Icon type="settings"></Icon>
+            综合设置
+        </Menu-item>
+    </Menu>
+    <br>
+    <p>切换主题</p>
+    <Radio-group :model.sync="theme1">
+        <Radio value="light"></Radio>
+        <Radio value="dark"></Radio>
+        <Radio value="primary"></Radio>
+    </Radio-group>
 <i-table border :columns="columns4" :data="data1" @on-selection-change="selChange"></i-table>
 <br/>
 <button @click="update(4)">修改</button>{{modelForm.oldState}}
@@ -42,6 +80,7 @@ import CurrencyInput from '../../components/currency-input'
         components:{CurrencyInput},
         data () {
             return {
+                 theme1: 'light',
                 data3: [],
                 targetKeys3:[],
                 listStyle: {
@@ -155,6 +194,9 @@ import CurrencyInput from '../../components/currency-input'
                 return _list;
             }
         },
+        ready(){
+            
+        },
         watch:{
             canCkStateList: {
                 handler (canCkStateList) {
@@ -166,6 +208,53 @@ import CurrencyInput from '../../components/currency-input'
             
         },
         methods: {
+            MenuSelect(key){
+                if(key==='3-6'){
+                    var t;
+                    clearTimeout(t);
+                    t = setTimeout(() => {
+                        this.$router.go('/login');
+                        
+                    }, 600);
+                    return;
+                }
+                this.$Notice.info({
+                    title:'信息',
+                    desc:'选择了'+key
+                });
+            },
+            getForChild(list=[],src=''){
+                let keys={
+                    topKey:0,
+                    leftKey:0
+                }
+                
+                for(var i=0;i<list.length;i++){
+                    
+                    if(list[i].levelNum===2 && list[i].src===src){
+                        keys.topKey=list[i].parentId;
+                        keys.leftKey=list[i].id;
+                        return keys;
+                    }else if(list[i].children){
+                        for(var j=0;j<list[i].children.length;j++){
+                            if(list[i].children[j].levelNum===2 && list[i].children[j].src===src){
+                                keys.topKey=list[i].children[j].parentId;
+                                keys.leftKey=list[i].children[j].id;
+                                return keys;
+                            }
+                        }
+                        
+                    }
+                }
+                return keys;
+            },
+            getChild(list=[]){
+                list.forEach((item)=>{
+                    if(item.children.length>0){
+                        this.getChild(item.children);
+                    }
+                })
+            },
             cancel(){
                 this.$router.go(-1);
             },

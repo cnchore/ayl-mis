@@ -2,11 +2,11 @@
 	
 </style>
 <template>
-    <l-header active-key="3"></l-header>
+    <l-header page-src="/trash"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="3" active-key="3-3"></left-menu>
+                <left-menu page-src="/trash"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
