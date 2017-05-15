@@ -1,75 +1,30 @@
  <template>                  
     <header>
             <Row>
-                <i-col :xs="0" :sm="0" :md="0" :lg="5" v-show="spanLeft>0">
+                <i-col :xs="0" :sm="0" :md="0" :lg="5" v-if="spanLeft>0">
                     <div class="logo"></div>
                 </i-col>
                 <i-col  :md="20" :lg="16">
-                 <Menu mode="horizontal" theme="primary" class="q-menu" :active-key="activeKey" @on-select="handleSelect">
-                    <Menu-item key="0">
-                        <i class="iconfont icon-zhuye"></i>
-                        <span>首页</span>
+                 <Menu mode="horizontal" :id="Math.random()" theme="primary" class="q-menu" :active-key="topMenuAct" @on-select="MenuSelect">
+                    <Menu-item :key="item.id"  v-for="item in menuList | filterBy 'icon' in 'iconUrl'">
+                        <i class="iconfont" :class="item.iconUrl"></i>
+                        <span>{{item.menuName}}</span>
                     </Menu-item>
-                    <Menu-item key="3" v-show="userInfo.type===1 && userInfo.roleName!='自助学习'">
-                        <i class="iconfont icon-yuyueguanli"></i>
-                        <span>预约管理</span>
-                    </Menu-item>
-                    <Menu-item key="10" v-show="userInfo.type===2 && userInfo.roleName!='自助学习'">
-                        <i class="iconfont icon-yuyueguanli"></i>
-                        <span>预约管理</span>
-                    </Menu-item>
-                    <Menu-item key="4" v-show="userInfo.type===1 && userInfo.roleName!='自助学习'">
-                        <i class="iconfont icon-dingdan"></i>
-                        <span>客户订单管理</span>
-                    </Menu-item>
-                     <Menu-item key="11" v-show="userInfo.type===2 && userInfo.roleName!='自助学习'">
-                        <i class="iconfont icon-dingdan"></i>
-                        <span>客户订单管理</span>
-                    </Menu-item>
-                    <Menu-item key="1" v-if="userInfo.roleName!='自助学习'">
-                        <i class="iconfont icon-qiye"></i>
-                        <span>安居艾臣</span>
-                    </Menu-item>
-                    <Menu-item key="2" v-if="userInfo.roleName!='自助学习'">
-                        <i class="iconfont icon-hehuoren"></i>
-                        <span>艾臣合伙人</span>
-                    </Menu-item>
-                    <Menu-item key="5" v-if="userInfo.type==1 && userInfo.roleName!='自助学习'">
-                        <i class="iconfont icon-mendian"></i>
-                        <span>经销商管理</span>
-                    </Menu-item>
-                    <Menu-item key="9" v-if="userInfo.type==2 && userInfo.roleName!='自助学习'">
-                        <i class="iconfont icon-mendian"></i>
-                        <span>门店管理</span>
-                    </Menu-item>
-                    <Menu-item key="6" v-if="userInfo.roleName!='自助学习'">
-                        <i class="iconfont icon-tongji"></i>
-                        <span>统计分析</span>
-                    </Menu-item>
-                    <Menu-item key="12">
-                        <i class="iconfont icon-zizhuxuexi"></i>
-                        <span>自助学习</span>
-                    </Menu-item>
+                    
                 </Menu>
                 </i-col>
                 <i-col  :md="4" :lg="3">
-                    <Menu mode="horizontal" theme="primary" class="q-menu"  style="float: right;"
-                    @on-select="handleSelect">
-                        <Menu-item key="7" class="q-right q-inline" v-if="false && spanLeft>0">
-                            <i class="iconfont icon-xiaoxi"></i>
-                        </Menu-item>
-                        <Submenu key="8" class="q-right">
+                    <Menu mode="horizontal" :active-key="topMenuAct" :id="Math.random()" theme="primary" class="q-menu"  style="float: right;"
+                    @on-select="MenuSelect">
+                        
+                        <Submenu :key="item.id" class="q-right" v-for="item in menuList | filterBy '/user' in 'src'">
                             <template slot="title">{{userInfo.userName}}</template>
-                                <Menu-item key="8-1">
-                                   <i class="iconfont icon-zhanghaoxinxi"></i>
-
-                                    <span>账号信息</span>
+                                
+                                <Menu-item :key="child.id" v-for="child in item.children">
+                                    <i class="iconfont" :class="child.iconUrl"></i>
+                                    <span>{{child.menuName}}</span>
                                 </Menu-item>
-                                <Menu-item key="8-2">
-                                    <i class="iconfont icon-xiugaimima"></i>
-                                    <span>修改密码</span>
-                                </Menu-item>
-                                <Menu-item key="8-3">
+                                <Menu-item :key="9999">
                                     <i class="iconfont icon-tuichu"></i>
                                     <span>退&nbsp;&nbsp;&nbsp;&nbsp;出</span>
                                 </Menu-item>
@@ -85,6 +40,10 @@ import server,{ storage } from '../libs/server'
 import env from '../config/env';
     export default{
         props: {
+            selKey:{
+                type:Number,
+                default:1
+            },
             activeKey:{
                 type:String,
                 default:'1'
@@ -96,17 +55,28 @@ import env from '../config/env';
             spanRight:{
                 type:Number,
                 default:20
+            },
+            pageSrc:{
+                type:String,
+                default:''
             }
         },
         data(){
             return {
-                userInfo:env==='development'?{userName:'TestName',type:1}:storage.session.get('userInfo')
+                userInfo:env==='development'?{userName:'TestName',type:2}:storage.session.get('userInfo'),
+                menuList:storage.session.get('menuList'),
+                topMenuAct:0
             }
         },
+
         ready(){
             let w=window.document.body.clientWidth;
-
-            
+            if(this.pageSrc==='/index'){
+                this.getIndexMenuId();
+            }else{
+                let keys=server.getForChild(this.menuList,this.pageSrc)
+                this.topMenuAct=keys.topKey;
+            }
             if(w&&w<1136){
                 this.spanLeft=0;
                 this.spanRight = 24;
@@ -121,73 +91,73 @@ import env from '../config/env';
                 this.spanLeft=4;
                 this.spanRight = 20-4;
             }
+
         },
         methods:{
-            handleSelect(key){
-                //this.$Message.info(key);
-                switch(key){
-                    case '0':
-                        if(this.userInfo.roleName==='自助学习'){
-                            this.$router.go('/study/product/point');
-                        }else{
-                            this.$router.go('/index');
-                        }
-                        break;
-                    case '1':
-                        if(this.userInfo.type===1){
-                            this.$router.go('/store');
-                        }else{
-                            this.$router.go('/coupon');
-                        }
-                        
-                        break;
-                    case '2':
-                        if(this.userInfo.type===1){
-                            this.$router.go('/partner/account');
-                        }else{
-                            this.$router.go('/partner/bonus');
-                        }   
-                        break;
-                    case '3':
-                        this.$router.go('/waiting');
-                        break;
-                    case '10':
-                        this.$router.go('/owner/waiting');
-                        break;
-                    case '5':
-                         this.$router.go('/agent/index');
-                        break;
-                    case '4':
-                        this.$router.go('/order/list')
-                        break;
-                    case '11':
-                         this.$router.go('/owner/order/list')
-                        break;
-                    case '6':
-                    case '7':
-                        this.$Notice.info({
-                                title:'提示',
-                                desc:'开发中,敬请期待...'
-                            });
-                        break;
-                    case '8-1':
-                        this.$router.go('/info');
-                        break;
-                    case '8-2':
-                        this.$router.go('/pwd/update');
-                        break;
-                    case '8-3':
+            MenuSelect(key){
+                if(key===9999){
+                    var t;
+                    clearTimeout(t);
+                    t = setTimeout(() => {
                         this.loginOut();
-                        break;
-                    case '9':
-                        this.$router.go('/staff');
-                        break;
-                    case '12'://自助学习
-                        this.$router.go('/study/product/point');
-                        break;
                         
+                    }, 600);
+                    return;
+                }
+                let _src=this.getMenuSrcById(this.menuList,key);
+                if(this.userInfo.type===2){
+                    switch(_src){
+                        case '/waiting':
+                            _src='/owner/waiting';
+                            break;
+                        case '/order/list':
+                            _src='/owner/order/list';
+                            break;
+                    }
+                }
+                if(_src){
+                    var t;
+                    clearTimeout(t);
+                    t = setTimeout(() => {
+                        this.$router.go(_src);
+                    }, 600);
+                }else{
+                    this.$Notice.info({
+                        title:'提示',
+                        desc:'开发中,敬请期待...'
+                    });
                 }
             },
+            getIndexMenuId(){
+                let self=this;
+                self.menuList.every((item)=>{
+                    if(item.src==='/index'){
+                        self.topMenuAct=item.id;
+                        return false;
+                    }
+                })
+            },
+            getMenuSrcById(list,key){
+                let _src=null;
+                list.forEach((item)=>{
+                    if(parseInt(key)===parseInt(item.id)){
+                        if(item.children && item.children[0]){
+                            _src=item.children[0].src;
+                        }else{
+                          _src=item.src;  
+                        }
+                        
+                    }else if(item.children && item.children.length>0){
+                        item.children.forEach((child)=>{
+                            if(parseInt(child.id)===parseInt(key)){
+                                _src=child.src;
+                            }
+                        })
+                    }
+                })
+                return _src;
+            },
+
             loginOut(){
                 let self=this;
                 self.$Loading.start();
@@ -195,7 +165,8 @@ import env from '../config/env';
                     self.$Loading.finish();
                     if(res.success){
                         storage.session.remove('userInfo');
-                        self.$router.go('login')
+                        storage.session.remove('menuList');
+                        self.$router.go('/login')
                         
                     }else{
                         self.$Message.error(res.message);

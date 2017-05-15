@@ -257,14 +257,18 @@ export default {
 
 	},
 	getPromise(url='',params={},requestName=''){
-		let ret = {}
+		let ret = {
+			success:false,
+			message:requestName+'请求错误',
+			data:[]
+		}
 	    let promise = new Promise( (resolve) => {
 	      
 	        util.ajax.get(
 	        	url,{
 	        		params:params
 	        	}).then((body)=>{
-	        		console.log(requestName,body);
+	        		//console.log(requestName,body);
 	        		if(body.data.success){
 	        			if(body.data.data){
 	        				resolve(body.data)
@@ -280,28 +284,15 @@ export default {
 	        			}else{
 	        				alert(requestName+'请求错误！\n\n'+body.data.message);
 	        			}
-	        			/**/
+	        			ret.message=body.data.message;
+	        			
 	        			resolve(ret);
-	        			/*
-	        			if(body.data.message&&body.data.message.indexOf('请先登录')>-1){
-		        			Vue.$Modal.confirm({
-			                    onOk:function(){
-			                       Vue.$router.go('/login');
-			                    },
-			                    title:'未登录活登录超时，需重新登录',
-			                    content:'确定马上，重新登录吗？'
-			                })
-		        		}else{
-		        			Vue.$Notice.error({
-	                            title:'请求-'+requestName+'-失败',
-	                            desc:body.data.message
-	                        });
-		        		}
-		        		*/
+	        			
 	        		}
 		        }, (error)=>{
-		          resolve(ret)
-		          console.error(requestName,error);
+		        	ret.message=error;
+		          	resolve(ret)
+		          	console.error(requestName,error);
 		        })
 	    })
     	return promise
@@ -326,7 +317,11 @@ export default {
     	return promise
 	},
 	getJsonpPromise(url='',params={},requestName=''){
-		let ret = {}
+		let ret = {
+			success:false,
+			message:requestName+'请求错误',
+			data:[]
+		}
 	    let promise = new Promise( (resolve) => {
 	      
 	        Vue.http.jsonp(util.serverPath+url,{
@@ -343,14 +338,19 @@ export default {
 		            resolve(ret)
 		          }
 		        }, (error)=>{
-		          resolve(ret)
-		          console.log(requestName,error);
+		        	ret.message=error;
+		          	resolve(ret)
+		          	console.log(requestName,error);
 		        })
 	    })
     	return promise
 	},
 	postPromise(url='',formData={},requestName=''){
-		let ret = {}
+		let ret = {
+			success:false,
+			message:'',
+			data:[]
+		}
 	    let promise = new Promise( (resolve) => {
 	      
 	        util.ajax.request({
@@ -365,8 +365,9 @@ export default {
 		            resolve(body.data)
 		          }
 		        }, (error)=>{
-		          resolve(ret)
-		          console.log(requestName,error);
+		        	ret.message=error;
+		          	resolve(ret)
+		          	console.error(requestName,error);
 		        })
 	    })
     	return promise
@@ -489,6 +490,60 @@ export default {
 		}
 		
 	},
+	getMenuKeyBySrc(list=[],src=''){
+		let keys={
+			topKey:0,
+			leftKey:0
+		}
+		if(!src){
+			return keys;
+		}
+		for(var i=0;i<list.length;i++){
+			if(list[i].levelNum===2 && list[i].src===src){
+				keys.leftKey=list[i].id;
+				keys.topKey=list[i].parentId;
+				return keys ;
+			}else if(list[i].children && list[i].children.length>0){
+				for(var j=0;j<list[i].children.length;j++){
+                    if(list[i].children[j].levelNum===2 && list[i].children[j].src===src){
+                        keys.topKey=list[i].children[j].parentId;
+                        keys.leftKey=list[i].children[j].id;
+                        return keys;
+                    }
+                }
+			}
+		}
+		return keys;
+	},
+	getForChild(list=[],src=''){
+        let keys={
+            topKey:0,
+            leftKey:0
+        }
+        //console.log('getForChild',src)
+        for(var i=0;i<list.length;i++){
+               // console.log(list[i].menuName,list[i].id);
+            
+            if(list[i].levelNum===2 && list[i].src===src){
+                //console.log(list[i].menuName,list[i].id,list[i].parentId);
+                keys.topKey=list[i].parentId;
+                keys.leftKey=list[i].id;
+                return keys;
+            }else if(list[i].children){
+                for(var j=0;j<list[i].children.length;j++){
+                   // console.log(list[i].children[j].menuName,list[i].children[j].id);
+                    if(list[i].children[j].levelNum===2 && list[i].children[j].src===src){
+                        //console.log(list[i].children[j].menuName,list[i].children[j].id,list[i].children[j].parentId);
+                        keys.topKey=list[i].children[j].parentId;
+                        keys.leftKey=list[i].children[j].id;
+                        return keys;
+                    }
+                }
+                
+            }
+        }
+        return keys;
+    },
 	getBaseUrl(){
 		return util.serverPath;
 	},

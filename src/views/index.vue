@@ -85,7 +85,7 @@
     }
 </style>
 <template>
-    <l-header active-key="0"></l-header>
+    <l-header page-src="/index"></l-header>
     <div class="q-page">
         <Row class="q-card">
             <i-col span="6">
@@ -257,7 +257,7 @@ import LHeader from '../components/header'
                 tableData:[],
                 tableCol: [
                 {
-                    key:'name',title:'客户名称',width:95
+                    key:'name',title:'客户名称',width:125
                 },
                 {
                     key:'state',title:'当前阶段',width:140,
@@ -284,7 +284,7 @@ import LHeader from '../components/header'
                 }],
                 orderWaitCol:[
                 {
-                    key:'name',title:'客户名称',width:95
+                    key:'name',title:'客户名称',width:125
                 },
                 {
                     title:'订单级别',width:95,
@@ -314,7 +314,7 @@ import LHeader from '../components/header'
                 }],
                 orderCol:[
                 {
-                    key:'name',title:'客户姓名',width:95
+                    key:'name',title:'客户姓名',width:125
                 },
                 
                 {

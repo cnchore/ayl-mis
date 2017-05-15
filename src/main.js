@@ -48,7 +48,7 @@ router.beforeEach((transition) => {
         // this route requires auth, check if logged in
         // if not, redirect to login page.
         let userInfo=storage.session.get('userInfo');
-        console.log('transition',transition);
+        //console.log('transition',transition);
         //console.log(userInfo)
         if(env!='development' && !(userInfo && userInfo.userName) ){
             //let lc=window.document.location;
@@ -65,6 +65,7 @@ router.beforeEach((transition) => {
                     query: { redirect: transition.to.fullPath }
                 })
             }else{
+                console.log('transition.next',transition.to.path);
                 transition.next();
             }
         }

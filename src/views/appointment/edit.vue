@@ -128,11 +128,11 @@
 	}
 </style>
 <template>
-    <l-header active-key="10"></l-header>
+    <l-header page-src="/waiting"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="10" active-key="10-1"></left-menu>
+                <left-menu page-src="/waiting"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">

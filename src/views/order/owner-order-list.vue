@@ -2,11 +2,11 @@
     
 </style>
 <template>
-    <l-header active-key="11"></l-header>
+    <l-header page-src="/order/list"></l-header>
     <div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="11" active-key="11-1"></left-menu>
+                <left-menu page-src="/order/list"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
@@ -205,10 +205,10 @@ import LTitle from '../../components/title'
                     align: 'center',
                     render (row, column, index) {
                     return `
-                        <i class="iconfont icon-chakanyuyue btn" v-show="${row.appointId}!=0"  title="查看预约" @click="modelShow(${row.appointId})"></i>
+                        <i class="iconfont icon-chakanyuyue btn" v-if="${row.appointId}"  title="查看预约" @click="modelShow(${row.appointId})"></i>
                         <i class="iconfont icon-chakandingdan btn" title="查看订货单" @click="actionShow(${row.id})"></i>
-                        <i class="iconfont icon-bianji btn" title="编辑订货单" v-show="${row.flowState}===0" @click="actionShow(${row.id},true)"></i>
-                        <i class="iconfont icon-fasong btn" title="提交" v-show="${row.flowState}===0" @click="actionNext(${row.id})"></i>
+                        <i class="iconfont icon-bianji btn" title="编辑订货单" v-if="${row.flowState}===0" @click="actionShow(${row.id},true)"></i>
+                        <i class="iconfont icon-fasong btn" title="提交" v-if="${row.flowState}===0" @click="actionNext(${row.id})"></i>
                     `;
                     }   
                 }]

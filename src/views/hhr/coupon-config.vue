@@ -2,11 +2,11 @@
 	
 </style>
 <template>
-    <l-header active-key="2"></l-header>
+    <l-header page-src="/coupon/config"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="2" active-key="2-2"></left-menu>
+                <left-menu page-src="/coupon/config"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">

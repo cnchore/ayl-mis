@@ -108,15 +108,7 @@ import util from '../libs/util'
             }
         },
         ready(){
-            //console.log(this.$router.query);
-            //this.getVcode();
-
-            //
-            /*
-            server.getStaffList({}).then((res)=>{
-
-            })
-            */
+            
         },
         methods: {
             onEnter(){
@@ -137,7 +129,16 @@ import util from '../libs/util'
                                 storage.session.set('menuList',res.data.menuList);
                                 self.$router.go('/index');
                             }else{
-                                self.$Message.error(res.message);
+                                if(window.location.origin.indexOf('http://localhost:')!=-1){
+                                    let list={"success":true,"message":"登录成功","data":{"sessionInfo":{"user":{"id":36,"userName":"刘路路","pwd":"670B14728AD9902AECBA32E22FA4F6BD","type":2,"status":1,"roleId":4,"roleName":"代理商","validateCode":null},"memAcount":null,"role":{"id":4,"roleName":"代理商","roleCode":"agent","remark":"代理商"},"isLiveMode":false},"menuList":[{"id":63,"parentId":1,"seq":null,"iconUrl":"icon-zhuye","menuName":"首页","src":"/index","levelNum":1,"isLeaf":true,"nodePath":null,"remark":"营销平台首页","state":"colsed","ck":true,"children":[]},{"id":64,"parentId":1,"seq":null,"iconUrl":"icon-yuyueguanli","menuName":"预约管理","src":"/waiting","levelNum":1,"isLeaf":false,"nodePath":null,"remark":"营销平台－总部","state":"colsed","ck":true,"children":[{"id":72,"parentId":64,"seq":null,"iconUrl":"icon-daiban","menuName":"待办事项","src":"/waiting","levelNum":2,"isLeaf":true,"nodePath":null,"remark":"营销平台－总部","state":"colsed","ck":true,"children":[]},{"id":73,"parentId":64,"seq":null,"iconUrl":"icon-mendian","menuName":"已办事项","src":"/complete","levelNum":2,"isLeaf":true,"nodePath":null,"remark":"营销平台－总部","state":"colsed","ck":true,"children":[]}]},{"id":65,"parentId":1,"seq":null,"iconUrl":"icon-dingdan","menuName":"客户订单管理","src":"/order/list","levelNum":1,"isLeaf":false,"nodePath":null,"remark":"营销平台－总部","state":"colsed","ck":true,"children":[{"id":75,"parentId":65,"seq":null,"iconUrl":"icon-dingdanguanli","menuName":"订单管理","src":"/order/list","levelNum":2,"isLeaf":true,"nodePath":null,"remark":"营销平台－总部","state":"colsed","ck":true,"children":[]},{"id":76,"parentId":65,"seq":null,"iconUrl":"icon-kehuguanli","menuName":"客户管理","src":"/order/hq/ownerInfo","levelNum":2,"isLeaf":true,"nodePath":null,"remark":"营销平台－总部","state":"colsed","ck":true,"children":[]}]},{"id":66,"parentId":1,"seq":null,"iconUrl":"icon-qiye","menuName":"安居艾臣","src":"/store","levelNum":1,"isLeaf":false,"nodePath":null,"remark":"营销平台－总部","state":"colsed","ck":true,"children":[{"id":83,"parentId":66,"seq":null,"iconUrl":"icon-youhuihuodongfabu","menuName":"优惠活动发布","src":"/coupon","levelNum":2,"isLeaf":true,"nodePath":null,"remark":"营销平台－总部","state":"colsed","ck":true,"children":[]}]},{"id":67,"parentId":1,"seq":null,"iconUrl":"icon-hehuoren","menuName":"艾臣合伙人","src":"/partner/account","levelNum":1,"isLeaf":false,"nodePath":null,"remark":"营销平台－总部","state":"colsed","ck":true,"children":[{"id":92,"parentId":67,"seq":null,"iconUrl":"icon-fenhongguanli1","menuName":"分红管理","src":"/partner/bonus","levelNum":2,"isLeaf":true,"nodePath":null,"remark":"营销平台－总部","state":"colsed","ck":true,"children":[]}]},{"id":70,"parentId":1,"seq":null,"iconUrl":"icon-zizhuxuexi","menuName":"自助学习","src":"/study/product/point","levelNum":1,"isLeaf":false,"nodePath":null,"remark":"营销平台－总部","state":"colsed","ck":true,"children":[{"id":94,"parentId":70,"seq":null,"iconUrl":"icon-chanpinmaidian","menuName":"产品卖点","src":"/study/product/point","levelNum":2,"isLeaf":true,"nodePath":null,"remark":"营销平台－总部","state":"colsed","ck":true,"children":[]},{"id":95,"parentId":70,"seq":null,"iconUrl":"icon-xitongjieshao","menuName":"系统介绍","src":"/study/sys/introduce","levelNum":2,"isLeaf":true,"nodePath":null,"remark":"营销平台－总部","state":"colsed","ck":true,"children":[]},{"id":96,"parentId":70,"seq":null,"iconUrl":"icon-anzhuangshouhou","menuName":"安装售后","src":"/study/customer/service","levelNum":2,"isLeaf":true,"nodePath":null,"remark":"营销平台－总部","state":"colsed","ck":true,"children":[]},{"id":97,"parentId":70,"seq":null,"iconUrl":"icon-yunyingtixi","menuName":"运营体系","src":"/study/operating/system","levelNum":2,"isLeaf":true,"nodePath":null,"remark":"营销平台－总部","state":"colsed","ck":true,"children":[]}]},{"id":71,"parentId":1,"seq":null,"iconUrl":"","menuName":"个人中心","src":"/user","levelNum":1,"isLeaf":false,"nodePath":null,"remark":"营销平台－总部","state":"colsed","ck":true,"children":[{"id":98,"parentId":71,"seq":null,"iconUrl":"icon-zhanghaoxinxi","menuName":"基本信息","src":"/info","levelNum":2,"isLeaf":true,"nodePath":null,"remark":"营销平台－总部","state":"colsed","ck":true,"children":[]},{"id":99,"parentId":71,"seq":null,"iconUrl":"icon-xiugaimima","menuName":"修改密码","src":"/pwd/update","levelNum":2,"isLeaf":true,"nodePath":null,"remark":"营销平台－总部","state":"colsed","ck":true,"children":[]},{"id":100,"parentId":71,"seq":null,"iconUrl":"icon-beiwanglu","menuName":"备忘录","src":"/memo","levelNum":2,"isLeaf":true,"nodePath":null,"remark":"营销平台－总部","state":"colsed","ck":true,"children":[]}]},{"id":107,"parentId":1,"seq":null,"iconUrl":"icon-mendian","menuName":"门店管理","src":"/staff","levelNum":1,"isLeaf":false,"nodePath":null,"remark":"营销平台－经销商","state":"colsed","ck":true,"children":[{"id":117,"parentId":107,"seq":null,"iconUrl":"icon-kehu","menuName":"人员管理","src":"/staff","levelNum":2,"isLeaf":true,"nodePath":null,"remark":"营销平台－经销商","state":"colsed","ck":true,"children":[]}]}]},"resultCode":200};
+                                    let menuList=list.data.menuList;
+                                    let userInfo=list.data.sessionInfo.user;
+                                    storage.session.set('userInfo',userInfo);
+                                    storage.session.set('menuList',menuList);
+                                    self.$router.go('/index');
+                                }else{
+                                    self.$Message.error(res.message);
+                                }
                             }
                         })
                     } else {

@@ -2,11 +2,11 @@
 	
 </style>
 <template>
-    <l-header active-key="3"></l-header>
+    <l-header page-src="/complete"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="3" active-key="3-2"></left-menu>
+                <left-menu page-src="/complete"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">

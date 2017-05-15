@@ -33,7 +33,7 @@
 			.q-right{
 				width: 100%;
 				padding-left: 10px;
-				.q-img-list{
+				.q-l-img-list{
 					height:58px;
 					display: flex;
 					align-items: center;
@@ -112,11 +112,11 @@
 	}
 </style>
 <template>
-    <l-header active-key="4"></l-header>
+    <l-header page-src="/order/hq/ownerInfo"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="4" active-key="4-2"></left-menu>
+                <left-menu page-src="/order/hq/ownerInfo"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
@@ -190,7 +190,7 @@
                     	<div class="container">
                     		
                             <div class="q-right">
-	                            <div class="q-img-list" v-show="item.state==1" v-for="item in defaultList">
+	                            <div class="q-l-img-list" v-show="item.state==1" v-for="item in defaultList">
 		                    		<div class="l-upload-list" >
 		                                    <img :src="item.avatar">
 		                            </div>
@@ -250,7 +250,7 @@ import LTitle from '../../components/title'
 				tableCol: [
 				{title:'订单编号',key:'orderNo',width:200,
 					render(row){
-						return `<a v-link="{path:'/order/look?t='+${row.id}+'&id='+${row.id}}">${row.orderNo}</a>`;
+						return `<a v-link="{path:'/order/look?t='+id+'&id='+${row.id}}">${row.orderNo}</a>`;
 					}
 				},
 				{title:'下单日期',key:'createTime',width:170},

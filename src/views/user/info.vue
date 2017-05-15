@@ -12,11 +12,11 @@
 	
 </style>
 <template>
-    <l-header active-key="0"></l-header>
+    <l-header page-src="/user"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="0" active-key="0-1"></left-menu>
+                <left-menu page-src="/info"></left-menu>
             </i-col>
             <i-col :span="spanRight">
 

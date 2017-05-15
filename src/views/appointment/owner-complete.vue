@@ -2,11 +2,11 @@
 	
 </style>
 <template>
-    <l-header active-key="10"></l-header>
+    <l-header page-src="/complete"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="10" active-key="10-2"></left-menu>
+                <left-menu page-src="/complete"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
@@ -282,7 +282,7 @@ import chinaAddress from '../../components/china-address-0408'
 			},
 			actionShow(id=null){
 				
-				this.$router.go('/appointment/look?id='+id+'&t=2')
+				this.$router.go('/appointment/look?t=2&id='+id)
 			},
 			
 			

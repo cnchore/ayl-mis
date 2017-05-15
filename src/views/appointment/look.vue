@@ -130,11 +130,11 @@
 	}
 </style>
 <template>
-    <l-header active-key="10"></l-header>
+    <l-header page-src="/waiting"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="10" :active-key="activeKey"></left-menu>
+                <left-menu :page-src="pageSrc"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
@@ -243,6 +243,16 @@ import server from '../../libs/server'
 import LeftMenu from '../../components/left-menu'
 import LHeader from '../../components/header'
 import LTitle from '../../components/title'
+	
+	function getPageSrc(){
+		var url=window.location.hash;
+
+		if(url.indexOf('/appointment/look?t=2&id=')===-1){
+			return '/waiting';
+		}else{
+			return '/complete';
+		}
+	}
 	export default{
 		components:{LHeader,LeftMenu,LTitle},
 		data(){
@@ -252,6 +262,7 @@ import LTitle from '../../components/title'
 				spanLeft: 4,
                 spanRight: 20,
                 activeKey:'10-1',
+                pageSrc:getPageSrc(),
                 defaultList: [],
                 imgName: '',
                 visible: false,

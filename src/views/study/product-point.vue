@@ -3,11 +3,11 @@
 	
 </style>
 <template>
-    <l-header active-key="12"></l-header>
+    <l-header page-src="/study/product/point"></l-header>
 	<div class="layout">
         <Row type="flex" class="l-row">
             <i-col :span="spanLeft" v-show="leftMenu" class="layout-menu-left">
-                <left-menu active-Menu="12" active-key="12-1"></left-menu>
+                <left-menu page-src="/study/product/point"></left-menu>
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
