@@ -132,6 +132,7 @@ import LTitle from '../../components/title'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+               	menuActList:server.getMenuActionList('/complete'),
                 modelForm:{
          
                 },
@@ -170,6 +171,7 @@ import LTitle from '../../components/title'
 				{
 					key:'appointDate',title:'预约时间',width:170
 				},
+                {title:' '},
 				
 				{
 					title: '操作',
@@ -179,7 +181,7 @@ import LTitle from '../../components/title'
 					align: 'center',
 					render (row, column, index) {
 					return `
-                        <i class="iconfont icon-chakanyuyue btn" title="查看预约" @click="modelShow(${row.id})"></i>
+                        <i class="iconfont icon-chakanyuyue btn" v-if="getAction('查看预约')" title="查看预约" @click="modelShow(${row.id})"></i>
 					`;
 					}   
 				}]
@@ -189,7 +191,13 @@ import LTitle from '../../components/title'
 			this.getList();
 		},
 		methods:{
-			
+			getAction(name=''){
+				var	l=this.menuActList.filter((item)=>item.menuName===name).length;
+				if(l>0){
+					return true;
+				}
+				return false;
+			},
             getStatusName(v){
             	
                 switch(v){

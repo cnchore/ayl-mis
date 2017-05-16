@@ -129,6 +129,7 @@ import LTitle from '../../components/title'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+                menuActList:server.getMenuActionList('/gift/send'),
                 tableCol: [
                 {width:95,key:'state',title:'状态',
                     
@@ -146,7 +147,9 @@ import LTitle from '../../components/title'
                 {width:500,key:'address',title:'详细地址'},
                 {width:170,key:'createTime',title:'创建时间'},
                 {width:170,key:'updateTime',title:'更新时间'
-                },{
+                },
+                    {title:' '},
+                {
                     title: '操作',
                     key: 'action',
                     fixed:'right',
@@ -156,16 +159,16 @@ import LTitle from '../../components/title'
                         return `
                         
                         <i-button type="primary" 
-                            v-show="${row.state}==1"
+                            v-if="getAction('已回访') && ${row.state}==1"
                             @click="updateState(${row.id},'您确认处理为［已回访］吗？')"
                              size="small">已回访</i-button>
 
                         <i-button type="primary"
-                            v-show="${row.state}<3" 
+                            v-if="getAction('已发货') && ${row.state}<3" 
                             @click="updateState(${row.id},'您确认处理为［已发货］吗？')"
                              size="small">已发货</i-button>
 
-                        <i-button type="primary" size="small" title="活动参与情况" icon="eye" @click="look(${row.id})"></i-button>
+                        <i-button type="primary" v-if="getAction('查看')" size="small" title="活动参与情况" icon="eye" @click="look(${row.id})"></i-button>
                         `;
                     }   
                 }],
@@ -192,6 +195,13 @@ import LTitle from '../../components/title'
 			this.getList();
 		},
 		methods:{
+            getAction(name=''){
+                var l=this.menuActList.filter((item)=>item.menuName===name).length;
+                if(l>0){
+                    return true;
+                }
+                return false;
+            },
             getStatusName(v){
                 switch(v){
                     case 1:

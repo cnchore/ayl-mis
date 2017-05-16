@@ -180,6 +180,7 @@ import CurrencyInput from '../../components/currency-input'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+                menuActList:server.getMenuActionList('/partner/bonus'),
                 modelForm:{
                 	walletNew:''
                 },
@@ -230,6 +231,7 @@ import CurrencyInput from '../../components/currency-input'
 				{
 					key:'bankAccountName',title:'户名',width:95
 				},
+                    {title:' '},
 				{
 					title: '操作',
 					key: 'action',
@@ -238,9 +240,9 @@ import CurrencyInput from '../../components/currency-input'
 					align: 'center',
 					render (row, column, index) {
 					return `
-						<i-button type="primary" v-if="userInfo.type===2" title="添加转账" icon="plus" @click="modelShow(${row.id})" size="small"></i-button>
+						<i-button type="primary" v-if="getAction('添加') && userInfo.type===2" title="添加转账" icon="plus" @click="modelShow(${row.id})" size="small"></i-button>
 						
-						<i-button type="primary"
+						<i-button type="primary" v-if="getAction('查看')"
 							 @click="showBonus(${row.id})"
 								title="查看转账记录"
 							 icon="eye" size="small"></i-button>
@@ -257,7 +259,7 @@ import CurrencyInput from '../../components/currency-input'
                     	render(row,column,index){
                         	return `
                         	<i-button type="primary"
-							 v-show="btnShow(${index})"
+							 v-if="btnShow(${index})"
                         	 @click="imageView(${index})"
 							 icon="eye" size="small">查看</i-button>`
                     	}
@@ -278,7 +280,13 @@ import CurrencyInput from '../../components/currency-input'
             }
         },
 		methods:{
-            
+            getAction(name=''){
+				var	l=this.menuActList.filter((item)=>item.menuName===name).length;
+				if(l>0){
+					return true;
+				}
+				return false;
+			},
             getList(page=1,rows=10){
                 let self=this;
                 self.$Loading.start();

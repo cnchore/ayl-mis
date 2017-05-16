@@ -10,7 +10,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="addOrUpdate()" :breads="breads" ></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="addOrUpdate()" :is-show="getAction('新增')" :breads="breads" ></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm"  inline>
@@ -63,7 +63,7 @@ import LTitle from '../../components/title'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
-               
+                menuActList:server.getMenuActionList('/order/hq/ownerInfo'),
 				tableCol: [
 				{title:'客户名称',key:'name',width:125},
                 {title:'成单数量',key:'orderNum',width:125},
@@ -80,6 +80,7 @@ import LTitle from '../../components/title'
                     }
                 },
 				{title:'备注',key:'remark',width:400},
+                    {title:' '},
 				{
 					title: '操作',
 					key: 'action',
@@ -88,10 +89,10 @@ import LTitle from '../../components/title'
 					align: 'center',
 					render (row, column, index) {
 					return `
-                        <i-button type="primary" title="查看" icon="eye" @click="look(${row.id})" size="small"></i-button>
-						<i-button type="primary" title="修改" v-if="${row.sourceType}===2" icon="edit" @click="addOrUpdate(${row.id})" size="small"></i-button>
+                        <i-button type="primary" title="查看" v-if="getAction('查看')" icon="eye" @click="look(${row.id})" size="small"></i-button>
+						<i-button type="primary" title="修改" v-if="getAction('编辑') && ${row.sourceType}===2" icon="edit" @click="addOrUpdate(${row.id})" size="small"></i-button>
 					
-						<i-button type="primary" title="删除" v-if="${row.sourceType}===2" icon="ios-trash" @click="del(${row.id})"  size="small"></i-button>	
+						<i-button type="primary" title="删除" v-if="getAction('删除') && ${row.sourceType}===2" icon="ios-trash" @click="del(${row.id})"  size="small"></i-button>	
 					`;
 					}   
 				}]
@@ -101,7 +102,13 @@ import LTitle from '../../components/title'
 			this.getList();
 		},
 		methods:{
-			
+			getAction(name=''){
+                var l=this.menuActList.filter((item)=>item.menuName===name).length;
+                if(l>0){
+                    return true;
+                }
+                return false;
+            },
             getList(page=1,rows=10){
                 let self=this;
                 self.$Loading.start();

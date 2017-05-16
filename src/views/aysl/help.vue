@@ -11,7 +11,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add" :breads="breads"></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add" :is-show="getAction('新增')" :breads="breads"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm" inline>
@@ -96,19 +96,21 @@ import LTitle from '../../components/title'
                 leftMenu:true,
                 spanLeft: 4,
                 spanRight: 20,
+                menuActList:server.getMenuActionList('/help'),
                 tableCol: [
                     
                     {
-                        title: '问题类型',
+                        title: '问题类型',width:125,
                         key: 'type',
                         render(row,column,index){
                             return `{{getTypeName(${row.type})}}`;
                         }
                     },
                     {
-                        title: '问题标题',
+                        title: '问题标题',width:580,ellipsis:true,
                         key: 'question'
                     },
+                    {title:' '},
                     {
                         title: '操作',
                         key: 'action',
@@ -117,9 +119,9 @@ import LTitle from '../../components/title'
                         align: 'center',
                         render (row, column, index) {
                             return `
-                            <i-button type="primary" size="small" title="修改" icon="edit" @click="update(${row.id})"></i-button>
+                            <i-button type="primary" v-if="getAction('编辑')" size="small" title="修改" icon="edit" @click="update(${row.id})"></i-button>
                           
-                            <i-button type="primary"
+                            <i-button type="primary" v-if="getAction('删除')"
                                 @click="remove(${row.id})" title="删除"
                                  icon="ios-trash" size="small"></i-button>
 
@@ -156,6 +158,13 @@ import LTitle from '../../components/title'
             
         },
         methods:{
+            getAction(name=''){
+                var l=this.menuActList.filter((item)=>item.menuName===name).length;
+                if(l>0){
+                    return true;
+                }
+                return false;
+            },
             getTypeName(value){
                 let _index=this.typeList.findIndex((v)=>v.value==value);
                 return this.typeList[_index].label;

@@ -120,6 +120,7 @@ import LTitle from '../../components/title'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+                menuActList:server.getMenuActionList('/partner/account'),
 				tableCol: [
 				{key:'partnerName',width:120,title:'合伙人姓名'},
 				{
@@ -148,6 +149,7 @@ import LTitle from '../../components/title'
 				{key:'agentName',width:150,title:'代理商名称'},
 				{key:'agentPhone',width:125,title:'代理商电话'},
 				{key:'registerTime',width:170,title:'注册时间'},
+                    {title:' '},
 
 				{
 					title: '操作',
@@ -159,11 +161,11 @@ import LTitle from '../../components/title'
 					return `
 						
 						<i-button type="primary"
-							v-show="${row.state}==0" 
+							v-if="getAction('通过') && ${row.state}==0" 
 							@click="updateState(${row.id},true,'您确认该账号通过吗？')"
 							 size="small">通过</i-button>
 						<i-button type="primary"
-							v-show="${row.state}==0" 
+							v-if="getAction('不通过') && ${row.state}==0" 
 							@click="updateState(${row.id},false,'您确认该账号不通过吗？')"
 							 size="small">不通过</i-button>
 
@@ -176,6 +178,13 @@ import LTitle from '../../components/title'
 			this.getList();
 		},
 		methods:{
+			getAction(name=''){
+				var	l=this.menuActList.filter((item)=>item.menuName===name).length;
+				if(l>0){
+					return true;
+				}
+				return false;
+			},
             getStatusName(v,t){
             	if(t==='s'){
 	                switch(v){

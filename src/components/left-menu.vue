@@ -6,7 +6,7 @@
     <Menu :active-key="selKey" :id="Math.random()" class="q-menu q-lg-icon"
      width="auto" @on-select="leftMenuSelect">
         
-        <Menu-item :key="item.id" v-show="item.iconUrl" v-for="item in menuList">
+        <Menu-item :key="item.id" v-show="item.iconUrl" v-for="item in menuList | filterBy '1' in 'type'">
             <i class="iconfont" :class="item.iconUrl"></i>
             <span>{{item.menuName}}</span>
         </Menu-item>
@@ -46,13 +46,14 @@ import env from '../config/env';
 	  	},
         data(){
             return {
-                userInfo:env==='development'?{userName:'TestName',type:2}:storage.session.get('userInfo'),
+                userInfo:env==='development'?{userName:'TestName',type:1}:storage.session.get('userInfo'),
                 menuList:[]
             }
         },
 		ready(){
             //console.log('keys',this.topMenu,this.selKey);
             let _list=storage.session.get('menuList');
+            //console.log(this.pageSrc);
             //顶部菜单，左侧菜单选择获取
             let keys=server.getForChild(_list,this.pageSrc);
             if(keys.topKey>0){
@@ -62,10 +63,12 @@ import env from '../config/env';
                 this.selKey=keys.leftKey;
             }
             //第三级页面，左侧菜单选中获取
+            /*
             let leftKeys=server.getMenuKeyBySrc(_list,this.leftMenuAct);
             if(leftKeys.leftKey>0){
                 this.selKey=leftKeys.leftKey;
             }
+            */
             this.setMenuList(_list);
 		},
 		methods:{

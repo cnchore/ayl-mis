@@ -97,6 +97,7 @@ import LTitle from '../../components/title'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+                menuActList:server.getMenuActionList('/coupon/apply'),
 				tableCol: [
                 
                 {
@@ -157,6 +158,7 @@ import LTitle from '../../components/title'
                         {{${row.progress}===1?'已进场':'未进场'}}</span>`;
                     }
                 },
+                    {title:' '},
                 {
                     title: '操作',
                     key: 'action',
@@ -167,11 +169,11 @@ import LTitle from '../../components/title'
                     return `
                         
                         <i-button type="primary"
-                            v-show="${row.state}==0"
+                            v-if="getAction('通过') && ${row.state}==0"
                             @click="updateState(${row.id},true,'您确认审核通过吗？')"
                           size="small">通过</i-button>
                         <i-button type="primary"
-                            v-show="${row.state}==0"
+                            v-if="getAction('不通过') && ${row.state}==0"
                             @click="updateState(${row.id},false,'您确认审核不通过吗？')"
                           size="small">不通过</i-button>
                       
@@ -184,6 +186,13 @@ import LTitle from '../../components/title'
 			this.getList();
 		},
 		methods:{
+            getAction(name=''){
+                var l=this.menuActList.filter((item)=>item.menuName===name).length;
+                if(l>0){
+                    return true;
+                }
+                return false;
+            },
             getStatusName(v,t){
             	if(t==='s'){
 	                switch(v){

@@ -142,13 +142,13 @@
                 </div>
                 <br/>
                 <div class="layout-content" >
-                	<div class="q-imgs" v-show="optionList[0]">
+                	<div class="q-imgs" v-if="optionList[0]">
                 		<div class="q-title">
                         	<i class="iconfont icon-kehuyijian"></i>客户意见区
                     	</div>
                 		<div class="container q-table">
-                			<Collapse active-key="0">
-						        <Panel :key="index" v-for="(index,item) in optionList">
+                			<Collapse :active-key="0">
+						        <Panel  v-for="(index,item) in optionList">
 						            {{item.createTime}}
 						            <p slot="content">{{item.remark}}</p>
 						        </Panel>

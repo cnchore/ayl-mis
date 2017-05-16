@@ -174,6 +174,7 @@ import LTitle from '../../components/title'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+                menuActList:server.getMenuActionList(getPageSrc()),
 				tableCol: [
                     
                     {
@@ -207,6 +208,7 @@ import LTitle from '../../components/title'
                        width:170,
                         key: 'replyTime'
                     },
+                    {title:' '},
                     {
                         title: '操作',
                         key: 'action',
@@ -215,8 +217,8 @@ import LTitle from '../../components/title'
                         align: 'center',
                         render (row, column, index) {
                             return `
-                            <i-button type="primary" size="small" @click="reply(${row.id})">回复</i-button>
-                            <i-button type="primary" size="small" title="查看" icon="eye" @click="look(${row.id})"></i-button>
+                            <i-button type="primary" v-if="getAction('回复')" size="small" @click="reply(${row.id})">回复</i-button>
+                            <i-button type="primary" v-if="getAction('查看')" size="small" title="查看" icon="eye" @click="look(${row.id})"></i-button>
                             `;
                         }   
                     }
@@ -253,6 +255,13 @@ import LTitle from '../../components/title'
 			this.getList();
 		},
 		methods:{
+            getAction(name=''){
+                var l=this.menuActList.filter((item)=>item.menuName===name).length;
+                if(l>0){
+                    return true;
+                }
+                return false;
+            },
             getStatusName(v){
                 switch(v){
                     case 1:

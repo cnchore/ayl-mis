@@ -11,7 +11,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add" :breads="breads"></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add" :is-show="getAction('新增')" :breads="breads"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm" inline>
@@ -188,6 +188,7 @@ import chinaAddress from '../../components/china-address-0408'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+                menuActList:server.getMenuActionList('/coupon'),
 				tableCol: [
                     
                     {
@@ -228,6 +229,7 @@ import chinaAddress from '../../components/china-address-0408'
                         title: '活动结束时间',width:170,
                         key: 'endTime'
                     },
+                    {title:' '},
                     {
                         title: '操作',
                         key: 'action',
@@ -236,21 +238,21 @@ import chinaAddress from '../../components/china-address-0408'
                         align: 'center',
                         render (row, column, index) {
                             return `
-                                <i-button type="primary" v-if="btnShow(${row.userType},${row.state},${row.auditState},'e')" size="small" icon="edit" @click="modalShow(${row.id},'u')" title="修改"></i-button>
-                                <i-button type="primary" v-if="btnShow(${row.userType},${row.state},${row.auditState},'a')" size="small"  @click="apply(${row.id})">申请</i-button>
+                                <i-button type="primary" v-if="getAction('编辑') && btnShow(${row.userType},${row.state},${row.auditState},'e')" size="small" icon="edit" @click="modalShow(${row.id},'u')" title="修改"></i-button>
+                                <i-button type="primary" v-if="getAction('申请') && btnShow(${row.userType},${row.state},${row.auditState},'a')" size="small"  @click="apply(${row.id})">申请</i-button>
                                 
                                 <i-button type="primary" 
-                                    v-if="btnShow(${row.userType},${row.state},${row.auditState},'ul')"
+                                    v-if="getAction('上线') && btnShow(${row.userType},${row.state},${row.auditState},'ul')"
                                     @click="changeState(${row.id},'您确认上线吗？')"
                                     size="small" icon="arrow-graph-up-right" title="上线"></i-button>
 
                                 <i-button type="primary"  
-                                    v-if="btnShow(${row.userType},${row.state},${row.auditState},'dl')"
+                                    v-if="getAction('下线') && btnShow(${row.userType},${row.state},${row.auditState},'dl')"
                                     @click="changeState(${row.id},'您确认下线吗？')"
                                     size="small" icon="arrow-graph-down-right" title="下线"></i-button>
                                 
-                                <i-button type="primary" v-if="btnShow(${row.userType},${row.state},${row.auditState},'vf')" size="small" icon="hammer" @click="modalShow(${row.id},'v')" title="审核"></i-button>
-                                <i-button type="primary" size="small" icon="eye" @click="modalShow(${row.id},'l')" title="查看"></i-button>
+                                <i-button type="primary" v-if="getAction('审核') && btnShow(${row.userType},${row.state},${row.auditState},'vf')" size="small" icon="hammer" @click="modalShow(${row.id},'v')" title="审核"></i-button>
+                                <i-button type="primary" size="small" v-if="getAction('查看')" icon="eye" @click="modalShow(${row.id},'l')" title="查看"></i-button>
                             `;
                         }   
                     }
@@ -325,6 +327,13 @@ import chinaAddress from '../../components/china-address-0408'
             }
         },
 		methods:{
+            getAction(name=''){
+                var l=this.menuActList.filter((item)=>item.menuName===name).length;
+                if(l>0){
+                    return true;
+                }
+                return false;
+            },
             addrSelected(value,selectedData){
                 //console.log(selectedData);
                 if(selectedData.length>0){

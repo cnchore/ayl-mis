@@ -6,18 +6,25 @@
                 </i-col>
                 <i-col  :md="20" :lg="16">
                  <Menu mode="horizontal" :id="Math.random()" theme="primary" class="q-menu" :active-key="topMenuAct" @on-select="MenuSelect">
-                    <Menu-item :key="item.id"  v-for="item in menuList | filterBy 'icon' in 'iconUrl'">
+                    <Menu-item :key="item.id"  v-for="item in menuList | filterBy 'icon' in 'iconUrl' |limitBy showLen">
                         <i class="iconfont" :class="item.iconUrl"></i>
                         <span>{{item.menuName}}</span>
                     </Menu-item>
-                    
+                    <Submenu :key="10000" v-if="menuLength>maxLength">
+                            <template slot="title">更多</template>
+                                
+                            <Menu-item :key="item.id" v-for="item in menuList | filterBy 'icon' in 'iconUrl' | limitBy 10 showLen">
+                                <i class="iconfont" :class="item.iconUrl"></i>
+                                <span>{{item.menuName}}</span>
+                            </Menu-item>
+                    </Submenu>
                 </Menu>
                 </i-col>
                 <i-col  :md="4" :lg="3">
                     <Menu mode="horizontal" :active-key="topMenuAct" :id="Math.random()" theme="primary" class="q-menu"  style="float: right;"
                     @on-select="MenuSelect">
                         
-                        <Submenu :key="item.id" class="q-right" v-for="item in menuList | filterBy '/user' in 'src'">
+                        <Submenu :key="item.id" v-for="item in menuList | filterBy '/user' in 'src'">
                             <template slot="title">{{userInfo.userName}}</template>
                                 
                                 <Menu-item :key="child.id" v-for="child in item.children">
@@ -63,12 +70,24 @@ import env from '../config/env';
         },
         data(){
             return {
-                userInfo:env==='development'?{userName:'TestName',type:2}:storage.session.get('userInfo'),
+                userInfo:env==='development'?{userName:'TestName',type:1}:storage.session.get('userInfo'),
                 menuList:storage.session.get('menuList'),
-                topMenuAct:0
+                topMenuAct:0,
+                maxLength:8,
+                showLen:8
             }
         },
-
+        computed:{
+            menuLength:function(){
+                var l=this.menuList.filter((item)=>(item.iconUrl!=null && item.iconUrl!='')).length;
+                if(l>this.maxLength){
+                    this.showLen=this.maxLength-1;
+                }else{
+                    this.showLen=this.maxLength;
+                }
+                return l;
+            }
+        },
         ready(){
             let w=window.document.body.clientWidth;
             if(this.pageSrc==='/index'){
@@ -91,7 +110,6 @@ import env from '../config/env';
                 this.spanLeft=4;
                 this.spanRight = 20-4;
             }
-
         },
         methods:{
             MenuSelect(key){

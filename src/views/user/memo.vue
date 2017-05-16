@@ -59,6 +59,8 @@
 	}
 	.q-cell-memo em{
 		text-decoration: overline;
+		font-weight: bold;
+		color:#369;
 	}
 </style>
 <template>
@@ -139,7 +141,7 @@
                 				<h1>{{value.getDate()}}</h1>
                 				<div>
                 					<span>{{value.getFullYear()}}年 {{value.getMonth()+1}}月</span>
-                            		<i class="iconfont icon-tianjia btn" @click="addOrUpdate()"></i>
+                            		<i v-if="getAction('新增')" class="iconfont icon-tianjia btn" @click="addOrUpdate()"></i>
                 				</div>
                 			</div>
                 			<i-table :content="self" :columns="tableCol" :data="tableData"></i-table>
@@ -262,6 +264,7 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+                menuActList:server.getMenuActionList('/memo'),
                 modelForm:{},
                 modeRule:{
                 	content: [
@@ -285,11 +288,12 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
 					}
 				},
 				{
-					key:'memoTime',title:'备忘时间',width:200
+					key:'memoTime',title:'备忘时间',width:170
 				},
 				{
-					key:'content',title:'备忘',className:'l-min-width l-ellipsis'
+					key:'content',title:'备忘',width:300,ellipsis:true
 				},
+                    {title:' '},
 				
 				{
 					title: '操作',
@@ -297,13 +301,15 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
 					align: 'center',
 					render (row, column, index) {
 					return `
-						<i-button type="primary" icon="edit" @click="addOrUpdate(${row.id})" size="small">修改</i-button>
+						<i-button type="primary" v-if="getAction('修改')" icon="edit" @click="addOrUpdate(${row.id})" size="small">修改</i-button>
 						<i-button type="primary"
-							@click="del(${row.id})"
+							@click="del(${row.id})" v-if="getAction('删除')"
 							 icon="ios-trash" size="small">删除</i-button>
 					`;
 					}   
-				}]
+				}],
+				topMemoList:[],
+				bottomMemoList:[]
 			}
 		},
 		ready(){
@@ -312,19 +318,22 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
 		watch:{
 			cells: {
                 handler (cells) {
-                    this.readCells = cells;
-
+                    //this.readCells = cells;
+                    //this.getTopMemoList();
                 },
                 immediate: true
             },
             rightCells: {
                 handler (rightCells) {
-                    this.rightReadCells = rightCells;
+                    //this.rightReadCells = rightCells;
+                    //this.getBottomMemoList();
                 },
                 immediate: true
             },
             valueStr:{
             	handler(valueStr){
+            		this.getTopMemoList();
+            		this.getBottomMemoList();
             		this.getList();
             	},
             	immediate:true
@@ -356,20 +365,14 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
                         cells.push(cell);
                     }
                 }
-                let nextMonth = this.month + 1;
-                let nextYear = this.year;
-                if (this.month === 11) {
-                    nextMonth = 0;
-                    nextYear += 1;
-                }
-                let memoList=this.getNoPageList(this.getDateStr(this.year,this.month,1),this.getDateStr(nextYear,nextMonth,1));
+                
 
                 for (let i = 1; i <= dateCountOfMonth; i++) {
                     const cell = deepCopy(cell_tmpl);
                     const time = clearHours(new Date(this.year, this.month, i));
                     cell.type = time === today ? 'today' : 'normal';
-                    if(typeOf(memoList)=== 'array'){
-                    	memoList.forEach((item)=>{
+                    if(typeOf(this.topMemoList)=== 'array'){
+                    	this.topMemoList.forEach((item)=>{
 	                    	let d=new Date(item.memoTime).getDate();
 	                    	if(d===i){
 	                    		cell.memo='memo';
@@ -392,7 +395,8 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
                    
                     cells.push(cell);
                 }
-                return cells;
+            	return cells;
+                
             },
             rightCells () {
             	let rightYear=this.year;
@@ -416,7 +420,6 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
                     text: '',
                     type: '',
                     selected: false
-                    
                 };
                 if (day !== 7) {
                     for (let i = 0; i < day; i++) {
@@ -428,20 +431,14 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
                         cells.push(cell);
                     }
                 }
-                let nextMonth = this.rightMonth + 1;
-                let nextYear = this.rightYear;
-                if (this.rightMonth === 11) {
-                    nextMonth = 0;
-                    nextYear += 1;
-                }
-                let memoList=this.getNoPageList(this.getDateStr(this.rightYear,this.rightMonth,1),this.getDateStr(nextYear,nextMonth,1));
+
 
                 for (let i = 1; i <= dateCountOfMonth; i++) {
                     const cell = deepCopy(cell_tmpl);
                     const time = clearHours(new Date(rightYear, rightMonth, i));
                     cell.type = time === today ? 'today' : 'normal';
-                    if(typeOf(memoList)=== 'array'){
-                    	memoList.forEach((item)=>{
+                    if(typeOf(this.bottomMemoList)=== 'array'){
+                    	this.bottomMemoList.forEach((item)=>{
 	                    	let d=new Date(item.memoTime).getDate();
 	                    	if(d===i){
 	                    		cell.memo='memo';
@@ -464,9 +461,56 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
                     cells.push(cell);
                 }
                 return cells;
+                
             }
 		},
 		methods:{
+			getTopMemoList(){
+				let nextMonth = this.month + 1;
+                let nextYear = this.year;
+                if (this.month === 11) {
+                    nextMonth = 0;
+                    nextYear += 1;
+                }
+                let timeStart=this.getDateStr(this.year,this.month,1);
+                let timeEnd=this.getDateStr(nextYear,nextMonth,1);
+                //this.topMemoList=this.getNoPageList(timeStart,timeEnd);
+                server.getMemoAll({memoTimeStart:timeStart,memoTimeEnd:timeEnd}).then((res)=>{
+					if(res.success){
+						 this.topMemoList=res.data;
+					}else{
+						this.topMemoList=[];
+					}
+					this.readCells=this.cells;
+				})
+			},
+			getBottomMemoList(){
+
+				let nextMonth = this.rightMonth + 1;
+                let nextYear = this.rightYear;
+                if (this.rightMonth === 11) {
+                    nextMonth = 0;
+                    nextYear += 1;
+                }
+                let timeStart=this.getDateStr(this.rightYear,this.rightMonth,1);
+                let timeEnd=this.getDateStr(nextYear,nextMonth,1);
+                //this.bottomMemoList=this.getNoPageList(timeStart,timeEnd);
+                server.getMemoAll({memoTimeStart:timeStart,memoTimeEnd:timeEnd}).then((res)=>{
+					if(res.success){
+						 this.bottomMemoList=res.data;
+					}else{
+						this.bottomMemoList=[];
+					}
+					this.rightReadCells=this.rightCells;
+				})
+			},
+			getAction(name=''){
+				var	l=this.menuActList.filter((item)=>item.menuName===name).length;
+				if(l>0){
+					return true;
+				}
+				return false;
+			},
 			getNoPageList(memoTimeStart,memoTimeEnd){
 				server.getMemoAll({memoTimeStart,memoTimeEnd}).then((res)=>{
 					if(res.success){
@@ -568,9 +612,13 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
             },
             prevYear(){
             	this.year--;
+            	this.getTopMemoList();
+            	this.getBottomMemoList();
             },
             nextYear(){
             	this.year++;
+            	this.getTopMemoList();
+            	this.getBottomMemoList();
             },
             prevMonth () {
                 this.month--;
@@ -578,6 +626,8 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
                     this.month = 11;
                     this.year--;
                 }
+                this.getTopMemoList();
+            	this.getBottomMemoList();
             },
             nextMonth () {
                 this.month++;
@@ -585,6 +635,8 @@ import { getFirstDayOfMonth, getDayCountOfMonth } from '../../libs/date-util'
                     this.month = 0;
                     this.year++;
                 }
+                this.getTopMemoList();
+            	this.getBottomMemoList();
             },
 			getStatusName(v){
 				switch(v){

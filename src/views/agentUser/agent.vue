@@ -10,7 +10,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="addOrUpdate" :breads="breads" ></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="addOrUpdate" :is-show="getAction('新增')" :breads="breads" ></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm"  inline>
@@ -99,7 +99,8 @@ import chinaAddress from '../../components/china-address-0408'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
-               
+                menuActList:server.getMenuActionList('/agent/index'),
+                
 				tableCol: [
 				{title:'账号',key:'userName',width:125},
 				{title:'门店名称',key:'agentName',width:200},
@@ -113,6 +114,7 @@ import chinaAddress from '../../components/china-address-0408'
 					key:'createTime',title:'创建时间',width:170
 				},
 				
+                {title:' '},
 				
 				{
 					title: '操作',
@@ -122,16 +124,16 @@ import chinaAddress from '../../components/china-address-0408'
 					align: 'center',
 					render (row, column, index) {
 					return `
-						<i-button type="primary" title="修改" icon="edit" @click="addOrUpdate(${row.id})" size="small"></i-button>
+						<i-button type="primary" v-if="getAction('编辑')" title="修改" icon="edit" @click="addOrUpdate(${row.id})" size="small"></i-button>
 						<i-button type="primary"
-							v-show="${row.status}==1" 
+							v-if="getAction('禁用') && ${row.status}==1" 
 							@click="updateState(${row.userId},0,'您确定禁用么？')"
 							  size="small">禁用</i-button>
 						<i-button type="primary"
-							v-show="${row.status}==0" 
+							v-if="getAction('启用') && ${row.status}==0" 
 							@click="updateState(${row.userId},1,'您确定启用么？')"
 							  size="small">启用</i-button>
-						<i-button type="primary" size="small">二维码</i-button>	
+						<i-button type="primary" v-if="getAction('二维码')" size="small">二维码</i-button>	
 					`;
 					}   
 				}]
@@ -141,6 +143,13 @@ import chinaAddress from '../../components/china-address-0408'
 			this.getList();
 		},
 		methods:{
+            getAction(name=''){
+                var l=this.menuActList.filter((item)=>item.menuName===name).length;
+                if(l>0){
+                    return true;
+                }
+                return false;
+            },
 			addrSelected(value,selectedData){
                 //console.log(selectedData);
                 if(selectedData.length>0){

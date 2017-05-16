@@ -70,6 +70,7 @@ import LTitle from '../../components/title'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+               	menuActList:server.getMenuActionList('/trash'),
                 modelForm:{
          
                 },
@@ -105,6 +106,7 @@ import LTitle from '../../components/title'
 				{
 					key:'updateTime',title:'废弃时间',width:170
 				},
+                {title:' '},
 				
 				{
 					title: '操作',
@@ -114,7 +116,7 @@ import LTitle from '../../components/title'
 					align: 'center',
 					render (row, column, index) {
 					return `
-						<i-button type="primary" size="small" @click="reStore(${row.id})" >恢复</i-button>
+						<i-button type="primary" size="small" v-if="getAction('恢复')" @click="reStore(${row.id})" >恢复</i-button>
 					`;
 					}   
 				}]
@@ -124,9 +126,13 @@ import LTitle from '../../components/title'
 			this.getList();
 		},
 		methods:{
-			
-           
-           
+			getAction(name=''){
+				var	l=this.menuActList.filter((item)=>item.menuName===name).length;
+				if(l>0){
+					return true;
+				}
+				return false;
+			},
             getList(page=1,rows=10){
                 let self=this;
                 self.$Loading.start();

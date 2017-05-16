@@ -51,23 +51,24 @@ import LTitle from '../../components/title'
                 spanRight: 20,
 				tableCol: [
                     {
-                        title: '课程名称',
+                        title: '课程名称',width:200,
                         key: 'courseName'
                     },
                     {
-                        title: '课程描述',width:200,className:'l-ellipsis',
+                        title: '课程描述',width:300,ellipsis:true,
                         key: 'courseDesc'
                     },
                     {
-                        title: '讲师',
+                        title: '讲师',width:125,
                         key: 'lecturer'
                     },
                     {
                         title: '创建时间',width:170,
                         key: 'createTime'
                     },
+                    {title:' '},
                     {
-                        title: '操作',
+                        title: '操作',width:125,
                         render(row){
                             return `<a target="_blank" href="${row.courseUrl}">马上学习</a>`;
 

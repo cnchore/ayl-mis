@@ -10,7 +10,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="actionAdd" :breads="breads" ></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="actionAdd" :is-show="getAction('新增')" :breads="breads" ></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm"  inline>
@@ -138,6 +138,7 @@ import LTitle from '../../components/title'
                 leftMenu:true,
                 spanLeft: 4,
                 spanRight: 20,
+                menuActList:server.getMenuActionList('/order/list'),
                 modelForm:{
          
                 },
@@ -197,6 +198,7 @@ import LTitle from '../../components/title'
                         return row.updateTime?row.updateTime:'无'
                     }
                 },
+                    {title:' '},
                 {
                     title: '操作',
                     key: 'action',
@@ -205,10 +207,10 @@ import LTitle from '../../components/title'
                     align: 'center',
                     render (row, column, index) {
                     return `
-                        <i class="iconfont icon-chakanyuyue btn" v-if="${row.appointId}"  title="查看预约" @click="modelShow(${row.appointId})"></i>
-                        <i class="iconfont icon-chakandingdan btn" title="查看订货单" @click="actionShow(${row.id})"></i>
-                        <i class="iconfont icon-bianji btn" title="编辑订货单" v-if="${row.flowState}===0" @click="actionShow(${row.id},true)"></i>
-                        <i class="iconfont icon-fasong btn" title="提交" v-if="${row.flowState}===0" @click="actionNext(${row.id})"></i>
+                        <i class="iconfont icon-chakanyuyue btn" v-if="getAction('查看预约') && ${row.appointId}"  title="查看预约" @click="modelShow(${row.appointId})"></i>
+                        <i class="iconfont icon-chakandingdan btn" v-if="getAction('查看订货单')" title="查看订货单" @click="actionShow(${row.id})"></i>
+                        <i class="iconfont icon-bianji btn" title="编辑订货单" v-if="getAction('编辑') && ${row.flowState}===0" @click="actionShow(${row.id},true)"></i>
+                        <i class="iconfont icon-fasong btn" title="提交" v-if="getAction('提交') && ${row.flowState}===0" @click="actionNext(${row.id})"></i>
                     `;
                     }   
                 }]
@@ -224,7 +226,13 @@ import LTitle from '../../components/title'
             
         },
         methods:{
-            
+            getAction(name=''){
+                var l=this.menuActList.filter((item)=>item.menuName===name).length;
+                if(l>0){
+                    return true;
+                }
+                return false;
+            },
             getStatusName(v){
                 
                 switch(v){

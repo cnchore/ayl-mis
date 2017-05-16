@@ -11,7 +11,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add" :breads="breads"></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add" :is-show="getAction('新增')" :breads="breads"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm" inline>
@@ -233,20 +233,22 @@ import LTitle from '../../components/title'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
-				tableCol: [
+				menuActList:server.getMenuActionList('/product'),
+                tableCol: [
                     
                     {
-                        title: '产品类别',
+                        title: '产品类别',width:150,
                         key: 'categoryName'
                     },
                     {
-                        title: '产品名称',
+                        title: '产品名称',width:300,
                         key: 'productName'
                     },
                     {
-                        title: '适用范围',
+                        title: '适用范围',width:300,
                         key: 'application'
                     },
+                    {title:' '},
                     {
                         title: '操作',
                         key: 'action',
@@ -255,13 +257,13 @@ import LTitle from '../../components/title'
                         align: 'center',
                         render (row, column, index) {
                             return `
-                            <i-button type="primary" size="small" title="修改" icon="edit" @click="update(${row.id})"></i-button>
+                            <i-button type="primary" v-if="getAction('编辑')" size="small" title="修改" icon="edit" @click="update(${row.id})"></i-button>
                             
                             <i-button type="primary"
-                                @click="remove(${row.id})"
+                                @click="remove(${row.id})" v-if="getAction('删除')" 
                                  icon="ios-trash" size="small" title="删除" ></i-button>
 
-                            <i-button type="primary" size="small" icon="eye" title="查看" @click="look(${row.id})"></i-button>
+                            <i-button type="primary"  v-if="getAction('查看')" size="small" icon="eye" title="查看" @click="look(${row.id})"></i-button>
                             `;
                         }   
                     }
@@ -322,6 +324,13 @@ import LTitle from '../../components/title'
             }
         },
 		methods:{
+            getAction(name=''){
+                var l=this.menuActList.filter((item)=>item.menuName===name).length;
+                if(l>0){
+                    return true;
+                }
+                return false;
+            },
             getDict(){
                 let self=this;
                server.getDict('ProductIntroduceCategory_Item').then((res)=>{

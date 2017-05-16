@@ -10,7 +10,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="modelShow" :breads="breads"></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="modelShow" :is-show="getAction('新增')" :breads="breads"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm"  inline>
@@ -113,6 +113,7 @@ import LTitle from '../../components/title'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+                menuActList:server.getMenuActionList('/coupon/config'),
                 modelForm:{},
                 modeRule:{
                 	couponName: [
@@ -162,6 +163,7 @@ import LTitle from '../../components/title'
 				{
 					key:'remark',title:'备注',width:200,className:'l-ellipsis'
 				},
+                    {title:' '},
 				{
 					title: '操作',
 					key: 'action',
@@ -172,17 +174,17 @@ import LTitle from '../../components/title'
 					return `
 						
 						<i-button type="primary"
-						 v-show="${row.state}==0"
+						 v-if="getAction('上架') && ${row.state}==0"
 						 @click="updateState(${row.id},'您确认上架吗？')" size="small">上架</i-button>
 						<i-button type="primary"
-						 v-show="${row.state}==1"
+						 v-if="getAction('下架') && ${row.state}==1"
 						 @click="updateState(${row.id},'您确认下架吗？')" size="small">下架</i-button>
 
 						
-						<i-button type="primary" v-show="${row.state}==0" title="修改" icon="edit" @click="modelShow(${row.id})" size="small"></i-button>
+						<i-button type="primary" v-if="getAction('编辑') && ${row.state}==0" title="修改" icon="edit" @click="modelShow(${row.id})" size="small"></i-button>
 						
 						<i-button type="primary"
-							v-show="${row.state}==0" 
+							v-if="getAction('删除') && ${row.state}==0" 
 							@click="del(${row.id})" title="删除"
 						 icon="ios-trash" size="small"></i-button>
 
@@ -195,6 +197,13 @@ import LTitle from '../../components/title'
 			this.getList();
 		},
 		methods:{
+			getAction(name=''){
+				var	l=this.menuActList.filter((item)=>item.menuName===name).length;
+				if(l>0){
+					return true;
+				}
+				return false;
+			},
             getStatusName(v){
             	
                 switch(v){

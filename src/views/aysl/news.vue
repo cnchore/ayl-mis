@@ -11,7 +11,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add" :breads="breads"></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add" :is-show="getAction('新增')" :breads="breads"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm"  inline>
@@ -130,6 +130,7 @@ import LTitle from '../../components/title'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+                menuActList:server.getMenuActionList('/news'),
                // keys:server.getForChild(storage.session.get('menuList'),"/news"),
                 newsForm:{
 					  thumb:'',   //缩略图
@@ -149,14 +150,14 @@ import LTitle from '../../components/title'
 				tableCol: [
                     
                     {
-                        title: '标题',
+                        title: '标题',width:300,ellipsis:true,
                         key: 'title',
                         render (row, column, index) {
                             return `<strong>${row.title}</strong>`;
                         }
                     },
                     {
-                        title: '状态',
+                        title: '状态',width:125,
                         key: 'status',
                         render(row,column,index){
                             return `<Tag type="dot" :color="getStatus(${row.status})">{{getStatusName(${row.status})}}</Tag>`;
@@ -164,13 +165,14 @@ import LTitle from '../../components/title'
                     },
                     {
                         title: '摘要',
-                        width:125,className:'l-ellipsis',
+                        width:125,ellipsis:true,
                         key: 'summary'
                     },
                     {
-                        title: '发布时间',
+                        title: '发布时间',width:170,
                         key: 'publishTime'
                     },
+                    {title:' '},
                     {
                         title: '操作',
                         key: 'action',
@@ -179,16 +181,16 @@ import LTitle from '../../components/title'
                         align: 'center',
                         render (row, column, index) {
                             return `
-                            <i-button type="primary" v-show="${row.status}==1" size="small" icon="edit" @click="update(${row.id})" title="修改"></i-button>
-                            <i-button type="primary" v-show="${row.status}==1" size="small" icon="forward" @click="publish(${row.id})" title="发布"></i-button>
-                            <i-button type="primary" v-show="${row.status}==2" size="small" icon="stop" @click="publish(${row.id})" title="结束发布"></i-button>
+                            <i-button type="primary" v-if="getAction('编辑') && ${row.status}==1" size="small" icon="edit" @click="update(${row.id})" title="修改"></i-button>
+                            <i-button type="primary" v-if="getAction('发布') && ${row.status}==1" size="small" icon="forward" @click="publish(${row.id})" title="发布"></i-button>
+                            <i-button type="primary" v-if="getAction('结束发布') && ${row.status}==2" size="small" icon="stop" @click="publish(${row.id})" title="结束发布"></i-button>
                             
                             <i-button type="primary" 
-                                v-show="${row.status}==1"
+                                v-if="getAction('删除') && ${row.status}==1"
                                 @click="remove(${row.id})"
                                 icon="ios-trash" size="small" title="删除"></i-button>
 
-                            <i-button type="primary" size="small" icon="eye" title="查看" @click="look(${row.id})"></i-button>
+                            <i-button type="primary" v-if="getAction('查看')" size="small" icon="eye" title="查看" @click="look(${row.id})"></i-button>
                             `;
                         }   
                     }
@@ -212,6 +214,13 @@ import LTitle from '../../components/title'
             }
         },
 		methods:{
+            getAction(name=''){
+                var l=this.menuActList.filter((item)=>item.menuName===name).length;
+                if(l>0){
+                    return true;
+                }
+                return false;
+            },
             getStatus(v){
                 switch(v){
                     case 1:
