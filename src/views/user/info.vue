@@ -26,7 +26,7 @@
                	<br/>
                 <div class="layout-content">
                 	<i-form v-ref:form-validate :model="modelForm" :rules="modeRule" :label-width="150">
-                		<Form-item >
+                		<Form-item v-if="getAction('编辑')">
 							 <div class="q-right q-lg-btn">
 							 	<i class="iconfont icon-bianji btn" title="编辑" @click="edit"></i>
 							 </div>       
@@ -129,6 +129,7 @@ import LTitle from '../../components/title'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+                menuActList:server.getMenuActionList('/info'),
                 userInfo:storage.session.get('userInfo'),
                 loginerInfo:{}
 			}
@@ -137,6 +138,13 @@ import LTitle from '../../components/title'
 			this.getList();
 		},
 		methods:{
+			getAction(name=''){
+				var	l=this.menuActList.filter((item)=>item.menuName===name).length;
+				if(l>0){
+					return true;
+				}
+				return false;
+			},
 			getList(){
 				let self=this;
 				self.$Loading.start();

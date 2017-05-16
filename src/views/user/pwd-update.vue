@@ -44,7 +44,7 @@
 	                	</Row>
 	                	<Form-item>
 						        	<div class="q-form-btn">
-						            <i-button type="primary" size="large" @click="submit">保存</i-button>
+						            <i-button type="primary" v-if="getAction('编辑')" size="large" @click="submit">保存</i-button>
 						            <i-button type="ghost" size="large" @click="cancel">取消</i-button>
 						            </div>
 				        </Form-item>
@@ -73,6 +73,7 @@ import LTitle from '../../components/title'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+                menuActList:server.getMenuActionList('/pws/update'),
                 modelForm:{
 					oldPassWord:'',//旧密码
 					newPassWord:'',//新密码
@@ -95,6 +96,13 @@ import LTitle from '../../components/title'
 			
 		},
 		methods:{
+			getAction(name=''){
+				var	l=this.menuActList.filter((item)=>item.menuName===name).length;
+				if(l>0){
+					return true;
+				}
+				return false;
+			},
 			submit(){
 				let self=this;
 				self.$Loading.start();

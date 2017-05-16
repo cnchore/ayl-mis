@@ -137,6 +137,7 @@ import LTitle from '../../components/title'
                 leftMenu:true,
                 spanLeft: 4,
                 spanRight: 20,
+                menuActList:server.getMenuActionList('/order/list'),
                 modelForm:{
          
                 },
@@ -206,6 +207,7 @@ import LTitle from '../../components/title'
                         return row.updateTime?row.updateTime:'无'
                     }
                 },
+                    {title:' '},
                 {
                     title: '操作',
                     key: 'action',
@@ -214,10 +216,10 @@ import LTitle from '../../components/title'
                     align: 'center',
                     render (row, column, index) {
                     return `
-                        <i class="iconfont icon-chakanyuyue btn" v-show="${row.appointId}!=0" title="查看预约" @click="modelShow(${row.appointId})"></i>
-                        <i class="iconfont icon-chakandingdan btn" title="查看订货单" @click="actionShow(${row.id})"></i>
-                        <i class="iconfont icon-bianji btn" v-show="${row.flowState}===1" title="编辑订货单" @click="actionShow(${row.id},true)"></i>
-                        <i class="iconfont icon-fasong btn" v-show="${row.flowState}===1" title="提交" @click="orgNext(${row.id})"></i>
+                        <i class="iconfont icon-chakanyuyue btn" v-if="getAction('查看预约') && ${row.appointId}!=0" title="查看预约" @click="modelShow(${row.appointId})"></i>
+                        <i class="iconfont icon-chakandingdan btn" v-if="getAction('查看订货单')" title="查看订货单" @click="actionShow(${row.id})"></i>
+                        <i class="iconfont icon-bianji btn" v-if="getAction('编辑') && ${row.flowState}===1" title="编辑订货单" @click="actionShow(${row.id},true)"></i>
+                        <i class="iconfont icon-fasong btn" v-if="getAction('提交') && ${row.flowState}===1" title="提交" @click="orgNext(${row.id})"></i>
 
                     `;
                     }   
@@ -234,7 +236,13 @@ import LTitle from '../../components/title'
             
         },
         methods:{
-            
+            getAction(name=''){
+                var l=this.menuActList.filter((item)=>item.menuName===name).length;
+                if(l>0){
+                    return true;
+                }
+                return false;
+            },
             getStatusName(v){
                 
                 switch(v){

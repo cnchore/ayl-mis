@@ -10,7 +10,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="modelShow" :breads="breads" ></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="modelShow" :is-show="getAction('新增')" :breads="breads" ></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm"  inline>
@@ -155,6 +155,7 @@ import chinaAddress from '../../components/china-address-0408'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+               	menuActList:server.getMenuActionList('/waiting'),
                 modelForm:{
          
                 },
@@ -216,6 +217,7 @@ import chinaAddress from '../../components/china-address-0408'
 				{
 					key:'updateTime',title:'接收时间',width:170
 				},
+                {title:' '},
 				{
 					title: '操作',
 					key: 'action',
@@ -224,9 +226,9 @@ import chinaAddress from '../../components/china-address-0408'
 					align: 'center',
 					render (row, column, index) {
 					return `
-                        <i class="iconfont icon-bianji btn" title="编辑" @click="modelShow(${row.id})"></i>
-                        <i class="iconfont icon-fasong btn" title="提交" @click="nextAppoint(${row.id})"></i>
-                        <i class="iconfont icon-shanchu btn" title="删除" @click="del(${row.id})"></i>
+                        <i class="iconfont icon-bianji btn" v-if="getAction('编辑预约')" title="编辑" @click="modelShow(${row.id})"></i>
+                        <i class="iconfont icon-fasong btn" v-if="getAction('提交')" title="提交" @click="nextAppoint(${row.id})"></i>
+                        <i class="iconfont icon-shanchu btn" v-if="getAction('删除预约')" title="删除" @click="del(${row.id})"></i>
 					`;
 					}   
 				}],
@@ -245,6 +247,8 @@ import chinaAddress from '../../components/china-address-0408'
 			if(this.id){
 				this.modelShow(this.id);
 			}
+			//console.log(this.menuActList);
+			
 		},
 		route:{
             data:function(transition){
@@ -254,6 +258,13 @@ import chinaAddress from '../../components/china-address-0408'
             }
         },
 		methods:{
+			getAction(name=''){
+				var	l=this.menuActList.filter((item)=>item.menuName===name).length;
+				if(l>0){
+					return true;
+				}
+				return false;
+			},
 			addrSelected(value,selectedData){
                 //console.log(selectedData);
                 if(selectedData.length>0){

@@ -154,7 +154,9 @@ import LTitle from '../../components/title'
 				},
 				{
 					key:'updateTime',title:'更新时间',width:200
-				}]
+				},
+                {title:' '}
+                ]
 			}
 		},
 		ready(){

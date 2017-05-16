@@ -11,7 +11,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add" :breads="breads"></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add" :is-show="getAction('新增')" :breads="breads"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm" inline>
@@ -151,6 +151,7 @@ import LTitle from '../../components/title'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+                menuActList:server.getMenuActionList('/coupon/details'),
 				tableCol: [
                     
                     {
@@ -190,6 +191,7 @@ import LTitle from '../../components/title'
                         title: '客服电话',width:170,
                         key: 'serviceTel'
                     },
+                    {title:' '},
                     {
                         title: '操作',
                         key: 'action',width:135,
@@ -197,15 +199,15 @@ import LTitle from '../../components/title'
                         align: 'center',
                         render (row, column, index) {
                             return `
-                                <i-button type="primary" size="small" icon="edit" @click="modalShow(${row.id})" title="修改"></i-button>
+                                <i-button type="primary" size="small" v-if="getAction('编辑')" icon="edit" @click="modalShow(${row.id})" title="修改"></i-button>
                                 
                                 <i-button type="primary"
-                                    v-show="${row.isEnabled}==0"
+                                    v-if="getAction('启用') && ${row.isEnabled}==0"
                                     @click="changeState(${row.id},true,'您确认启用吗？')"
                                      size="small" >启用</i-button>
 
                                 <i-button type="primary" 
-                                    v-show="${row.isEnabled}==1"
+                                    v-if="getAction('禁用') && ${row.isEnabled}==1"
                                     @click="changeState(${row.id},false,'您确认禁用吗？')"
                                      size="small" >禁用</i-button>
 
@@ -259,7 +261,13 @@ import LTitle from '../../components/title'
            
         },
 		methods:{
-            
+            getAction(name=''){
+                var l=this.menuActList.filter((item)=>item.menuName===name).length;
+                if(l>0){
+                    return true;
+                }
+                return false;
+            },
             strDateChange(d){
                 this.modelForm.startTimeStr=d;
             },

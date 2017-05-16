@@ -95,6 +95,7 @@ import LTitle from '../../components/title'
                 leftMenu:true,
                 spanLeft: 4,
                 spanRight: 20,
+                menuActList:server.getMenuActionList('/order/state/change'),
                 selectedData:[],
                 modelForm:{
                     state:null,
@@ -155,6 +156,7 @@ import LTitle from '../../components/title'
                     title:'交货周期',key:'finishTime',width:170
                     
                 },
+                    {title:' '},
                 {
                     title: '操作',
                     key: 'action',
@@ -163,7 +165,7 @@ import LTitle from '../../components/title'
                     align: 'center',
                     render (row, column, index) {
                     return `
-                        <i class="iconfont icon-bianji btn" v-show="${row.flowState}===2" title="修改订单状态" @click="changeClick(${row.id},${row.state})"></i>
+                        <i class="iconfont icon-bianji btn" v-if="getAction('修改') && ${row.flowState}===2" title="修改订单状态" @click="changeClick(${row.id},${row.state})"></i>
                     `;
                     }   
                 }],
@@ -234,6 +236,13 @@ import LTitle from '../../components/title'
             }
         },
         methods:{
+            getAction(name=''){
+                var l=this.menuActList.filter((item)=>item.menuName===name).length;
+                if(l>0){
+                    return true;
+                }
+                return false;
+            },
             selChange(selection){
                 console.log(selection);
                 this.selectedData=selection;

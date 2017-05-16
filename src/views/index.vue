@@ -46,6 +46,10 @@
                     .q-title{
                         padding:5px 0px;
                     }
+                    .q-flex{
+                        flex:1;
+                        padding-left: 5px;
+                    }
                     .q-right{
                         text-align: right;
                     }
@@ -141,17 +145,12 @@
         <Row class="q-card q-table">
             <i-col :span="userType===2?18:12">
                 <div class="q-body">
-                    <Row type="flex" justify="center" align="middle">
-                        <i-col :md="2" :lg="2" class="q-title">
-                            <i class="iconfont icon-wodedaiban"></i>
-                        </i-col>
-                        <i-col :md="19" :lg="20">
-                            我的预约待办
-                        </i-col>
-                        <i-col :md="3" :lg="2" class="q-right">
-                            {{formData.appointPage?formData.appointPage.total:0}}
-                        </i-col>
-                    </Row>
+                    <div class="ivu-row-flex ivu-row-flex-middle ivu-row-flex-center">
+                        <div class="q-title"><i class="iconfont icon-wodedaiban"></i></div>
+                        <div class="q-flex">我的预约待办</div>
+                        <div class="q-right">{{formData.appointPage?formData.appointPage.total:0}}</div>
+                    </div>
+                   
                     <i-table :content="self" height="240" :columns="tableCol" :data="formData.appointPage?formData.appointPage.rowsObject?formData.appointPage.rowsObject.slice(0,4):[]:[]"></i-table>
                     <a v-if="userType===2" v-link="{path: '/owner/waiting'}" class="q-more">更多...</a>
                     <a v-else v-link="{path: '/waiting'}" class="q-more">更多...</a>
@@ -159,17 +158,12 @@
             </i-col>
             <i-col span="12" v-show="userType===1">
                 <div class="q-body">
-                    <Row type="flex" justify="center" align="middle">
-                        <i-col :md="2" :lg="2" class="q-title">
-                            <i class="iconfont icon-wodedingdandaiban"></i>
-                        </i-col>
-                        <i-col :md="19" :lg="20">
-                            我的订单待办
-                        </i-col>
-                        <i-col :md="3" :lg="2" class="q-right">
-                            {{formData.orderWaitDoPage?formData.orderWaitDoPage.total:0}}
-                        </i-col>
-                    </Row>
+                    <div class="ivu-row-flex ivu-row-flex-middle ivu-row-flex-center">
+                        <div class="q-title"><i class="iconfont icon-wodedingdandaiban"></i></div>
+                        <div class="q-flex">我的订单待办</div>
+                        <div class="q-right">{{formData.orderWaitDoPage?formData.orderWaitDoPage.total:0}}</div>
+                    </div>
+                   
                     <i-table :content="self" height="240" :columns="orderWaitCol" :data="formData.orderWaitDoPage?formData.orderWaitDoPage.rowsObject?formData.orderWaitDoPage.rowsObject.slice(0,4):[]:[]"></i-table>
                    
                     <a v-link="{path: '/order/list'}" class="q-more">更多...</a>
@@ -177,17 +171,11 @@
             </i-col>
             <i-col span="12" v-show="userType===1">
                 <div class="q-body">
-                    <Row type="flex" justify="center" align="middle">
-                        <i-col :md="2" :lg="2" class="q-title">
-                            <i class="iconfont icon-dingdanyujing"></i>
-                        </i-col>
-                        <i-col :md="19" :lg="20">
-                            订单预警
-                        </i-col>
-                        <i-col :md="3" :lg="2" class="q-right">
-                            {{formData.orderPage?formData.orderPage.total:0}}
-                        </i-col>
-                    </Row>
+                    <div class="ivu-row-flex ivu-row-flex-middle ivu-row-flex-center">
+                        <div class="q-title"><i class="iconfont icon-dingdanyujing"></i></div>
+                        <div class="q-flex">订单预警</div>
+                        <div class="q-right">{{formData.orderPage?formData.orderPage.total:0}}</div>
+                    </div>
                     <i-table :content="self" height="240" :columns="orderCol" :data="formData.orderPage?formData.orderPage.rowsObject?formData.orderPage.rowsObject.slice(0,4):[]:[]"></i-table>
                     
                     <a v-link="{path: '/order/list'}" class="q-more">更多...</a>
@@ -202,17 +190,11 @@
             </i-col>
             <i-col :span="userType===2?18:12">
                <div class="q-body">
-                    <Row type="flex" justify="center" align="middle">
-                        <i-col :md="2" :lg="2" class="q-title">
-                            <i class="iconfont icon-beiwanglu"></i>
-                        </i-col>
-                        <i-col :md="19" :lg="20">
-                            我的备忘录
-                        </i-col>
-                        <i-col :md="3" :lg="2"  class="q-right">
-                            <i class="iconfont icon-tianjia btn" @click="$router.go('/memo')"></i>
-                        </i-col>
-                    </Row>
+                    <div class="ivu-row-flex ivu-row-flex-middle ivu-row-flex-center">
+                        <div class="q-title"><i class="iconfont icon-beiwanglu"></i></div>
+                        <div class="q-flex">我的备忘录</div>
+                        <div class="q-right"><i class="iconfont icon-tianjia btn" @click="$router.go('/memo')"></i></div>
+                    </div>
                     <i-table :content="self" height="240" :columns="memoCol" :show-header="false" :data="formData.memoPage?formData.memoPage.rowsObject?formData.memoPage.rowsObject.slice(0,5):[]:[]"></i-table>
                     <a v-link="{path: '/memo'}" class="q-more">更多...</a>
                </div>
@@ -244,6 +226,7 @@ import LHeader from '../components/header'
                 },
                 {key:'content'},
                 {key:'memoTime'},
+                {title:' '},
                 {
                     key: 'action',fixed:'right',
                     align: 'center',width:105,
@@ -271,6 +254,7 @@ import LHeader from '../components/header'
                 {
                     key:'updateTime',title:'接收时间',width:170
                 },
+                {title:' '},
                 {
                     title: '操作',
                     key: 'action',fixed:'right',
@@ -301,6 +285,7 @@ import LHeader from '../components/header'
                 {
                     key:'updateTime',title:'接收时间',width:170
                 },
+                {title:' '},
                 {
                     title: '操作',
                     key: 'action',fixed:'right',
@@ -331,6 +316,7 @@ import LHeader from '../components/header'
                         return `<span class="l-s-Error">${row.warnDays}</span>`
                     }
                 },
+                {title:' '},
                 {
                     title: '操作',
                     key: 'action',fixed:'right',
@@ -358,6 +344,7 @@ import LHeader from '../components/header'
                 return;
             }
             this.getList(); 
+            
         },
         methods:{
 

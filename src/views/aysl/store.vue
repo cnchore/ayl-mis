@@ -10,7 +10,7 @@
             </i-col>
             <i-col :span="spanRight">
                 <div class="layout-header">
-                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add" :breads="breads"></l-title>
+                    <l-title :span-Left.sync="spanLeft" :span-Right.sync="spanRight" :left-Menu.sync="leftMenu" @on-add="add" :is-show="getAction('新增')" :breads="breads"></l-title>
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="formInline"  inline>
@@ -191,6 +191,7 @@ import LTitle from '../../components/title'
                 spanLeft: 4,
                 spanRight: 20,
                 leftMenu:true,
+                menuActList:server.getMenuActionList('/store'),
                 addModal:false,
                 rowsTotal:10,
                 pageIndex:1,
@@ -229,24 +230,25 @@ import LTitle from '../../components/title'
                 storeCols: [
                     
                     {
-                        title: '门店名称',
+                        title: '门店名称',width:200,
                         key: 'storeName',
                         render (row, column, index) {
                             return `<strong>${row.storeName}</strong>`;
                         }
                     },
                     {
-                        title: '营业时间',
+                        title: '营业时间',width:170,
                         key: 'openTime'
                     },
                     {
-                        title: '工作电话',
+                        title: '工作电话',width:125,
                         key: 'workPhone'
                     },
                     {
-                        title: '门店地址',
+                        title: '门店地址',width:400,
                         key: 'address'
                     },
+                    {title:' '},
                     {
                         title: '操作',
                         key: 'action',width:105,
@@ -254,8 +256,8 @@ import LTitle from '../../components/title'
                         align: 'center',
                         render (row, column, index) {
                             return `
-                            <i class="iconfont icon-bianji btn" title="编辑" @click="update(${row.id})"></i>
-                            <i class="iconfont icon-shanchu btn" title="删除" @click="remove(${row.id})"></i>
+                            <i class="iconfont icon-bianji btn" v-if="getAction('编辑')" title="编辑" @click="update(${row.id})"></i>
+                            <i class="iconfont icon-shanchu btn" v-if="getAction('删除')" title="删除" @click="remove(${row.id})"></i>
                             `;
                         }   
                     }
@@ -287,6 +289,13 @@ import LTitle from '../../components/title'
             }
         },
         methods: {
+            getAction(name=''){
+                var l=this.menuActList.filter((item)=>item.menuName===name).length;
+                if(l>0){
+                    return true;
+                }
+                return false;
+            },
             getList(page=1,rows=10,storeName=''){
                 let self=this;
                 self.$Loading.start();

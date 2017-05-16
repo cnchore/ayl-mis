@@ -24,6 +24,10 @@ iView.LoadingBar.config({
     color: '#ff6600',
     height:5
 });
+iView.Notice.config({
+    top: 80,
+    duration:10
+});
 // 开启debug模式
 Vue.config.debug = true;
 

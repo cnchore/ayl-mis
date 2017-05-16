@@ -524,15 +524,15 @@ export default {
         for(var i=0;i<list.length;i++){
                // console.log(list[i].menuName,list[i].id);
             
-            if(list[i].levelNum===2 && list[i].src===src){
+            if(list[i].levelNum===2 && list[i].src===src && list[i].type===1){
                 //console.log(list[i].menuName,list[i].id,list[i].parentId);
                 keys.topKey=list[i].parentId;
                 keys.leftKey=list[i].id;
                 return keys;
-            }else if(list[i].children){
+            }else if(list[i].children && list[i].children[0]){
                 for(var j=0;j<list[i].children.length;j++){
                    // console.log(list[i].children[j].menuName,list[i].children[j].id);
-                    if(list[i].children[j].levelNum===2 && list[i].children[j].src===src){
+                    if(list[i].children[j].levelNum===2 && list[i].children[j].src===src && list[i].children[j].type===1){
                         //console.log(list[i].children[j].menuName,list[i].children[j].id,list[i].children[j].parentId);
                         keys.topKey=list[i].children[j].parentId;
                         keys.leftKey=list[i].children[j].id;
@@ -543,6 +543,30 @@ export default {
             }
         }
         return keys;
+    },
+    getMenuActionList(src=''){
+    	return this.getActList(storage.session.get('menuList'),src);
+    },
+    getActList(list=[],src=''){
+    	let _list=[];
+    	for(var i=0;i<list.length;i++){
+    		if(list[i].levelNum===2&&list[i].type===1&&list[i].src===src){
+    			if(list[i].children && list[i].children[0]){
+    				_list=list[i].children;
+    			}
+    			return _list;
+    		}else if(list[i].children && list[i].children[0]){
+    			for(var j=0;j<list[i].children.length;j++){
+    				if(list[i].children[j].levelNum===2&&list[i].children[j].type===1&&list[i].children[j].src===src){
+    					if(list[i].children[j].children && list[i].children[j].children[0]){
+    						_list=list[i].children[j].children;
+    					}
+    					return _list;
+    				}
+    			}
+    		}
+    	}
+    	return _list;
     },
 	getBaseUrl(){
 		return util.serverPath;

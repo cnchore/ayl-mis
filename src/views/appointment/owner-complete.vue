@@ -133,6 +133,7 @@ import chinaAddress from '../../components/china-address-0408'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
+               	menuActList:server.getMenuActionList('/complete'),
                 modelForm:{
          
                 },
@@ -171,6 +172,7 @@ import chinaAddress from '../../components/china-address-0408'
 				{
 					key:'updateTime',title:'接收时间',width:170
 				},
+                {title:' '},
 				{
 					title: '操作',
 					key: 'action',
@@ -179,8 +181,8 @@ import chinaAddress from '../../components/china-address-0408'
 					align: 'center',
 					render (row, column, index) {
 					return `
-						<i class="iconfont icon-chakanyuyue btn" title="查看预约" @click="modelShow(${row.id})"></i>
-                        <i class="iconfont icon-chakandingdan btn" title="查看订货单" @click="actionShow(${row.id})"></i>
+						<i class="iconfont icon-chakanyuyue btn" v-if="getAction('查看预约')" title="查看预约" @click="modelShow(${row.id})"></i>
+                        <i class="iconfont icon-chakandingdan btn" v-if="getAction('查看订货单')" title="查看订货单" @click="actionShow(${row.id})"></i>
 						
 					`;
 					}   
@@ -197,6 +199,13 @@ import chinaAddress from '../../components/china-address-0408'
 			
 		},
 		methods:{
+			getAction(name=''){
+				var	l=this.menuActList.filter((item)=>item.menuName===name).length;
+				if(l>0){
+					return true;
+				}
+				return false;
+			},
 			addrSelected(value,selectedData){
                 //console.log(selectedData);
                 if(selectedData.length>0){
