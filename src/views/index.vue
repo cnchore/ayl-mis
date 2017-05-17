@@ -444,8 +444,13 @@ import LHeader from '../components/header'
                     self.$Loading.finish();
                     if(res.success){
                         self.formData=res.data;
-                        if(res.data.myQrCodeUrl){
-                            server.getQrcode(res.data.myQrCodeUrl).then((qr)=>{
+                        let qrcodeurl=res.data.myQrCodeUrl;
+                        if(qrcodeurl){
+                            let _url=qrcodeurl;
+                            if(qrcodeurl.indexOf(window.location.protocol)===-1){
+                                _url=qrcodeurl.replace('http:',window.location.protocol);
+                            }
+                            server.getQrcode(_url).then((qr)=>{
                                 if(qr.success){
                                     self.qrcode=qr.data;
                                 }else{
