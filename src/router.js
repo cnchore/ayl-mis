@@ -293,6 +293,12 @@ const routers = {
         },
         meta: { requiresAuth: true,title:'艾臣营销管理平台－运营体系' }
     },
+    '/report/index': {
+        component(resolve) {
+            require(['./views/report/index.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－统计分析' }
+    },
 
 };
 export default routers;

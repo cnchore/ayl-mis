@@ -116,8 +116,11 @@ import env from '../config/env';
                             break;
                     }
                 }
+                if(_src.indexOf('/ShowReport.wx')!=-1){
+                    _src='/report/index?t='+_src;
+                }
                 if(_src){
-                    this.$router.go(_src);
+                   this.$router.go(_src);
                 }
             },
             getMenuSrcById(list,key){
