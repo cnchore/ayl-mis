@@ -130,11 +130,14 @@ import util from '../libs/util'
                                 self.$router.go('/index');
                             }else{
                                 if(window.location.origin.indexOf('http://localhost:')!=-1){
-                                    let list={};
+                                    /*
+                                    let list={data:{menuList:[],sessionInfo:{}}};
+                                   
                                     let menuList=list.data.menuList;
                                     let userInfo=list.data.sessionInfo.user;
                                     storage.session.set('userInfo',userInfo);
                                     storage.session.set('menuList',menuList);
+                                    */
                                     self.$router.go('/index');
                                 }else{
                                     self.$Notice.error({
