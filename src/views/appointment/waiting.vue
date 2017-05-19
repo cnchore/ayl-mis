@@ -232,7 +232,7 @@ import chinaAddress from '../../components/china-address-0408'
 					`;
 					}   
 				}],
-				id:null
+				id:-1,
 			}
 		},
 		ready(){
@@ -244,16 +244,22 @@ import chinaAddress from '../../components/china-address-0408'
 			this.getList();
 			this.getDict();
 			this.getAgentList();
-			if(this.id){
-				this.modelShow(this.id);
+
+			if(this.id!=-1){
+				var t;
+	            clearTimeout(t);
+	            t = setTimeout(() => {
+					//this.modalVisible=true;
+					this.modelShow(this.id);
+	            }, 1000);
 			}
 			//console.log(this.menuActList);
 			
 		},
 		route:{
-            data:function(transition){
-                if(transition.to.query &&transition.to.query.id){
-                    this.id=transition.to.query.id;
+            data:function({to}){
+                if(to.query && to.query.id){
+                    this.id=to.query.id;
                 }
             }
         },
