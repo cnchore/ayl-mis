@@ -175,7 +175,7 @@ import LTitle from '../../components/title'
         },
         route:{
             data:function({to}){
-                if(to.query &&to.query.id){
+                if(to.query && to.query.id){
                     this.id=to.query.id;
                 }
                 if(to.query && to.query.s){
@@ -190,7 +190,9 @@ import LTitle from '../../components/title'
                 return;
             }
             this.getList();
-            
+            if(this.id && this.queryState){
+                this.changeClick(this.id,this.queryState);
+            }
         },
         computed:{
             canChangeData(){
@@ -323,10 +325,6 @@ import LTitle from '../../components/title'
                     if(res.data&&res.data.rowsObject){
                         self.tableData=res.data.rowsObject;
                         self.rowsTotal=res.data.total;
-                    }
-                }).then(()=>{
-                    if(self.id && self.queryState){
-                        self.changeClick(self.id,self.queryState);
                     }
                 })
             },

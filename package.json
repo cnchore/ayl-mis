@@ -8,7 +8,7 @@
     "dev": "webpack-dev-server --port 8080 --inline --colors --hot --compress --history-api-fallback --config webpack.dev.config.js",
     "build": "webpack --progress --hide-modules --config webpack.prod.config.js",
     "lint": "eslint --fix --ext .js,.vue src",
-    "watch":"webpack --watch --colors --config webpack.prod.config.js"
+    "watch":"webpack --watch --progress --colors --config webpack.watch.config.js"
   },
   "repository": {
     "type": "git",

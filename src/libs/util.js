@@ -10,7 +10,7 @@ let ajaxUrl = _HOST+'/service';
 if(_HOST.indexOf('www.aylsonclub.com') === -1){
 	//ajaxUrl='http://test.aylsonclub.com/admin'
 	//ajaxUrl='http://192.168.108:8080/admin'
-    ajaxUrl='http://192.168.0.106:6688/admin'
+    ajaxUrl=_HOST+'/admin';
 	//ajaxUrl='http://localhost:6688/admin'
 	//本地后台接口
 }

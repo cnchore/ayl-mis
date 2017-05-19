@@ -31,10 +31,7 @@ iView.Notice.config({
 // 开启debug模式
 Vue.config.debug = true;
 
-//过滤器c
-Vue.filter('currencyDisplay',function(val){
-    return parseFloat(val).toFixed(2);
-});
+
 // 路由配置
 let router = new VueRouter({
     // 是否开启History模式的路由, 如果生产环境的服务端没有进行相关配置,请慎用
