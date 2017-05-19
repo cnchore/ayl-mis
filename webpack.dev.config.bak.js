@@ -55,7 +55,7 @@ config.plugins = (config.plugins || []).concat([
 
 // 写入环境变量
 fs.open('./src/config/env.js', 'w', function(err, fd) {
-    var buf = 'export default "production";';
+    var buf = 'export default "development";';
     fs.write(fd, buf, 0, buf.length, 0, function(err, written, buffer) {});
 });
 

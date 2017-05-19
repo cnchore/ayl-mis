@@ -3,6 +3,7 @@ const config = require('./webpack.base.config.js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const fs = require('fs');
+const proxy = require('http-proxy-middleware');
 
 config.devtool = '#source-map'; // source-map
 config.output.publicPath = '/dist/'; // 资源路径
