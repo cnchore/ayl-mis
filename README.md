@@ -21,3 +21,7 @@ vue 1.0+axios+iview+lazyload+less+es6
 命令分别为：｀git config  --global user.name 你的目标用户名；｀
 
           ｀git config  --global user.email 你的目标邮箱名;｀
+
+## Vim知识要点
+1. 退出
+｀ctrl+c; :quit｀
