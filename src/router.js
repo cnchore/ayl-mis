@@ -84,6 +84,12 @@ const routers = {
             require(['./views/aysl/gift-send.vue'], resolve);
         },
         meta: { requiresAuth: true,title:'艾臣营销管理平台－领取礼品管理' }
+    },
+    '/product/interest': {
+        component(resolve) {
+            require(['./views/aysl/product-interest.vue'], resolve);
+        },
+        meta: { requiresAuth: true,title:'艾臣营销管理平台－建博会兴趣名单' }
     }
     //艾臣合伙人
     ,

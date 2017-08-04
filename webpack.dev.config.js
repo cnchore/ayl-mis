@@ -24,7 +24,19 @@ config.vue = {
         )
     }
 };
-
+config.devServer={
+    proxy:{
+        '/admin':{
+          //http://test.aylsonclub.com
+          target: "http://test.aylsonclub.com",
+          //host:"test.aylsonclub.com",
+          changeOrigin: true,
+          secure: false,
+          pathRewrite: {'^/admin' : '/admin'},
+          //router:{'/qite':'http://localhost:9000/qite'}
+        }
+    }
+}
 config.plugins = (config.plugins || []).concat([
     new ExtractTextPlugin("[name].css", {
         allChunks: true,

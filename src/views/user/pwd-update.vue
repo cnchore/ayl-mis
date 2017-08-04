@@ -73,7 +73,7 @@ import LTitle from '../../components/title'
 				leftMenu:true,
 				spanLeft: 4,
                 spanRight: 20,
-                menuActList:server.getMenuActionList('/pws/update'),
+                menuActList:server.getMenuActionList('/pwd/update'),
                 modelForm:{
 					oldPassWord:'',//旧密码
 					newPassWord:'',//新密码

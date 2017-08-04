@@ -39,7 +39,17 @@ let router = new VueRouter({
 });
 
 router.map(Routers);
-
+router.beforeEach((transition) => {
+    const { to, next, abort} = transition;
+    if(to.path.indexOf('__t=')===-1){
+        transition.redirect({
+            path:to.path,
+            query:{__t:Date.now()}
+        })
+    }else{
+        next()
+    }
+})
 
 router.beforeEach((transition) => {
     //loading=Loading.service({ fullscreen: true })
@@ -66,7 +76,7 @@ router.beforeEach((transition) => {
                     query: { redirect: transition.to.fullPath }
                 })
             }else{
-                console.log('transition.next',transition.to.path);
+                console.log('transition.next:',transition.to.path);
                 transition.next();
             }
         }

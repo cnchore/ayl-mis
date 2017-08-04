@@ -46,7 +46,7 @@ import env from '../config/env';
 	  	},
         data(){
             return {
-                userInfo:env==='development'?{userName:'TestName',type:1}:storage.session.get('userInfo'),
+                userInfo:storage.session.get('userInfo'),
                 menuList:[]
             }
         },

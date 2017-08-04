@@ -18,7 +18,6 @@
                 </div>
                 <br/>
                 <div class="layout-content" >
-                	
                     <iframe :height="iframeHeight" :src="iframeSrc" scrolling="auto" class="q-iframe"></iframe>
                 	
                 </div>
@@ -36,8 +35,9 @@ import LeftMenu from '../../components/left-menu'
 import LHeader from '../../components/header'
 import LTitle from '../../components/title'
 	function getPageSrc(){
-		var url=window.location.hash;
-		return url.replace('#!/report/index?t=','');
+		var _hash=window.location.hash.indexOf('__t')!==-1?window.location.hash.split('&__t')[0]:window.location.hash;
+		// var url=window.location.hash;
+		return _hash.replace('#!/report/index?t=','');
 	}
 	export default{
 		components:{LHeader,LeftMenu,LTitle},

@@ -20,25 +20,25 @@
                 </div>
                 <div class="layout-breadcrumb">
                     <i-form v-ref:form-inline :model="seachForm"  inline>
-                        <Form-item prop="storeName">
+                        <Form-item >
                             <div class="l-sel-inline">
                                 <span slot="prepend">收货人</span>
                                 <i-input :value.sync="seachForm.consigneeLike"  placeholder="请输入收货人" ></i-input>
                             </div>
                         </Form-item>
-                        <Form-item prop="storeName">
+                        <Form-item >
                             <div class="l-sel-inline">
                                 <span slot="prepend">手机号码</span>
                                <i-input :value.sync="seachForm.consigneePhoneLike"  placeholder="请输入手机号码" ></i-input>
                             </div>
                         </Form-item>
-                        <Form-item prop="storeName">
+                        <Form-item >
                             <div class="l-sel-inline">
                                 <span slot="prepend">提交日期</span>
                                 <Date-picker type="date" :value="seachForm.createTime" format="yyyy-MM-dd" @on-change="createDateChange"  placeholder="选择日期"></Date-picker>
                             </div>
                         </Form-item>
-                        <Form-item prop="storeName">
+                        <Form-item >
                             <div class="l-sel-inline">
                                 <span slot="prepend">更新日期</span>
                                 <Date-picker type="date" :value="seachForm.updateTime" format="yyyy-MM-dd" @on-change="updateDateChange"  placeholder="选择日期"></Date-picker>

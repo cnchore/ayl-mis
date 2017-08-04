@@ -149,7 +149,7 @@ import LHeader from '../../components/header'
 import LTitle from '../../components/title'
 	
     function getPageSrc(){
-        var _hash=window.location.hash;
+        var _hash=window.location.hash.indexOf('__t')!==-1?window.location.hash.split('&__t')[0]:window.location.hash;
         return _hash.replace('#!','');
     }
     export default{

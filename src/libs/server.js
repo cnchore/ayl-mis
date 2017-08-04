@@ -155,6 +155,9 @@ const serverPath={
 	getVcode:'/web/captchaImage',
 	//自助学习
 	getCourse:'/sys/course/getPage',
+	//建博会兴趣产品
+	getProductInterestList:'/sys/productIntent/getPage',
+	changeProductInterest:'/sys/productIntent/change',
 
 }
 
@@ -1591,5 +1594,11 @@ export default {
 	getCourse(searchData){
 		return this.getPromise(serverPath.getCourse,searchData,'getCourse');
 	},
-
+	//建博会产品兴趣
+	getProductInterestList(searchData){
+		return this.getPromise(serverPath.getProductInterestList,searchData,'getProductInterestList');
+	},
+	changeProductInterest(id){
+		return this.postPromise(serverPath.changeProductInterest,{id},'changeProductInterest');
+	}
 }
