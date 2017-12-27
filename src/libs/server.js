@@ -150,7 +150,8 @@ const serverPath={
 	confirmOrder:'/owner/order/confirmOrder',
 	ownerOrderNext:'/owner/order/next',
 	orgNext:'/owner/order/orgNext',
-
+	lack:'/owner/order/lack',
+	supplement:'/owner/order/supplement',
 	//验证码
 	getVcode:'/web/captchaImage',
 	//自助学习
@@ -429,7 +430,7 @@ export default {
     		return null;
     	}
     	let l=v.lastIndexOf('.');
-    	switch(v.substr(l)){
+    	switch(v.substr(l).toLocaleLowerCase()){
     		case '.doc':
     		case '.docx':
     			return require('../imgs/doc.png');
@@ -1574,12 +1575,36 @@ export default {
 		}
 		return this.postPromise(serverPath.confirmOrder,_list,'confirmOrder');
 	},
+	supplement(formData){
+		let _list={
+			id:formData.id,
+			isOnlySave:formData.isOnlySave,
+		}
+		if(formData.attachmentVoList){
+			formData.attachmentVoList.forEach((item,index)=>{
+				if(item.attachAddress){
+					if(item.id){
+						_list["attachmentVoList["+index+"].id"]=item.id;
+					}
+					_list["attachmentVoList["+index+"].attachAddress"]=item.attachAddress;
+					_list["attachmentVoList["+index+"].attachName"]=item.attachName;
+				}
+			})
+		}
+		return this.postPromise(serverPath.supplement,_list,'supplement');
+	},
+	lack(formData){
+		let _list={
+			id:formData.id,
+			lackDesc:formData.lackDesc,
+		}
+		return this.postPromise(serverPath.lack,_list,'lack');
+	},
 	ownerOrderNext(id){
 		return this.postPromise(serverPath.ownerOrderNext,{id},'ownerOrderNext');
 	},
 	orgNext(id){
 		return this.postPromise(serverPath.orgNext,{id},'orgNext');
-
 	},
 	//
 	getIndex(){

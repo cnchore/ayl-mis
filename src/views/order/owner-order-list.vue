@@ -157,7 +157,7 @@ import LTitle from '../../components/title'
                     title:'当前阶段',width:140,
 
                     render(row,column,index){
-                        return `{{getStatusName(${row.flowState})}}`;
+                        return `<span :class="${row.isLack}===true?'l-s-Error':''">{{getStatusName(${row.flowState},${row.isLack})}}</span>`;
                     }
                 },
                 {
@@ -209,7 +209,7 @@ import LTitle from '../../components/title'
                     return `
                         <i class="iconfont icon-chakanyuyue btn" v-if="getAction('查看预约') && ${row.appointId}"  title="查看预约" @click="modelShow(${row.appointId})"></i>
                         <i class="iconfont icon-chakandingdan btn" v-if="getAction('查看订货单')" title="查看订货单" @click="actionShow(${row.id})"></i>
-                        <i class="iconfont icon-bianji btn" title="编辑订货单" v-if="getAction('编辑') && ${row.flowState}===0" @click="actionShow(${row.id},true)"></i>
+                        <i class="iconfont icon-bianji btn" title="编辑订货单" v-if="getAction('编辑') && (${row.flowState}===0 || (${row.flowState}===1 && ${row.isLack}===true))" @click="actionShow(${row.id},true)"></i>
                         <i class="iconfont icon-fasong btn" title="提交" v-if="getAction('提交') && ${row.flowState}===0" @click="actionNext(${row.id})"></i>
                     `;
                     }   
@@ -233,13 +233,17 @@ import LTitle from '../../components/title'
                 }
                 return false;
             },
-            getStatusName(v){
+            getStatusName(v,t){
                 
                 switch(v){
                     case 0:
                     return "待下单";
                     case 1:
-                    return "待总部确认";
+                        if(t){
+                        return "退回补充材料";
+                        }else{
+                        return "待总部确认";
+                        }
                     case 2:
                     return "总部已确认";
                 }

@@ -167,26 +167,25 @@
                     		<i-form v-ref:form-validate :model="modelForm" :label-width="100" :rules="ruleForm">
                     			
             					<Form-item label="联系人姓名" prop="name">
-						            <i-input :value.sync="modelForm.name" placeholder="请输入..."></i-input>
+						            <i-input :value.sync="modelForm.name" placeholder="请输入..." :disabled="modelForm.flowState===1 && modelForm.isLack===true"></i-input>
 						        </Form-item>
                     			
             					<Form-item label="联系人手机" prop="mobilePhone">
-						            <i-input :value.sync="modelForm.mobilePhone" placeholder="请输入手机号码"></i-input>
+						            <i-input :value.sync="modelForm.mobilePhone" placeholder="请输入手机号码" :disabled="modelForm.flowState===1 && modelForm.isLack===true"></i-input>
 						        </Form-item>
                     			
 						        <Form-item label="装修项目" prop="decorate">
-						           <Checkbox-group :model.sync="decorateCkList">
-								        <Checkbox :value="item.id" v-for="item in decorateList">
+						          <Checkbox-group :model.sync="decorateCkList" >
+								        <Checkbox :value="item.id" v-for="item in decorateList" :disabled="modelForm.flowState===1 && modelForm.isLack===true">
 								        	<span>{{item.dicName}}</span>
 								        </Checkbox>
-								    </Checkbox-group>
+								    	</Checkbox-group>
 						        </Form-item>
-            					<Form-item label="所在地区" prop="addressValue">
-				        			<Cascader :data="addressData" @on-change="addrSelected" :value.sync="addressValue" trigger="hover"></Cascader>
-						           
+            				<Form-item label="所在地区" prop="addressValue">
+				        			<Cascader :disabled="modelForm.flowState===1 && modelForm.isLack===true" :data="addressData" @on-change="addrSelected" :value.sync="addressValue" trigger="hover"></Cascader>
 						        </Form-item>
             					<Form-item label="详细地址" prop="address">
-						            <i-input :value.sync="modelForm.address" placeholder="请输入详细地址"></i-input>
+						            <i-input :disabled="modelForm.flowState===1 && modelForm.isLack===true" :value.sync="modelForm.address" placeholder="请输入详细地址"></i-input>
 						        </Form-item>
 						    </i-form>
                     	</div>
@@ -245,6 +244,7 @@
 
 	                            <div class="q-top-b">
 	                            	<a href="/template/订货单.xlsx" target="_blank">门窗订货单模板下载</a>
+																<div v-if="modelForm.lackDesc">缺少材料说明：{{modelForm.lackDesc}}</div>
 	                            </div>
                             </div>
                             <div class="q-right" v-show="tabIndex===2 && id">
@@ -292,8 +292,8 @@
 		            				<span v-if="id && (item.costType===7 )">{{item.costValue| currency '¥' '2'}}</span>
 		            				<span v-if="id && (item.costType===8 )">{{item.costValue}}%</span>
 		            				
-		            				<discount-input v-if="item.costType===5 " :value.sync="item.costValue" :min-value="60"></discount-input>
-		            				<currency-input v-if="item.costType===1 || item.costType===2 || item.costType===3" :value="item.costValue | currency '¥' '2'" :out-value.sync="item.costValue" ></currency-input>
+		            				<discount-input :disabled="modelForm.flowState===1 && modelForm.isLack===true" v-if="item.costType===5 " :value.sync="item.costValue" :min-value="60"></discount-input>
+		            				<currency-input :disabled="modelForm.flowState===1 && modelForm.isLack===true" v-if="item.costType===1 || item.costType===2 || item.costType===3" :value="item.costValue | currency '¥' '2'" :out-value.sync="item.costValue" ></currency-input>
 		            				<span v-if="item.costType===6" >{{item.costValue}}</span>
 		
 		            				<span v-if="item.costType===4">{{getCouponToal | currency '¥' '2'}}</span>
@@ -304,7 +304,7 @@
 						        </i-col>
 						        <i-col span="14" class="q-flex">
 						        	
-						        	<i-input v-if="item.costType===1 ||item.costType===2 ||item.costType===3|| item.costType===5" :value.sync="item.desc"></i-input>
+						        	<i-input :disabled="modelForm.flowState===1 && modelForm.isLack===true" v-if="item.costType===1 ||item.costType===2 ||item.costType===3|| item.costType===5" :value.sync="item.desc"></i-input>
 						        	<span v-else>{{item.desc}}</span>
 			
 						        </i-col>
@@ -339,20 +339,22 @@
                     	<div class="container q-table">
                     		<i-form :model="modelForm" :label-width="100">
                     			<Form-item label="经销商备注">
-						            <i-input :value.sync="modelForm.agentRemark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
-						        </Form-item>
-                    		
+									            	<i-input :disabled="modelForm.flowState===1 && modelForm.isLack===true" :value.sync="modelForm.agentRemark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></i-input>
+									        </Form-item>
+				                    		
                     			<Form-item label="总部备注" v-if="false">
                     				{{modelForm.remark}}
-						        </Form-item>
-						        
-						    </i-form>
+									        </Form-item>
+										        
+										    </i-form>
                     	</div>
                     </div>
                  
                     <div class="q-btns">
-                    	<i-button type="primary" :loading="modelLoading" @click="ownerSaveAppoint(true)" size="large">保存</i-button>
-                    	<i-button type="primary" :loading="modelLoading" @click="ownerSaveAppoint(false)" size="large">提交</i-button>
+                    	<i-button v-if="modelForm.flowState===1 && modelForm.isLack===true" type="primary" :loading="supplementLoading" @click="handleSupplement(true)" size="large">补充材料</i-button>
+                    	<i-button v-if="modelForm.flowState===1 && modelForm.isLack===true" type="primary" :loading="supplementSubmitLoading" @click="handleSupplement(false)" size="large">补充材料并提交</i-button>
+                    	<i-button v-if="modelForm.isLack===undefined || modelForm.isLack===false" type="primary" :loading="saveLoading" @click="ownerSaveAppoint(true)" size="large">保存</i-button>
+                    	<i-button v-if="modelForm.isLack===undefined || modelForm.isLack===false" type="primary" :loading="submitLoading" @click="ownerSaveAppoint(false)" size="large">提交</i-button>
                     	<i-button type="ghost" size="large" @click="cancel">取消</i-button>
                     </div>
                 </div>
@@ -781,7 +783,11 @@ import DiscountInput from '../../components/discount-input'
                     });
 					return;
 				}
-				self.modelLoading=true;
+				if(t){
+					self.saveLoading=true;
+				}else{
+					self.submitLoading=true;
+				}
 				self.modelForm.isOnlySave=t;
 				self.modelForm.couponIds=self.targetKeysCoupon.join();
 
@@ -803,90 +809,113 @@ import DiscountInput from '../../components/discount-input'
 				}
 				if(self.id){
 					server.ownerUpdateOrder(self.modelForm).then((res)=>{
-	                	self.modelLoading=false;
-	                    if(res.success){
-	                        self.$Notice.success({
-	                            title:t?'保存成功':'提交成功',
-	                            desc:res.message
-	                        });
-	                        //self.modalVisible=false;
-	                        //self.getList();
+          	if(t){self.saveLoading=false;}else{self.submitLoading=false;}
+            if(res.success){
+              self.$Notice.success({
+                  title:t?'保存成功':'提交成功',
+                  desc:res.message
+              });
+              //self.modalVisible=false;
+              //self.getList();
 							self.$router.go('/owner/order/list');
 
-	                    }else{
-	                        self.$Notice.error({
-	                            title:t?'保存失败':'提交失败',
-	                            desc:res.message
-	                        });
-	                    }
-	                })
+              }else{
+                  self.$Notice.error({
+                      title:t?'保存失败':'提交失败',
+                      desc:res.message
+                  });
+              }
+          })
 				}else{
 					server.ownerAddOrder(self.modelForm).then((res)=>{
-	                	self.modelLoading=false;
-	                    if(res.success){
-	                        self.$Notice.success({
-	                            title:t?'保存成功':'提交成功',
-	                            desc:res.message
-	                        });
-	                        //self.modalVisible=false;
-	                        //self.getList();
+          	if(t){self.saveLoading=false;}else{self.submitLoading=false;}
+            if(res.success){
+              self.$Notice.success({
+                  title:t?'保存成功':'提交成功',
+                  desc:res.message
+              });
+              //self.modalVisible=false;
+              //self.getList();
 							self.$router.go('/owner/order/list');
 
-	                    }else{
-	                        self.$Notice.error({
-	                            title:t?'保存失败':'提交失败',
-	                            desc:res.message
-	                        });
-	                    }
-	                })
+            }else{
+                self.$Notice.error({
+                    title:t?'保存失败':'提交失败',
+                    desc:res.message
+                });
+            }
+        })
 				}
 				
 			},
-			
-            handleRemove (file) {
-                // 从 upload 实例删除数据
-                const fileList = this.$refs.upload.fileList;
-                this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
-            },
-            handleSuccess (res, file) {
-                // 因为上传过程为实例，这里模拟添加 url
-                file.attachAddress = res.data;
-                let nameList=res.data.split('@|@');
-                if(nameList&&nameList.length>1){
-                	file.attachName=nameList[1].substr(0,nameList[1].lastIndexOf('.'));
-		            file.avatar=this.getFileType(res.data);
-                }
-               	file.createTime=new Date();
-            },
-            getFileType(v){
-            	return server.getFileType(v);
-            },
-            handleView (name) {
-                this.imgName = name;
-                this.visible = true;
-            },
-            handleFormatError (file) {
-                this.$Notice.warning({
-                    title: '文件格式不正确',
-                    desc: '文件 ' + file.name + ' 格式不正确，请上传 jpg、png、doc、docx、xls、xlsx、pdf、dwg 格式'
-                });
-            },
-            handleMaxSize (file) {
-                this.$Notice.warning({
-                    title: '超出文件大小限制',
-                    desc: '文件 ' + file.name + ' 太大，不能超过 10M'
-                });
-            },
-            handleBeforeUpload () {
-                
-                const check = this.uploadList.length < 16;
-                if (!check) {
-                    this.$Notice.warning({
-                        title: '最多只能上传 15 张图片'
-                    });
-                }
-                return check;
-            },
+			handleSupplement(t){
+				let self=this;
+				let _formData={
+					id:self.modelForm.id,
+					isOnlySave:t,
+					attachmentVoList:self.uploadList
+				}
+				if(t){self.supplementLoading=true;}else{self.supplementSubmitLoading=true;}
+				server.supplement(_formData).then(res=>{
+					if(t){self.submitLoading=false;}else{self.supplementSubmitLoading=false;}
+					if(res.success){
+						self.$Notice.success({
+							title:t?'补充材料保存成功':'补充材料提交成功',
+							desc:res.message
+						});
+						self.$router.go('/owner/order/list');
+					}else{
+						self.$Notice.error({
+							title:t?'补充材料保存失败':'补充材料提交失败',
+							desc:res.message
+						});
+					}
+				});
+			},
+      handleRemove (file) {
+          // 从 upload 实例删除数据
+          const fileList = this.$refs.upload.fileList;
+          this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+      },
+      handleSuccess (res, file) {
+          // 因为上传过程为实例，这里模拟添加 url
+          file.attachAddress = res.data;
+          let nameList=res.data.split('@|@');
+          if(nameList&&nameList.length>1){
+          	file.attachName=nameList[1].substr(0,nameList[1].lastIndexOf('.'));
+          file.avatar=this.getFileType(res.data);
+          }
+         	file.createTime=new Date();
+      },
+      getFileType(v){
+      	return server.getFileType(v);
+      },
+      handleView (name) {
+          this.imgName = name;
+          this.visible = true;
+      },
+      handleFormatError (file) {
+          this.$Notice.warning({
+              title: '文件格式不正确',
+              desc: '文件 ' + file.name + ' 格式不正确，请上传 jpg、png、doc、docx、xls、xlsx、pdf、dwg 格式'
+          });
+      },
+      handleMaxSize (file) {
+          this.$Notice.warning({
+              title: '超出文件大小限制',
+              desc: '文件 ' + file.name + ' 太大，不能超过 10M'
+          });
+      },
+      handleBeforeUpload () {
+          
+          const check = this.uploadList.length < 16;
+          if (!check) {
+              this.$Notice.warning({
+                  title: '最多只能上传 15 张图片'
+              });
+          }
+          return check;
+      },
 		}
 	}
 </script>

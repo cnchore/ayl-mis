@@ -154,8 +154,10 @@ import LTitle from '../../components/title'
                 },
                 {
                     width:125,key:'flowState',title:'当前阶段',
-
                     render(row,column,index){
+                        if(row.isLack && row.flowState===1){
+                            return `<span class="l-s-Error">退回补充材料</span>`
+                        }
                         return row.flowState?row.flowState===0?'待下单':row.flowState===1?'待总部确认':'总部已确认':'无';
                     }
                 },
@@ -216,11 +218,10 @@ import LTitle from '../../components/title'
                     align: 'center',
                     render (row, column, index) {
                     return `
-                        <i class="iconfont icon-chakanyuyue btn" v-if="getAction('查看预约') && ${row.appointId}!=0" title="查看预约" @click="modelShow(${row.appointId})"></i>
+                        <i class="iconfont icon-chakanyuyue btn" v-if="getAction('查看预约') && ${row.appointId}!==null" title="查看预约" @click="modelShow(${row.appointId})"></i>
                         <i class="iconfont icon-chakandingdan btn" v-if="getAction('查看订货单')" title="查看订货单" @click="actionShow(${row.id})"></i>
-                        <i class="iconfont icon-bianji btn" v-if="getAction('编辑') && ${row.flowState}===1" title="编辑订货单" @click="actionShow(${row.id},true)"></i>
-                        <i class="iconfont icon-fasong btn" v-if="getAction('提交') && ${row.flowState}===1" title="提交" @click="orgNext(${row.id})"></i>
-
+                        <i class="iconfont icon-bianji btn" v-if="getAction('编辑') && ${row.flowState}===1 && ${row.isLack}===false" title="编辑订货单" @click="actionShow(${row.id},true)"></i>
+                        <i class="iconfont icon-fasong btn" v-if="getAction('提交') && ${row.flowState}===1 && ${row.isLack}===false"" title="提交" @click="orgNext(${row.id})"></i>
                     `;
                     }   
                 }]

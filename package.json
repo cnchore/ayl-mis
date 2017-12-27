@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "init": "webpack --progress --config webpack.dev.config.js",
-    "dev": "webpack-dev-server --port 8080 --inline --open --colors --hot --compress --history-api-fallback --config webpack.dev.config.js",
+    "dev": "webpack-dev-server --host 192.168.0.128 --port 8080 --inline --open --colors --hot --compress --history-api-fallback --config webpack.dev.config.js",
     "build": "webpack --progress --hide-modules --config webpack.prod.config.js",
     "lint": "eslint --fix --ext .js,.vue src",
     "watch": "webpack --watch --progress --colors --config webpack.watch.config.js"

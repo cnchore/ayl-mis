@@ -306,7 +306,9 @@
                     			<Form-item label="经销商备注">
 						        	{{modelForm.agentRemark}}
 						        </Form-item>
-                    		
+                    			<Form-item label="材料缺少说明:" v-if="modelForm.lackDesc">
+                    				{{modelForm.lackDesc}}
+						        			</Form-item>
                     			<Form-item label="总部备注" v-show="id">
                     				{{modelForm.remark}}
 						        </Form-item>

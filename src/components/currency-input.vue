@@ -1,6 +1,6 @@
  <template>                  
 
-    <input v-el:input v-bind:value="value" v-on:change="updateValue" class="ivu-input" v-on:focus="onFoucs">
+    <input v-el:input v-bind:value="value" v-bind:disabled="disabled" v-on:change="updateValue" class="ivu-input" v-on:focus="onFoucs">
     
 </template> 
 <script>
@@ -11,6 +11,10 @@
             },
             outValue:{
                 default:0
+            },
+            disabled:{
+                type:Boolean,
+                default:false
             }
         },
         

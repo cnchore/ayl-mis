@@ -280,11 +280,14 @@
                     		<i-form :model="modelForm" :label-width="132">
                     			<Form-item label="经销商备注:">
                     				{{modelForm.agentRemark}}
-						        </Form-item>
-                    		
+						        			</Form-item>
+						        			<Form-item label="材料缺少说明:" v-if="modelForm.lackDesc">
+                    				{{modelForm.lackDesc}}
+						        			</Form-item>
+                    			
                     			<Form-item label="总部备注:">
-						            {{modelForm.remark}}
-						        </Form-item>
+						            		{{modelForm.remark}}
+						        			</Form-item>
 						        
 						    </i-form>
                     	</div>

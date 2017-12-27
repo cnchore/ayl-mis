@@ -1,6 +1,6 @@
  <template>                  
     <div class="q-discout ivu-input-wrapper ivu-input-type">
-    <input v-el:qdiscount v-bind:value="value" type="text" v-on:change="updateValue" class="ivu-input" v-on:focus="onFoucs">
+    <input v-el:qdiscount v-bind:value="value" v-bind:disabled="disabled" type="text" v-on:change="updateValue" class="ivu-input" v-on:focus="onFoucs">
     </div>
 </template> 
 <script>
@@ -12,6 +12,10 @@
             minValue:{
                 type:Number,
                 default:0
+            },
+            disabled:{
+                type:Boolean,
+                default:false
             }
         },
         
